@@ -294,6 +294,22 @@ export default{
     meta: {
       tokenRequired: true
     }
+  },
+  {
+    path: '/connection',
+    name: 'connection',
+    component: resolve => require(['modules/request/Connection.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  },
+  {
+    path: '/invitation/:code',
+    name: 'scannedConfirm',
+    component: resolve => require(['modules/request/ScannedConfirm.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
   }
   ]
 }
