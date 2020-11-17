@@ -174,7 +174,7 @@ export default{
         }],
         sort: sort
       }
-      this.APIRequest('transfer_charges/retrieve', parameter).then(response => {
+      this.APIRequest('fund_transfer_charges/retrieve', parameter).then(response => {
         $('#loading').css({display: 'none'})
         if(response.data.length > 0){
           this.data = response.data
@@ -190,7 +190,7 @@ export default{
         }
       }
       $('#loading').css({display: 'block'})
-      this.APIRequest('transfer_charges/retrieve', parameter).then(response => {
+      this.APIRequest('fund_transfer_charges/retrieve', parameter).then(response => {
         $('#loading').css({display: 'none'})
         if(response.data.length > 0){
           this.data = response.data
@@ -212,7 +212,7 @@ export default{
           let modalData = {...this.transferModal}
           let parameter = {
             title: 'Update Requests',
-            route: 'transfer_charges/update',
+            route: 'fund_transfer_charges/update',
             button: {
               left: 'Cancel',
               right: 'Update'
