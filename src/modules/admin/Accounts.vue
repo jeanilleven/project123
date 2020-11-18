@@ -68,34 +68,6 @@
     <empty v-if="data === null" :title="'No accounts available!'" :action="'Keep growing.'"></empty>
     <profile :item="selecteditem"></profile>
     <increment-modal :property="partnerLocation"></increment-modal>
-    <!-- <div class="modal fade" id="addAddressAccount" tabindex="-1" role="dialog"  aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Assign Location</h5>
-            <button type="button" class="close" @click="hideAddressModal('#addAddressAccount')" aria-label="Close">
-              <span aria-hidden="true" class="text-primary">&times;</span>
-            </button>
-          </div>
-              <div class="modal-body card " v-for="item in scopeLocation" v-bind:key="item.id">
-              <div class="row">
-                <div class="col-9"> <b><label class="modal-label">City :</label></b>
-                  <span style='margin:3%'>{{item.city}}</span>
-               <b><label class="modal-label">Country :</label></b>
-                  <span style='margin:3%'>  {{item.country}}</span></div>
-               
-
-                   <div class="col-3">  <span style='padding:3%'>  
-                    <i style='font-size:20px; color:red' class='fa fa-trash' @click="deleteLocationAddress(item)"></i>
-                  </span>
-                  <span >
-                    <i style='font-size:20px; color:#3F0050' class='fa fa-edit'></i>
-                  </span></div>
-              </div>
-            </div>
-        </div>
-      </div>
-    </div> -->
   </div>
 </template>
 <style scoped>
@@ -213,9 +185,7 @@ export default{
       selectedLocation: null,
       editTypeIndex: null,
       newAccountType: null,
-      selectedAccount: null,
-      scopeLocation: null,
-      locationMessage: null
+      selectedAccount: null
     }
   },
   components: {
@@ -361,31 +331,6 @@ export default{
         this.retrieve(null, null)
       })
     }
-    // showAddressModal(item){
-    //   console.log(item)
-    //   this.locationMessage = null
-    //   this.APIRequest('location_scopes/retrieve').then(response => {
-    //     console.log(response.data)
-    //     if(response.data.length > 0){
-    //       this.scopeLocation = response.data
-    //     }else{
-    //       this.scopeLocation = null
-    //     }
-    //     $('#addAddressAccount').modal('show')
-    //   })
-    // },
-    // hideAddressModal(item){
-    //   $('#addAddressAccount').modal('hide')
-    // },
-    // deleteLocationAddress(item){
-    //   let param = {
-    //     id: item.id
-    //   }
-    //   this.APIRequest('location_scopes/delete', param).then(response => {
-    //     $('#loading').css({display: 'none'})
-    //     this.retrieve(null, null)
-    //   })
-    // }
   }
 }
 </script>

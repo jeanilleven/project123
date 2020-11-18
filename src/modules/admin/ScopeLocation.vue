@@ -156,6 +156,7 @@ export default{
         limit: this.limit,
         offset: (this.activePage > 0) ? ((this.activePage - 1) * this.limit) : this.activePage
       }
+      $('#loading').css({display: 'block'})
       this.APIRequest('location_scopes/retrieve', parameter).then(response => {
         $('#loading').css({display: 'none'})
         if(response.data.length > 0){
