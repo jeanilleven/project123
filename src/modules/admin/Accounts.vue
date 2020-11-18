@@ -128,6 +128,11 @@ td i {
     width: 100%;
   }
 }
+
+.card{
+  margin:2%
+}
+
 </style>
 <script>
 import ROUTER from 'src/router'
@@ -189,6 +194,7 @@ export default{
       filter: null,
       sort: null,
       partnerLocation: PartnerLocation,
+      selectedLocation: null,
       editTypeIndex: null,
       newAccountType: null,
       selectedAccount: null

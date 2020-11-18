@@ -310,6 +310,14 @@ export default{
     meta: {
       tokenRequired: true
     }
+  },
+  {
+    path: '/scopeLocation',
+    name: 'scopeLocation',
+    component: resolve => require(['modules/admin/ScopeLocation.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
   }
   ]
 }
