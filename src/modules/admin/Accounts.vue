@@ -65,6 +65,14 @@
         </tr>
       </tbody>
     </table>
+
+     <Pager
+      :pages="numPages"
+      :active="activePage"
+      :limit="limit"
+      v-if="data !== null"
+      />
+
     <empty v-if="data === null" :title="'No accounts available!'" :action="'Keep growing.'"></empty>
     <profile :item="selecteditem"></profile>
     <increment-modal :property="partnerLocation"></increment-modal>
@@ -126,6 +134,7 @@ import ROUTER from 'src/router'
 import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
 import PartnerLocation from './CreatePartnerLocations.js'
+import Pager from 'src/components/increment/generic/pager/Pager.vue'
 export default{
   mounted(){
     $('#loading').css({display: 'block'})
@@ -138,6 +147,9 @@ export default{
       auth: AUTH,
       selecteditem: null,
       config: CONFIG,
+      limit: 5,
+      activePage: 1,
+      numPages: null,
       category: [{
         title: 'Sort by',
         sorting: [{
@@ -186,7 +198,9 @@ export default{
     'empty': require('components/increment/generic/empty/Empty.vue'),
     'basic-filter': require('components/increment/generic/filter/Basic.vue'),
     'profile': require('modules/request/Profile.vue'),
-    'increment-modal': require('components/increment/generic/modal/Modal.vue')
+    'increment-modal': require('components/increment/generic/modal/Modal.vue'),
+    Pager
+
   },
   methods: {
     setEditTypeIndex(index, item){
@@ -242,14 +256,19 @@ export default{
           column: filter.column,
           clause: 'like'
         }],
-        sort: sort
+        sort: sort,
+        limit: this.limit,
+        offset: (this.activePage > 0) ? ((this.activePage - 1) * this.limit) : this.activePage
       }
       this.APIRequest('accounts/retrieve_accounts', parameter).then(response => {
+        console.log(response)
         $('#loading').css({display: 'none'})
         if(response.data.length > 0){
           this.data = response.data
+          this.numPages = parseInt(response.size / this.limit) + (response.size % this.limit ? 1 : 0)
         }else{
           this.data = null
+          this.numPages = null
         }
       })
     },
