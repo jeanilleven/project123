@@ -13,7 +13,7 @@
     
     <table class="table table-bordered table-responsive" v-if="data !== null">
       <thead>
-        <tr>
+        <tr> 
           <td>Date</td>
           <td>Scope</td>
           <td>Destination</td>
@@ -32,8 +32,8 @@
           <td class="text-primary">{{auth.displayAmountWithCurrency(item.min_amount, item.currency)}}</td>
           <td class="text-primary">{{auth.displayAmountWithCurrency(item.max_amount, item.currency)}}</td>
           <td class="text-danger">{{auth.displayAmountWithCurrency(item.charge, item.currency)}}</td>
-          <td>{{currency.displayWithCurrency(item.charge, item.currency)}}</td>
-             <td>
+          <td>{{item.created_at_human}}</td>
+          <td>
             <button class="btn btn-primary" @click="showTransferAddModal('update', item)">Edit</button>
           </td>
         </tr>
@@ -94,7 +94,7 @@
 import ROUTER from 'src/router'
 import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
-import transferCharges from 'src/modules/admin/CreateAddCharges.js'
+import transferFeeAddCharges from 'src/modules/admin/CreateAddCharges.js'
 export default{
   mounted(){
     $('#loading').css({display: 'block'})
@@ -110,7 +110,7 @@ export default{
         file: null
       },
       config: CONFIG,
-      showTransferAddFeeModal: transferCharges,
+      showTransferAddFeeModal: transferFeeAddCharges,
       category: [{
         title: 'Sort by',
         sorting: [{
@@ -176,7 +176,7 @@ export default{
         }],
         sort: sort
       }
-      this.APIRequest('transfer_fee_add_charges/retrieve', parameter).then(response => {
+      this.APIRequest('fund_transfer_charges/retrieve', parameter).then(response => {
         $('#loading').css({display: 'none'})
         if(response.data.length > 0){
           this.data = response.data
@@ -192,7 +192,7 @@ export default{
         }
       }
       $('#loading').css({display: 'block'})
-      this.APIRequest('ttransfer_fee_add_charges/retrieve', parameter).then(response => {
+      this.APIRequest('fund_transfer_charges/retrieve', parameter).then(response => {
         $('#loading').css({display: 'none'})
         if(response.data.length > 0){
           this.data = response.data
@@ -204,7 +204,7 @@ export default{
     showTransferAddModal(action, item = null){
       switch(action){
         case 'create':
-          this.showTransferAddFeeModal = {...transferCharges}
+          this.showTransferAddFeeModal = {...transferFeeAddCharges}
           let inputs = this.showTransferAddFeeModal.inputs
           inputs.map(input => {
             input.value = null
@@ -214,7 +214,7 @@ export default{
           let modalData = {...this.showTransferAddFeeModal}
           let parameter = {
             title: 'Update Requests',
-            route: 'transfer_fee_add_charges/update',
+            route: 'fund_tranfer_charges/update',
             button: {
               left: 'Cancel',
               right: 'Update'
@@ -231,11 +231,11 @@ export default{
           modalData = {...modalData, ...parameter} // updated data without
           let object = Object.keys(item)
           modalData.inputs.map(data => {
-            if(input.variable === 'effective_date') {
-              input.value = item.effective_date
+            if(data.variable === 'effective_date') {
+              data.value = item.effective_date
             }
-            if(input.variable === 'destination'){
-              input.value = item.destination
+            if(data.variable === 'destination'){
+              data.value = item.destination
             }
             if(data.variable === 'min_amount'){
               data.value = item.min_amount
@@ -248,8 +248,9 @@ export default{
             }
             if(data.variable === 'currency'){
               data.value = item.currency
-            } if(input.variable === 'scope'){
-            input.value = item.scope
+            }
+            if(data.variable === 'scope'){
+              data.value = item.scope
             }
           })
           this.showTransferAddFeeModal = {...modalData}

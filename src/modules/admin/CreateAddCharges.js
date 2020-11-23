@@ -116,7 +116,7 @@ export default {
       type: 'number'
     }
   }],
-  route: 'transfer_fee_add_charges/create',
+  route: 'fund_transfer_charges/create',
   button: {
     left: 'Cancel',
     right: 'Submit'
