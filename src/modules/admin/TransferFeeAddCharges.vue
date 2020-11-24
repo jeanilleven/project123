@@ -1,7 +1,7 @@
 <template>
   <div class="ledger-summary-container">
     <div class="incre-row">
-      <button class="btn btn-primary pull-right" @click="showTransferModal('create')">Add</button>
+      <button class="btn btn-primary pull-right" @click="showTransferAddModal('create')">Add</button>
     </div>
     <basic-filter 
       v-bind:category="category" 
@@ -13,33 +13,35 @@
     
     <table class="table table-bordered table-responsive" v-if="data !== null">
       <thead>
-        <tr>
+        <tr> 
+          <td>Date</td>
+          <td>Scope</td>
+          <td>Destination</td>
           <td>Currency</td>
-          <td>Type</td>
           <td>Minimum Amount</td>
-          <td>Max Amount</td>
+          <td>Maximum Amount</td>
           <td>Charge</td>
-          <td>Date Added</td>
-          <td>Actions</td>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(item, index) in data" :key="index">
+          <td>{{item.effective_date}}</td>
+          <td>{{item.scope}}</td>
+          <td>{{item.destination}}</td>
           <td>{{item.currency}}</td>
-          <td>{{item.type}}</td>
           <td class="text-primary">{{auth.displayAmountWithCurrency(item.min_amount, item.currency)}}</td>
           <td class="text-primary">{{auth.displayAmountWithCurrency(item.max_amount, item.currency)}}</td>
           <td class="text-danger">{{auth.displayAmountWithCurrency(item.charge, item.currency)}}</td>
           <td>{{item.created_at_human}}</td>
           <td>
-            <button class="btn btn-primary" @click="showTransferModal('update', item)">Edit</button>
+            <button class="btn btn-primary" @click="showTransferAddModal('update', item)">Edit</button>
           </td>
         </tr>
       </tbody>
     </table>
     <empty v-if="data === null" :title="'No charges specified!'" :action="'Click add to create.'"></empty>
     <browse-images-modal></browse-images-modal>
-    <increment-modal :property="transferModal"></increment-modal>
+    <increment-modal :property="showTransferAddFeeModal"></increment-modal>
   </div>
 </template>
 <style scoped>
@@ -92,7 +94,7 @@
 import ROUTER from 'src/router'
 import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
-import transferCharges from 'src/modules/admin/CreateTransferCharges.js'
+import transferFeeAddCharges from 'src/modules/admin/CreateAddCharges.js'
 export default{
   mounted(){
     $('#loading').css({display: 'block'})
@@ -108,7 +110,7 @@ export default{
         file: null
       },
       config: CONFIG,
-      transferModal: transferCharges,
+      showTransferAddFeeModal: transferFeeAddCharges,
       category: [{
         title: 'Sort by',
         sorting: [{
@@ -199,20 +201,20 @@ export default{
         }
       })
     },
-    showTransferModal(action, item = null){
+    showTransferAddModal(action, item = null){
       switch(action){
         case 'create':
-          this.transferModal = {...transferCharges}
-          let inputs = this.transferModal.inputs
+          this.showTransferAddFeeModal = {...transferFeeAddCharges}
+          let inputs = this.showTransferAddFeeModal.inputs
           inputs.map(input => {
             input.value = null
           })
           break
         case 'update':
-          let modalData = {...this.transferModal}
+          let modalData = {...this.showTransferAddFeeModal}
           let parameter = {
             title: 'Update Requests',
-            route: 'fund_transfer_charges/update',
+            route: 'fund_tranfer_charges/update',
             button: {
               left: 'Cancel',
               right: 'Update'
@@ -229,8 +231,11 @@ export default{
           modalData = {...modalData, ...parameter} // updated data without
           let object = Object.keys(item)
           modalData.inputs.map(data => {
-            if(data.variable === 'type'){
-              data.value = item.type
+            if(data.variable === 'effective_date') {
+              data.value = item.effective_date
+            }
+            if(data.variable === 'destination'){
+              data.value = item.destination
             }
             if(data.variable === 'min_amount'){
               data.value = item.min_amount
@@ -244,11 +249,14 @@ export default{
             if(data.variable === 'currency'){
               data.value = item.currency
             }
+            if(data.variable === 'scope'){
+              data.value = item.scope
+            }
           })
-          this.transferModal = {...modalData}
+          this.showTransferAddFeeModal = {...modalData}
           break
       }
-      $('#createTransferChargesModal').modal('show')
+      $('#createAddChargesModal').modal('show')
     },
     manageGrid(event){
       switch(event){

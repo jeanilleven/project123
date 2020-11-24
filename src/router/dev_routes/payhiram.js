@@ -155,6 +155,13 @@ export default{
       tokenRequired: true
     }
   }, {
+    path: '/transfer_fee_add_charges/',
+    name: 'transferFeeAddCharges',
+    component: resolve => require(['modules/admin/TransferFeeAddCharges.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  }, {
     path: '/bookmarks/',
     name: 'bookmarks',
     component: resolve => require(['modules/bookmark/List.vue'], resolve),
