@@ -1,6 +1,7 @@
 <template>
   <div class="profile-preview-wrapper" v-if="item !== null">
     <profile-header :item="item" v-if="item.account !== null"></profile-header>
+    <view-location></view-location>
     <basic :item="item" v-if="item.account !== null"></basic>
     <educations :data="item.educations" v-if="item.educations !== null"></educations>
     <works :data="item.works" v-if="item.works !== null"></works>
@@ -14,7 +15,9 @@
       <button class="btn success action p-3 text-white">Accept</button>
       <!-- <button class="btn danger action p-3">Remove</button> -->
     </div>
+
   </div>
+
 </template>
 <style scoped>
 .action {
@@ -59,7 +62,8 @@ export default{
     'educations': require('modules/profile/Educations.vue'),
     'payments': require('modules/profile/Payments.vue'),
     'comakers': require('modules/profile/CoMakers.vue'),
-    'guarantors': require('modules/profile/Guarantors.vue')
+    'guarantors': require('modules/profile/Guarantors.vue'),
+    'view-location': require('modules/request/ViewLocation.vue')
   },
   methods: {
     redirect(parameter){
