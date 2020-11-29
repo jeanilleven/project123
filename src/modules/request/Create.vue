@@ -397,7 +397,7 @@ export default {
       }
       let location = this.request.location
       this.searchLocation = location.route
-      this.checkLocation(location.locality)
+      // this.checkLocation(location.locality)
     },
     checkLocation(locality){
       $('#loading').css({display: 'block'})
