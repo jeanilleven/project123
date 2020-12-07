@@ -90,10 +90,10 @@
         <small class="body mt-2">
             {{item.created_at_human}}
         </small>
-        <span class="footer">
+        <span>
           <div v-if="parseInt(item.account_id) !== user.userID">
-            <button class="btn btn-secondary" style="margin-right: 5px;" @click="showInvestmentModal(item)" v-if="parseInt(item.type) > 100 && user.type !== 'USER'">Send Proposal</button>
-            <button class="btn btn-secondary" style="margin-right: 5px;" @click="showChargeModal(item)" v-if="parseInt(item.type) < 101 && user.type !== 'USER'">Send Proposal</button>
+            <button class="btn btn-secondary send" style="margin-right: 5px;" @click="showInvestmentModal(item)" v-if="parseInt(item.type) > 100 && user.type !== 'USER'">Send Proposal</button>
+            <button class="btn btn-secondary send" style="margin-right: 5px;" @click="showChargeModal(item)" v-if="parseInt(item.type) < 101 && user.type !== 'USER'">Send Proposal</button>
             <!-- <button class="btn btn-warning" style="margin-right: 5px;" @click="bookmark(item.id)">
               <i class="fas fa-star" v-if="item.bookmark === true"></i>
               Bookmark</button> -->
@@ -147,6 +147,10 @@
 }
 .amount {
   color: $secondary;
+}
+.send {
+  float: right;
+  margin-bottom: 10px;
 }
 .request-list-wrapper{
   width: 100%;
