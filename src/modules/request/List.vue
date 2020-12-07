@@ -29,10 +29,6 @@
           <label class="action-link text-primary" @click="showProfileModal(item)">
             <i class="fas fa-user-circle" style="color: #555; padding-right: 5px;" v-if="item.account.profile === null"></i>
             <img :src="config.BACKEND_URL + item.account.profile.url" height="30px" width="30px;" style="border-radius: 50%;" v-else>
-            <ratings :ratings="item.rating" v-if="item.rating !== null"></ratings>
-          </label>
-          <label class="text-primary">
-            {{auth.showRequestType(item.type) + ' - ' + item.money_type}}
           </label>
           <label class="text-danger" v-if="item.coupon !== null && parseInt(item.account_id) === user.userID">
             <i class="fas fa-circle" style="font-size: 8px; color: #555; padding-right: 5px;"></i>
@@ -42,9 +38,10 @@
             <i class="fas fa-circle" style="font-size: 8px; color: #555; padding-right: 5px;"></i>
             Suggested Charge - {{auth.displayAmountWithCurrency(item.max_charge, item.currency)}}
           </label>
-          <label class="pull-right" v-if="parseInt(item.account_id) !== user.userID">
+          <label class="pull-right">
             <div class="dropdown" id="dropdownMenuButtonDropdown">
-              <i class="fas fa-ellipsis-h text-gray more-options" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-target="dropdownMenuButtonDropdown" style="padding-top: 10px;">
+              <ratings :ratings="item.rating" v-if="item.rating !== null"></ratings>
+              <i v-if="parseInt(item.account_id) !== user.userID" class="fas fa-ellipsis-h text-gray more-options ml-3" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-target="dropdownMenuButtonDropdown" style="padding-top: 10px;">
               </i>
               <div class="dropdown-menu dropdown-more-options" aria-labelledby="dropdownMenuButton" >
                 <!-- <span class="dropdown-item action-link" @click="showRequestModal('update', item)" v-if="parseInt(item.account_id) === user.userID || (item.comakers !== null && user.userID === parseInt(item.comakers[0].comaker))">Edit</span> -->
@@ -53,57 +50,33 @@
             </div>
           </label>
         </span>
-        <span class="body">
-          <label style="line-height: 50px;">
-            Posted on {{item.created_at_human}}
-          </label>
-        </span>
-        <span class="summary-header">
-          <label>
-            <b>{{auth.displayAmountWithCurrency(item.amount, item.currency)}}</b><br>
-            Amount
-          </label>
-        </span>
-        <span class="summary-header" v-if="item.location !== null">
-          <label>
-            <b>{{item.location.route + ', ' + item.location.locality + ', ' + item.location.country}}</b>
-            <br>
-            Location
-          </label>
-        </span>
-        <span class="summary-header">
-          <label>
-            <b>{{item.needed_on_human}}</b><br>
-            Needed on
-          </label>
-        </span>
-        <span class="summary-header" v-if="parseInt(item.type) > 100">
-          <label>
-            <b>
-              {{item.interest}}% interest per Month for {{item.months_payable + ' ' + (parseInt(item.month_payable) > 1 ? 'months' : 'month')}}
-            </b><br>
-            Interest rate
-          </label>
-        </span>
-        <span class="summary-header" v-if="parseInt(item.type) > 100">
-          <label>
-            <b>{{item.billing_per_month_human}}</b><br>
-            Billing Cycle
-          </label>
-        </span>
-        <span class="summary-header" v-if="parseInt(item.type) > 100">
-           <label>
-            <b>{{auth.displayAmount(item.total)}}</b>
-            <br>
-            Total borrowed
-          </label>
-        </span>
+        <label class="text-uppercase request">
+          {{auth.showRequestType(item.type) + ' - ' + item.money_type}}
+        </label>
+        <p class="float-right request">
+            <b class="amount">{{auth.displayAmountWithCurrency(item.amount, item.currency)}}</b>
+          </p>
+        <p v-if="item.location !== null" class="request">
+          {{item.location.route + ', ' + item.location.locality + ', ' + item.location.country}}
+        </p>
+        <p class="request">
+          Needed on: {{item.needed_on_human}}
+        </p>
+        <p class="request" v-if="parseInt(item.type) > 100">
+             Interest rate: {{item.interest}}% interest per Month for {{item.months_payable + ' ' + (parseInt(item.month_payable) > 1 ? 'months' : 'month')}}
+        </p>
+        <p class="request" v-if="parseInt(item.type) > 100">
+          Billing Cycle: {{item.billing_per_month_human}}
+        </p>
+        <p class="request" v-if="parseInt(item.type) > 100">
+          Total borrowed: {{auth.displayAmount(item.total)}}
+        </p>
         <span class="body" v-if="item.attachment_payload !== null">
           <label style="line-height: 50px;">
             <i>With product attachments</i>
           </label>
         </span>
-        <span class="body">
+        <span class="body request">
           <label style="text-align: justify;">
            {{item.reason}}
           </label>
@@ -111,10 +84,13 @@
         <span class="body" v-if="item.images !== null">
           <img :src="config.BACKEND_URL + imageItem.url" v-for="(imageItem, imageIndex) in item.images" :key="imageIndex" class="request-image" @click="showImage(config.BACKEND_URL + imageItem.url)" :style="{'width': (parseInt(100 / item.images.length) - 1) + '%', 'max-width': (parseInt(100 / item.images.length) - 1) + '%'}">
         </span>
+        <small class="body mt-2">
+            {{item.created_at_human}}
+        </small>
         <span class="footer">
           <div v-if="parseInt(item.account_id) !== user.userID">
-            <button class="btn btn-primary" style="margin-right: 5px;" @click="showInvestmentModal(item)" v-if="parseInt(item.type) > 100 && user.type !== 'USER'">Send Proposal</button>
-            <button class="btn btn-primary" style="margin-right: 5px;" @click="showChargeModal(item)" v-if="parseInt(item.type) < 101 && user.type !== 'USER'">Send Proposal</button>
+            <button class="btn btn-secondary" style="margin-right: 5px;" @click="showInvestmentModal(item)" v-if="parseInt(item.type) > 100 && user.type !== 'USER'">Send Proposal</button>
+            <button class="btn btn-secondary" style="margin-right: 5px;" @click="showChargeModal(item)" v-if="parseInt(item.type) < 101 && user.type !== 'USER'">Send Proposal</button>
             <!-- <button class="btn btn-warning" style="margin-right: 5px;" @click="bookmark(item.id)">
               <i class="fas fa-star" v-if="item.bookmark === true"></i>
               Bookmark</button> -->
@@ -163,6 +139,12 @@
 </template>
 <style scoped lang="scss">
 @import "~assets/style/colors.scss";
+.request {
+  font-size: 15px;
+}
+.amount {
+  color: $secondary;
+}
 .request-list-wrapper{
   width: 100%;
   float: left;
@@ -238,9 +220,9 @@
   overflow-y: hidden;
 }
 .footer button{
-  float: left;
+  float: right;
   height: 50px !important;
-  border-radius: 0px !important;
+  border-radius: 7px !important;
   margin-top: 25px;
   margin-bottom: 25px;
   width: 150px !important;
