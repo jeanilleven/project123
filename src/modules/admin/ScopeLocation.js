@@ -87,5 +87,8 @@ export default {
     right: 'Submit'
   },
   sort: null,
-  params: []
+  params: [{
+    variable: 'account_id',
+    value: null
+  }]
 }

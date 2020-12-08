@@ -14,7 +14,7 @@
         <span v-if="item.account.information.last_name !== null">{{item.account.information.last_name}}</span>
       </div>
       <p v-else class="text-white">{{item.account.username}}</p>
-      <ratings class="text-white" :ratings="item.rating" v-if="item.rating !== null"></ratings>
+      <ratings class="text-white" :ratings="item.rating" v-if="item !== null ? item.rating : 'No Ratings'"></ratings>
       <p class="text-white"><i class="far fa-check-circle" color="primary"></i><i> {{item.status === 'NOT_VERIFIED' ? item.status : 'Verified'}}</i></p>
       <br>
       <!-- <label class="text-white" v-if="item.account.information !== null"><b>{{item.account.information.address}}</b></label> -->

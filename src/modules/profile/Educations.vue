@@ -10,7 +10,7 @@
         <span class="summary-header">
           <div>
             <i class="fas fa-calendar"></i>
-            <span> 
+            <span>
               <label class="cards-label"> 
                 {{ item.month_started }}
                 {{ item.year_started }}

@@ -17,14 +17,14 @@
           <td>Username</td>
           <td>Email</td>
           <td>Type</td>
-          <td>Country & Region</td>
-          <td>Localities</td>
+          <!-- <td>Country & Region</td>
+          <td>Localities</td> -->
           <td>Status</td>
-          <td>Actions</td>
+          <!-- <td>Actions</td> -->
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item, index) in data" :ke="index">
+        <tr v-for="(item, index) in data" :key="index">
           <td>{{item.created_at}}</td>
           <td>
             <label class="action-link text-primary" @click="showProfileModal(item)">{{item.username}}</label>
@@ -41,14 +41,14 @@
               <i class="fa fa-times text-danger" style="margin-left: 5px; float: left;" @click="setEditTypeIndex(index, item)"></i>
             </span>
           </td>
-          <td>
+          <!-- <td>
             <label v-if="item.partner_locations !== null">
               {{item.partner_locations.country}} / {{item.partner_locations.region}}
             </label>
-          </td>
-          <td>
+          </td> -->
+          <!-- <td>
             <label v-if="item.partner_locations !== null">
-              <button class="btn btn-secondary" style="margin-right: 5px;" v-for="(itemLocation, indexLocation) in item.partner_locations.result">
+              <button class="btn btn-secondary" style="margin-right: 5px;" v-for="(itemLocation, indexLocation) in item.partner_locations.result" :key="indexLocation">
                 {{itemLocation.locality}}
                 <i class="fa fa-pencil text-primary" style="padding-left: 5px; padding-right: 5px;"  @click="showIncrementModal('update', itemLocation)"></i>
                 <i class="fa fa-trash text-danger" style="padding-left: 5px; padding-right: 5px;" @click="deleteLocation(itemLocation.id)"></i>
@@ -57,11 +57,11 @@
             <button class="btn btn-primary" @click="showIncrementModal('create', item)">
               <i class="fas fa-plus"></i>
             </button>
-          </td>
+          </td> -->
           <td>{{item.status}}</td>
-          <td>
+          <!-- <td>
             <button class="btn btn-primary" @click="update(item)">Grant</button>
-          </td>
+          </td> -->
         </tr>
       </tbody>
     </table>
@@ -71,11 +71,11 @@
       :active="activePage"
       :limit="limit"
       v-if="data !== null"
-      />
+    />
 
     <empty v-if="data === null" :title="'No accounts available!'" :action="'Keep growing.'"></empty>
     <profile :item="selecteditem"></profile>
-    <increment-modal :property="partnerLocation"></increment-modal>
+    <increment-modal :property="scopeLocation"></increment-modal>
   </div>
 </template>
 <style scoped>
@@ -139,6 +139,7 @@ import ROUTER from 'src/router'
 import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
 import PartnerLocation from './CreatePartnerLocations.js'
+import ScopeLocation from './ScopeLocation.js'
 import Pager from 'src/components/increment/generic/pager/Pager.vue'
 export default{
   mounted(){
@@ -194,6 +195,7 @@ export default{
       filter: null,
       sort: null,
       partnerLocation: PartnerLocation,
+      scopeLocation: ScopeLocation,
       selectedLocation: null,
       editTypeIndex: null,
       newAccountType: null,
@@ -267,7 +269,6 @@ export default{
         offset: (this.activePage > 0) ? ((this.activePage - 1) * this.limit) : this.activePage
       }
       this.APIRequest('accounts/retrieve_accounts', parameter).then(response => {
-        console.log(response)
         $('#loading').css({display: 'none'})
         if(response.data.length > 0){
           this.data = response.data
@@ -289,6 +290,7 @@ export default{
           $('#loading').css({display: 'none'})
           this.retrieve(null, null)
         })
+        $('#profileModal').modal('hide')
       }else{
         alert('Not Allowed!')
       }
@@ -296,20 +298,20 @@ export default{
     showIncrementModal(action, item){
       switch(action){
         case 'create':
-          this.partnerLocation = {...PartnerLocation}
-          let inputs = this.partnerLocation.inputs
+          this.scopeLocation = {...ScopeLocation}
+          let inputs = this.scopeLocation.inputs
           inputs.map(input => {
             input.value = null
           })
-          let params = this.partnerLocation.params
-          params.map(param => {
-            if(param.variable === 'account_id'){
-              param.value = item.id
-            }
-          })
+          let params = this.scopeLocation.params
+          // params.map(param => {
+          //   if(param.variable === 'account_id'){
+          //     param.value = item.id
+          //   }
+          // })
           break
         case 'update':
-          let modalData = {...this.partnerLocation}
+          let modalData = {...this.scopeLocation}
           let parameter = {
             title: 'Update Location',
             route: 'investor_locations/update',
@@ -335,10 +337,10 @@ export default{
               data.value = item.locality
             }
           })
-          this.partnerLocation = {...modalData}
+          this.scopeLocation = {...modalData}
           break
       }
-      $('#createPartnerLocationModal').modal('show')
+      $('#scopeLocatioModal').modal('show')
     },
     deleteLocation(id){
       let parameter = {
