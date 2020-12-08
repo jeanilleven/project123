@@ -96,7 +96,7 @@ import transferCharges from 'src/modules/admin/CreateTransferCharges.js'
 export default{
   mounted(){
     $('#loading').css({display: 'block'})
-    this._retrieve({type: 'asc'}, {column: 'created_at', value: ''})
+    this._retrieve({'created_at': 'asc'}, {column: 'created_at', value: ''})
   },
   data(){
     return {
@@ -174,8 +174,10 @@ export default{
         }],
         sort: sort
       }
-      this.APIRequest('fund_transfer_charges/retrieve', parameter).then(response => {
+      console.log(sort)
+      this.APIRequest('fund_transfer_charges/retrieve-all', parameter).then(response => {
         $('#loading').css({display: 'none'})
+        console.log(response.data)
         if(response.data.length > 0){
           this.data = response.data
         }else{
