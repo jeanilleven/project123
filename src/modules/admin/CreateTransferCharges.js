@@ -83,7 +83,7 @@ export default {
       type: 'number'
     }
   }],
-  route: 'transfer_charges/create',
+  route: 'fund_transfer_charges/create',
   button: {
     left: 'Cancel',
     right: 'Submit'

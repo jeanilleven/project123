@@ -120,17 +120,21 @@ export default {
             'column': 'id'
           }]
         }
-        vue.APIRequest('accounts/retrieve', parameter).then(response => {
-          if(response.data.length > 0){
-            this.otpDataHolder.userInfo = userInfo
-            this.otpDataHolder.data = response.data
-            this.checkOtp(response.data[0].notification_settings)
+        if(userInfo.account_type === 'ADMIN'){
+          vue.APIRequest('accounts/retrieve', parameter).then(response => {
+            if(response.data.length > 0){
+              this.otpDataHolder.userInfo = userInfo
+              this.otpDataHolder.data = response.data
+              this.checkOtp(response.data[0].notification_settings)
+            }
+          })
+          this.retrieveNotifications(userInfo.id)
+          this.retrieveMessages(userInfo.id, userInfo.account_type)
+          if(callback){
+            callback(userInfo)
           }
-        })
-        this.retrieveNotifications(userInfo.id)
-        this.retrieveMessages(userInfo.id, userInfo.account_type)
-        if(callback){
-          callback(userInfo)
+        }else{
+          this.deaunthenticate()
         }
       })
     }, (response, status) => {
