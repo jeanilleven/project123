@@ -174,7 +174,7 @@ export default{
         }],
         sort: sort
       }
-      this.APIRequest('fund_transfer_charges/retrieve', parameter).then(response => {
+      this.APIRequest('fund_transfer_charges/retrieve-all', parameter).then(response => {
         $('#loading').css({display: 'none'})
         if(response.data.length > 0){
           this.data = response.data

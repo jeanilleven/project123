@@ -16,17 +16,9 @@
             <label>Scope Code</label>
             <input type="text" class="form-control form-control-custom" v-model="localCode" placeholder="Type code">
           </div>
-          <div v-if="local === null">
-            <label>Search location</label>
-            <google-autocomplete-location
-              :property="googleProperty"
-              ref="location"
-              @onFinish="manageLocation($event)"
-            ></google-autocomplete-location>
-          </div>
-          <div v-if="local !== null">
+          <div>
             <label>
-              {{local.route + ', ' + locality + ', ' + local.country}}
+              {{address}}
             </label>
           </div>
         </div>
@@ -69,36 +61,19 @@ import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
 export default{
   mounted(){
-    this.manageLocation(location)
   },
   data(){
     return {
       user: AUTH.user,
       code: null,
       local: null,
-      location: null,
-      locality: null,
+      address: null,
       localCode: null,
-      scopeLocation: null,
-      googleProperty: {
-        style: {
-          height: '45px !important'
-        },
-        GOOGLE_API_KEY: CONFIG.GOOGLE_API_KEY,
-        results: {
-          style: {
-          }
-        },
-        placeholder: 'Type Location'
-      },
-      locationFlag: 'autocomplete',
-      selectedLocation: null,
       locationMessage: null
     }
   },
   props: ['item'],
   components: {
-    'google-autocomplete-location': require('src/components/increment/generic/location/GooglePlacesAutoComplete.vue')
   },
   methods: {
     redirect(parameter){
@@ -106,6 +81,7 @@ export default{
     },
     showAddressModal(item){
       this.selectedItem = item
+      this.address = item.account.information.address
       this.retrieveLocation(item)
       $('#addAddressAccount').modal('show')
     },
@@ -117,11 +93,10 @@ export default{
           clause: '='
         }]
       }
-      this.APIRequest('location_scopes/retrieve').then(response => {
+      this.APIRequest('location_scopes/retrieve', parameter).then(response => {
         if(response.data.length > 0){
           this.local = response.data[0]
           this.localCode = response.data[0].code
-          this.locality = this.local.city + ', ' + this.local.region
         }else{
           this.local = null
           this.localCode = null
@@ -133,10 +108,6 @@ export default{
       this.local = null
       $('#addAddressAccount').modal('hide')
     },
-    manageLocation(location){
-      console.log('lcoation', location)
-      this.location = location
-    },
     submit(){
       let parameter = null
       let route = null
@@ -145,9 +116,9 @@ export default{
       }
       if(this.local === null){
         parameter = {
-          ...this.location,
           account_id: this.selectedItem.id,
-          code: this.localCode
+          code: this.localCode,
+          country: this.address
         }
         route = 'location_scopes/create'
       }else{
@@ -157,7 +128,6 @@ export default{
         }
         route = 'location_scopes/update'
       }
-      console.log('location', parameter)
       this.APIRequest(route, parameter).then(response => {
         if(response.data){
           this.locationMessage = 'Successfully updated!'

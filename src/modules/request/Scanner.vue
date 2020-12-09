@@ -18,8 +18,8 @@
         </div>
       </div>
     </div>
-     <button type="button" class="btn btn-primary btn-block" @click="redirect('/connection')">View connections/Invite Email</button>
-    <button type="button" class="btn btn-primary" style="width: 49%;" data-toggle="modal" data-target="#scanner" @click="toggleScanner()">Scan Qr <i class="fas fa-expand"></i></button>
+     <button type="button" class="btn btn-secondary btn-block" @click="redirect('/connection')">View connections/Invite Email</button>
+    <button type="button" class="btn btn-secondary" style="width: 49%;" data-toggle="modal" data-target="#scanner" @click="toggleScanner()">Scan Qr <i class="fas fa-expand"></i></button>
 
 
     <!-- // For generating qr code -->
@@ -39,9 +39,9 @@
         </div>
       </div>
     </div>
-    <button type="button" class="btn btn-primary" style="width: 49%;" data-toggle="modal" data-target="#scan">Generate QR <i class="fas fa-expand"></i></button>
+    <button type="button" class="btn btn-secondary" style="width: 49%;" data-toggle="modal" data-target="#scan">Generate QR <i class="fas fa-expand"></i></button>
      <!-- For copying link -->
-    <button type="button" class="btn btn-primary btn-block" @click="createLink()">Create Link <i class="fas fa-copy"></i></button>
+    <button type="button" class="btn btn-secondary btn-block" @click="createLink()">Create Link <i class="fas fa-copy"></i></button>
     <br>
     <input type="text" class="form-control search" v-model="link" id="search" placeholder="Search..." v-if="link !== null">
     <button type="button" class="btn btn-primary" @click="generateLink()" v-if="link !== null">Copy</button>

@@ -3,7 +3,7 @@
     <label class="header"><b>My Pending Requests</b></label>
     <label class="content" v-if="data !== null">{{auth.displayAmountWithCurrency(data, auth.user.ledger.currency)}}</label>
     <span style="margin-bottom: 5px;" v-if="user.type !== 'USER'">
-      <button class="btn btn-primary" @click="redirect('/requests')">View requests</button>
+      <button class="btn btn-secondary" @click="redirect('/requests')">View requests</button>
     </span>
   </div>
 </template>
