@@ -122,6 +122,7 @@ import CONFIG from 'src/config.js'
 import Scanner from 'modules/request/Scanner.vue'
 export default{
   mounted(){
+    // this.retrieve()
     this.retrieve({column: 'created_at', value: 'desc'}, {column: 'created_at', value: ''})
   },
   data(){
@@ -159,7 +160,6 @@ export default{
       setTimeout(() => {
         $('#loading').css({display: 'block'})
         this.APIRequest('ledgers/summary', parameter).then(response => {
-          console.log('response', response)
           if(response !== null){
             this.data = response
             AUTH.user.ledger.amount = response.ledger.ledger

@@ -84,6 +84,7 @@ import AUTH from '../../services/auth'
 import CONFIG from '../../config.js'
 export default{
   mounted(){
+    this.retrieve({column: 'created_at', value: 'desc'}, {column: 'created_at', value: ''})
   },
   data(){
     return {
@@ -101,6 +102,23 @@ export default{
     },
     showInvestments(item){
       console.log(item)
+    },
+    retrieve(sort, filter){
+      let parameter = {
+        account_id: this.user.userID,
+        account_code: this.user.subAccount.account_id,
+        offset: 0,
+        limit: 5,
+        sort: sort,
+        value: filter.value + '%',
+        column: filter.column
+      }
+      console.log('parameter', parameter)
+      $('#loading').css({display: 'block'})
+      this.APIRequest('ledgers/history', parameter).then(response => {
+        console.log('response', response)
+
+      })
     }
   }
 }
