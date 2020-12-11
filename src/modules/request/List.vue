@@ -105,7 +105,7 @@
           <b-progress-bar :value="parseFloat(item.initial_amount) - item.amount" :variant="'bg-primary'" :label="parseInt((1 - (item.amount / parseFloat(item.initial_amount))) * 100) + '%'"></b-progress-bar>
         </b-progress>
 
-        <span class="peer-requests" v-if="parseInt(item.account_id) === user.userID && item.peers.peers !== null">
+        <span class="peer-requests" v-if="parseInt(item.account_id) === user.userID && item.peers !== null">
           <div class="peer-header text-primary">
             <b>Peer request list</b>
           </div>
@@ -449,6 +449,7 @@ export default{
       this.retrieve({created_at: 'desc'}, {column: 'account_id', value: this.user.userID})
     },
     retrieve(sort, filter){
+      console.log(this.$route.params)
       // if(this.user.type === 'USER'){
       //   filter.column = 'account_id'
       //   filter.value = this.user.userID
@@ -476,7 +477,8 @@ export default{
         value: filter.value + '%',
         column: filter.column,
         type: this.user.type,
-        account_id: this.user.userID
+        account_id: this.user.userID,
+        routeParams: this.$route.params.code !== undefined ? this.$route.params.code : null
       }
       setTimeout(() => {
         $('#loading').css({display: 'block'})
