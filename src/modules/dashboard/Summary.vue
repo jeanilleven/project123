@@ -64,6 +64,7 @@
 
 .summary-container-item .amount{
 }
+
 .view-more{
   height: 50px;
   line-height: 50px;
@@ -89,7 +90,8 @@ export default{
   data(){
     return {
       user: AUTH.user,
-      auth: AUTH
+      auth: AUTH,
+      data: []
     }
   },
   props: ['data'],
@@ -115,9 +117,9 @@ export default{
       }
       console.log('parameter', parameter)
       $('#loading').css({display: 'block'})
-      this.APIRequest('ledgers/history', parameter).then(response => {
+      this.APIRequest('ledger/summary_ledger', parameter).then(response => {
         console.log('response', response)
-
+        this.data = response.data
       })
     }
   }
