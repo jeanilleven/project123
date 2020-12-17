@@ -174,10 +174,6 @@ export default{
         }],
         sort: sort
       }
-<<<<<<< HEAD
-=======
-      console.log(sort)
->>>>>>> 626cc68155043740ce7734c013f62f57d13c126e
       this.APIRequest('fund_transfer_charges/retrieve-all', parameter).then(response => {
         $('#loading').css({display: 'none'})
         console.log(response.data)

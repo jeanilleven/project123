@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="summary-container-item" v-for="item, index in data" v-if="data !== null">
+  <div v-if="data !== null">
+    <div class="summary-container-item" v-for="(item, index) in data" :key="index">
       <span class="header">{{item.created_at_human}}</span>
       <span class="body">
         <label>
@@ -117,7 +117,7 @@ export default{
       }
       console.log('parameter', parameter)
       $('#loading').css({display: 'block'})
-      this.APIRequest('ledger/summary_ledger', parameter).then(response => {
+      this.APIRequest('ledgers/summary_ledger', parameter).then(response => {
         console.log('response', response)
         this.data = response.data
       })
