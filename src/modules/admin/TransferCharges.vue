@@ -37,6 +37,15 @@
         </tr>
       </tbody>
     </table>
+
+      <Confirmation
+      :title="'Removal Confirmation'"
+      :message="'Are you sure you want to continue this action?'"
+      ref="confirmation"
+      @onConfirm="removeItem"
+      />
+
+
     <empty v-if="data === null" :title="'No charges specified!'" :action="'Click add to create.'"></empty>
     <browse-images-modal></browse-images-modal>
     <increment-modal :property="transferModal"></increment-modal>
@@ -92,6 +101,9 @@
 import ROUTER from 'src/router'
 import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
+import CURRENCY from 'src/services/currency.js'
+// import Pager from 'src/components/increment/generic/pager/Pager.vue'
+import Confirmation from 'src/components/increment/generic/modal/Confirmation.vue'
 import transferCharges from 'src/modules/admin/CreateTransferCharges.js'
 export default{
   mounted(){
@@ -159,7 +171,9 @@ export default{
     'empty': require('components/increment/generic/empty/Empty.vue'),
     'browse-images-modal': require('components/increment/generic/image/BrowseModal.vue'),
     'basic-filter': require('components/increment/generic/filter/Basic.vue'),
-    'increment-modal': require('components/increment/generic/modal/Modal.vue')
+    'increment-modal': require('components/increment/generic/modal/Modal.vue'),
+    // Pager,
+    Confirmation
   },
   methods: {
     redirect(params){
@@ -175,7 +189,7 @@ export default{
         sort: sort
       }
       console.log(sort)
-      this.APIRequest('fund_transfer_charges/retrieve-all', parameter).then(response => {
+      this.APIRequest('fund_transfer_charges/retrieve_all', parameter).then(response => {
         $('#loading').css({display: 'none'})
         console.log(response.data)
         if(response.data.length > 0){
@@ -192,7 +206,7 @@ export default{
         }
       }
       $('#loading').css({display: 'block'})
-      this.APIRequest('fund_transfer_charges/retrieve', parameter).then(response => {
+      this.APIRequest('fund_transfer_charges/retrieve_all', parameter).then(response => {
         $('#loading').css({display: 'none'})
         if(response.data.length > 0){
           this.data = response.data
@@ -231,13 +245,19 @@ export default{
           modalData = {...modalData, ...parameter} // updated data without
           let object = Object.keys(item)
           modalData.inputs.map(data => {
-            if(data.variable === 'type'){
+            if(data.variable === 'effective_date'){
+              data.value = item.effective_date
+            }
+            if(data.variable === 'scope'){
+              data.value = item.scope
+            }
+            if(data.variable === 'destination'){
               data.value = item.type
             }
-            if(data.variable === 'min_amount'){
+            if(data.variable === 'minimum_amount'){
               data.value = item.min_amount
             }
-            if(data.variable === 'max_amount'){
+            if(data.variable === 'maximum_amount'){
               data.value = item.max_amount
             }
             if(data.variable === 'charge'){
@@ -251,6 +271,18 @@ export default{
           break
       }
       $('#createTransferChargesModal').modal('show')
+    },
+    setRemoveItem(item){
+      this.$refs.confirmation.show(item.id)
+    },
+    removeItem(event){
+      let parameter = {
+        id: event.id
+      }
+      this.APIRequest('fund_transfer_charges/delete', parameter).then(response => {
+        $('#loading').css({display: 'none'})
+        this.retrieve()
+      })
     },
     manageGrid(event){
       switch(event){

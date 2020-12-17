@@ -478,7 +478,8 @@ export default{
         column: filter.column,
         type: this.user.type,
         account_id: this.user.userID,
-        routeParams: this.$route.params.code !== undefined ? this.$route.params.code : null
+        routeParams: this.$route.params.code !== undefined ? this.$route.params.code : null,
+        account_parameter: this.itemID
       }
       setTimeout(() => {
         $('#loading').css({display: 'block'})

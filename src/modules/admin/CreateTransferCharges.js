@@ -1,78 +1,104 @@
-import AUTH from 'src/services/auth'
-import CONFIG from 'src/config.js'
-import COMMON from 'src/common.js'
-var currencies = []
-var options = []
-COMMON.payments.map(item => {
-  var object = {
-    label: item.title,
-    value: item.title
+import countries from 'src/countries.js'
+let currency = countries.list.map((item, index) => {
+  return {
+    label: item.currency,
+    value: item.currency
   }
-  options.push(object)
-})
-COMMON.currencies.map(item => {
-  var object = {
-    label: item.title,
-    value: item.value
-  }
-  currencies.push(object)
 })
 export default {
   id: 'createTransferChargesModal',
   size: 'modal-md',
-  title: 'Add Transfer Charges',
+  title: 'Add Fund Transfer Fee',
   background: null,
   inputs: [{
     row: 'full',
-    label: 'Currency',
-    variable: 'currency',
+    label: 'Effective Date',
+    variable: 'effective_date',
+    placeholder: 'Effective Date',
     value: null,
     required: true,
-    id: 'type',
-    type: 'select_specified',
-    options: currencies
+    id: 'effective_date',
+    type: 'PastDateLimit',
+    inputType: 'date',
+    validation: {
+      size: 1,
+      type: 'date'
+    }
   }, {
     row: 'full',
-    label: 'Payment type',
-    variable: 'type',
+    label: 'Scope',
+    variable: 'scope',
+    placeholder: 'Scope',
     value: null,
     required: true,
-    id: 'type',
+    id: 'scope',
+    type: 'input',
+    inputType: 'text',
+    validation: {
+      size: 1,
+      type: 'text'
+    }
+  }, {
+    row: 'full',
+    label: 'Destination',
+    variable: 'destination',
+    placeholder: 'Destination',
+    value: null,
+    required: true,
+    id: 'destination',
+    type: 'input',
+    inputType: 'text',
+    validation: {
+      size: 1,
+      type: 'text'
+    }
+  }, {
+    row: 'full',
+    label: 'Currency',
+    variable: 'currency',
+    placeholder: 'Currency',
+    value: 'PHP',
+    required: true,
+    id: 'currency',
     type: 'select_specified',
-    options: options
+    options: currency,
+    validation: {
+      size: 1,
+      type: 'text'
+    }
   }, {
     row: 'full',
     label: 'Minimum Amount',
-    variable: 'min_amount',
-    placeholder: 'Enter minimum amount',
+    variable: 'minimum_amount',
+    placeholder: 'Minimum Amount',
     value: null,
     required: true,
-    id: 'minAmount',
+    id: 'minimum_amount',
     type: 'input',
     inputType: 'number',
     validation: {
       size: 1,
-      type: 'number'
+      type: 'text'
     }
   }, {
     row: 'full',
     label: 'Maximum Amount',
-    variable: 'max_amount',
-    placeholder: 'Enter maximum amount',
+    variable: 'maximum_amount',
+    placeholder: 'Maximum Amount',
     value: null,
     required: true,
-    id: 'maxAmount',
+    id: 'maximum_amount',
     type: 'input',
     inputType: 'number',
     validation: {
       size: 1,
-      type: 'number'
+      type: 'text'
     }
   }, {
     row: 'full',
     label: 'Charge',
     variable: 'charge',
-    placeholder: 'Enter charge',
+    placeholder: 'Charge',
     value: null,
     required: true,
     id: 'charge',
@@ -80,7 +106,7 @@ export default {
     inputType: 'number',
     validation: {
       size: 1,
-      type: 'number'
+      type: 'text'
     }
   }],
   route: 'fund_transfer_charges/create',
@@ -88,9 +114,6 @@ export default {
     left: 'Cancel',
     right: 'Submit'
   },
-  sort: {
-    column: 'created_at',
-    value: 'desc'
-  },
+  sort: null,
   params: []
 }
