@@ -25,18 +25,18 @@
           </tr>
           <tr>
            <td><i class="fas fa-envelope"></i>
-              <span v-if="item.account.email !== null">{{item.account.email}}</span>
+              <span v-if="item.account.email !== null">{{item.account.email !== null ? item.account.email : 'No Email'}}</span>
             </td>
             <td><i class="far fa-calendar"></i>
-              <span v-if="item.account.information.birth_date !== null">{{item.account.information.birth_date}}</span>
+              <span>{{item.account.information.birth_date !== null ? item.account.information.birth_date : "No Birthdate"}}</span>
             </td>
           </tr>
           <tr>
             <td><i class="fas fa-user-circle"></i>
-              <span v-if="item.account.information.sex !== null">{{item.account.information.sex}}</span>
+              <span>{{item.account.information.sex !== null ? item.account.information.sex : "No Gender Set"}}</span>
             </td>
             <td><i class="fas fa-map-marker-alt"></i>
-              <span v-if="item.account.information.address !== null">{{item.account.information.address}}</span>
+              <span>{{item.account.information.address !== null ? item.account.information.address : "No Address"}}</span>
             </td>
             <!-- <td v-if="user.type !== 'ADMIN'"><i class="fa fa-check text-primary"></i>Verified</td>
             <td v-if="user.type === 'ADMIN'">{{item.account.information.cellular_number}}</td> -->
@@ -45,7 +45,7 @@
             <td>Address</td>
             <td>{{item.account.information.address}}</td>
           </tr> -->
-          <tr v-if="user.type === 'ADMIN'">
+          <tr v-if="user.type === 'ADMIN' && item.account.information.sex !== null">
             <td>Gender</td>
             <td style="text-transform:UPPERCASE">{{item.account.information.sex}}</td>
           </tr>

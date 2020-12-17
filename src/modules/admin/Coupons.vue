@@ -27,7 +27,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item, index) in data" :ke="index">
+        <tr v-for="(item, index) in data" :key="index">
           <td>{{item.country}}</td>
           <td>{{item.currency}}</td>
           <td>{{item.code}}</td>
@@ -104,6 +104,7 @@ export default{
   mounted(){
     $('#loading').css({display: 'block'})
     this._retrieve({type: 'asc'}, {column: 'created_at', value: ''})
+    // this.retrieve()
   },
   data(){
     return {
@@ -173,6 +174,7 @@ export default{
       ROUTER.push(params)
     },
     _retrieve(sort, filter){
+      console.log('here')
       let parameter = {
         condition: [{
           column: filter.column,
@@ -182,6 +184,7 @@ export default{
         sort: sort
       }
       this.APIRequest('coupons/retrieve', parameter).then(response => {
+        console.log('able')
         $('#loading').css({display: 'none'})
         if(response.data.length > 0){
           this.data = response.data
@@ -190,22 +193,22 @@ export default{
         }
       })
     },
-    retrieve(sort){
-      let parameter = {
-        sort: {
-          created_at: 'desc'
-        }
-      }
-      $('#loading').css({display: 'block'})
-      this.APIRequest('coupons/retrieve', parameter).then(response => {
-        $('#loading').css({display: 'none'})
-        if(response.data.length > 0){
-          this.data = response.data
-        }else{
-          this.data = null
-        }
-      })
-    },
+    // retrieve(sort){
+    //   let parameter = {
+    //     sort: {
+    //       created_at: 'desc'
+    //     }
+    //   }
+    //   $('#loading').css({display: 'block'})
+    //   this.APIRequest('coupons/retrieve', parameter).then(response => {
+    //     $('#loading').css({display: 'none'})
+    //     if(response.data.length > 0){
+    //       this.data = response.data
+    //     }else{
+    //       this.data = null
+    //     }
+    //   })
+    // },
     remove(id){
       let parameter = {
         id: id

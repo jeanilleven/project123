@@ -122,6 +122,7 @@ import CONFIG from 'src/config.js'
 import Scanner from 'modules/request/Scanner.vue'
 export default{
   mounted(){
+    // this.retrieve()
     this.retrieve({column: 'created_at', value: 'desc'}, {column: 'created_at', value: ''})
   },
   data(){
@@ -146,6 +147,7 @@ export default{
       ROUTER.push(parameter)
     },
     retrieve(sort, filter){
+      console.log(this.user)
       let parameter = {
         account_id: this.user.userID,
         offset: 0,
@@ -154,13 +156,14 @@ export default{
         value: filter.value + '%',
         column: filter.column
       }
-      $('#loading').css({display: 'block'})
+      console.log('parameter', parameter)
       setTimeout(() => {
+        $('#loading').css({display: 'block'})
         this.APIRequest('ledgers/summary', parameter).then(response => {
-          $('#loading').css({display: 'none'})
           if(response !== null){
             this.data = response
             AUTH.user.ledger.amount = response.ledger.ledger
+            $('#loading').css({display: 'none'})
           }else{
             this.data = null
             AUTH.user.ledger.amount = response.ledger.ledger
