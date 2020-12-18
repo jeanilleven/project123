@@ -1,14 +1,26 @@
-import countries from 'src/countries.js'
-let currency = countries.list.map((item, index) => {
-  return {
-    label: item.currency,
-    value: item.currency
+import AUTH from 'src/services/auth'
+import CONFIG from 'src/config.js'
+import COMMON from 'src/common.js'
+var currencies = []
+var options = []
+COMMON.payments.map(item => {
+  var object = {
+    label: item.title,
+    value: item.title
   }
+  options.push(object)
+})
+COMMON.currencies.map(item => {
+  var object = {
+    label: item.title,
+    value: item.value
+  }
+  currencies.push(object)
 })
 export default {
-  id: 'createTransferChargesModal',
+  id: 'createAddChargesModal',
   size: 'modal-md',
-  title: 'Add Fund Transfer Fee',
+  title: 'Add Transfer Fee Charges',
   background: null,
   inputs: [{
     row: 'full',
@@ -56,49 +68,44 @@ export default {
     row: 'full',
     label: 'Currency',
     variable: 'currency',
-    placeholder: 'Currency',
-    value: 'PHP',
+    value: null,
     required: true,
-    id: 'currency',
+    id: 'type',
     type: 'select_specified',
-    options: currency,
-    validation: {
-      size: 1,
-      type: 'text'
-    }
+    options: currencies
   }, {
     row: 'full',
     label: 'Minimum Amount',
-    variable: 'minimum_amount',
-    placeholder: 'Minimum Amount',
+    variable: 'min_amount',
+    placeholder: 'Enter minimum amount',
     value: null,
     required: true,
-    id: 'minimum_amount',
+    id: 'minAmount',
     type: 'input',
     inputType: 'number',
     validation: {
       size: 1,
-      type: 'text'
+      type: 'number'
     }
   }, {
     row: 'full',
     label: 'Maximum Amount',
-    variable: 'maximum_amount',
-    placeholder: 'Maximum Amount',
+    variable: 'max_amount',
+    placeholder: 'Enter maximum amount',
     value: null,
     required: true,
-    id: 'maximum_amount',
+    id: 'maxAmount',
     type: 'input',
     inputType: 'number',
     validation: {
       size: 1,
-      type: 'text'
+      type: 'number'
     }
   }, {
     row: 'full',
     label: 'Charge',
     variable: 'charge',
-    placeholder: 'Charge',
+    placeholder: 'Enter charge',
     value: null,
     required: true,
     id: 'charge',
@@ -106,7 +113,7 @@ export default {
     inputType: 'number',
     validation: {
       size: 1,
-      type: 'text'
+      type: 'number'
     }
   }],
   route: 'fund_transfer_charges/create',
@@ -114,6 +121,9 @@ export default {
     left: 'Cancel',
     right: 'Submit'
   },
-  sort: null,
+  sort: {
+    column: 'created_at',
+    value: 'desc'
+  },
   params: []
 }

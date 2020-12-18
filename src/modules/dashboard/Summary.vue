@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <div class="summary-container-item" v-for="item, index in data" v-if="data !== null">
+  <div v-if="data !== null">
+    <div class="summary-container-item" v-for="(item, index) in data" :key="index">
       <span class="header">{{item.created_at_human}}</span>
       <span class="body">
         <label>
@@ -64,6 +64,7 @@
 
 .summary-container-item .amount{
 }
+
 .view-more{
   height: 50px;
   line-height: 50px;
@@ -84,11 +85,13 @@ import AUTH from '../../services/auth'
 import CONFIG from '../../config.js'
 export default{
   mounted(){
+    this.retrieve({column: 'created_at', value: 'desc'}, {column: 'created_at', value: ''})
   },
   data(){
     return {
       user: AUTH.user,
-      auth: AUTH
+      auth: AUTH,
+      data: []
     }
   },
   props: ['data'],
@@ -101,6 +104,23 @@ export default{
     },
     showInvestments(item){
       console.log(item)
+    },
+    retrieve(sort, filter){
+      let parameter = {
+        account_id: this.user.userID,
+        account_code: this.user.subAccount.account_id,
+        offset: 0,
+        limit: 5,
+        sort: sort,
+        value: filter.value + '%',
+        column: filter.column
+      }
+      console.log('parameter', parameter)
+      $('#loading').css({display: 'block'})
+      this.APIRequest('ledgers/summary_ledger', parameter).then(response => {
+        console.log('response', response)
+        this.data = response.data
+      })
     }
   }
 }
