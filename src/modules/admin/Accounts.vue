@@ -24,7 +24,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item, index) in data" :ke="index">
+        <tr v-for="(item, index) in data" :key="index">
           <td>{{item.created_at}}</td>
           <td>
             <label class="action-link text-primary" @click="showProfileModal(item)">{{item.username}}</label>
@@ -48,7 +48,7 @@
           </td>
           <td>
             <label v-if="item.partner_locations !== null">
-              <button class="btn btn-secondary" style="margin-right: 5px;" v-for="(itemLocation, indexLocation) in item.partner_locations.result">
+              <button class="btn btn-secondary" style="margin-right: 5px;" v-for="(itemLocation, indexLocation) in item.partner_locations.result" :key="indexLocation">
                 {{itemLocation.locality}}
                 <i class="fa fa-pencil text-primary" style="padding-left: 5px; padding-right: 5px;"  @click="showIncrementModal('update', itemLocation)"></i>
                 <i class="fa fa-trash text-danger" style="padding-left: 5px; padding-right: 5px;" @click="deleteLocation(itemLocation.id)"></i>

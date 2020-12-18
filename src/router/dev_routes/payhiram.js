@@ -310,6 +310,30 @@ export default{
     meta: {
       tokenRequired: true
     }
+  },
+  {
+    path: '/tickets',
+    name: 'issues',
+    component: resolve => require(['modules/admin/Resolution/Ticket.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  },
+  {
+    path: '/tickets/details/:id',
+    name: 'issuesDetail',
+    component: resolve => require(['modules/admin/Resolution/TicketDetails.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  },
+  {
+    path: '/tickets/create',
+    name: 'ticketCreate',
+    component: resolve => require(['modules/admin/Resolution/CreateTicket.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
   }
   ]
 }

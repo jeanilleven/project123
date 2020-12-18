@@ -35,7 +35,7 @@
           </label>
           <label class="text-danger" v-if="item.coupon !== null && parseInt(item.account_id) === user.userID">
             <i class="fas fa-circle" style="font-size: 8px; color: #555; padding-right: 5px;"></i>
-            <b>{{item.coupon.type === 'percentage' ? item.coupon.amount + '%' : auth.displayAmountWithCurrency(item.coupon.amount, item.coupon.currency)}} Discount</b>
+            <!-- <b>{{item.coupon.type === 'percentage' ? item.coupon.amount + '%' : auth.displayAmountWithCurrency(item.coupon.amount, item.coupon.currency)}} Discount</b> -->
           </label>
           <label class="text-primary" v-if="item.max_charge !== null">
             <i class="fas fa-circle" style="font-size: 8px; color: #555; padding-right: 5px;"></i>
@@ -60,7 +60,7 @@
             <b class="amount">{{auth.displayAmountWithCurrency(item.amount, item.currency)}}</b>
           </p>
         <p v-if="item.location !== null" class="request">
-          {{item.location.route + ', ' + item.location.locality + ', ' + item.location.country}}
+          <!-- {{item.location.route + ', ' + item.location.locality + ', ' + item.location.country}} -->
         </p>
         <p class="request">
           Needed on: {{item.needed_on_human}}
@@ -105,7 +105,7 @@
           <b-progress-bar :value="parseFloat(item.initial_amount) - item.amount" :variant="'bg-primary'" :label="parseInt((1 - (item.amount / parseFloat(item.initial_amount))) * 100) + '%'"></b-progress-bar>
         </b-progress>
 
-        <span class="peer-requests" v-if="parseInt(item.account_id) === user.userID && item.peers.peers !== null">
+        <!-- <span class="peer-requests" v-if="parseInt(item.account_id) === user.userID && item.peers.peers !== null">
           <div class="peer-header text-primary">
             <b>Peer request list</b>
           </div>
@@ -125,7 +125,7 @@
               <button class="btn pull-right" v-if="item.peers.status === true && item.account_id === user.userID" style="margin-right: 10px; height: 35px !important;">Approved</button>
             </span>
           </div>
-        </span>
+        </span> -->
       
       </div>
       <empty v-if="data === null" :title="'We just launched and we\'re still growing.'" :action="' Please check back soon, we will have tons of request for you.'" :icon="'far fa-smile'" :iconColor="'text-primary'"></empty>
@@ -489,6 +489,7 @@ export default{
           $('#loading').css({display: 'none'})
           if(response.data !== null){
             this.data = response.data
+            console.log(this.data)
             this.size = parseInt(response.size)
             this.locations = response.locations
           }else{

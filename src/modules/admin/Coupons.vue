@@ -27,7 +27,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item, index) in data" :ke="index">
+        <tr v-for="(item, index) in data" :key="index">
           <td>{{item.country}}</td>
           <td>{{item.currency}}</td>
           <td>{{item.code}}</td>
@@ -44,6 +44,12 @@
         </tr>
       </tbody>
     </table>
+    <Pager
+      :pages="numPages"
+      :active="activePage"
+      :limit="limit"
+      v-if="data !== null"
+    />
     <empty v-if="data === null" :title="'No coupons added!'" :action="'Click add to create.'"></empty>
     <browse-images-modal></browse-images-modal>
     <increment-modal :property="modalProperty"></increment-modal>
@@ -100,10 +106,11 @@ import ROUTER from 'src/router'
 import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
 import ModalProperty from 'src/modules/admin/CreateCoupons.js'
+import Pager from 'src/components/increment/generic/pager/Pager.vue'
 export default{
   mounted(){
     $('#loading').css({display: 'block'})
-    this._retrieve({type: 'asc'}, {column: 'created_at', value: ''})
+    this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
   },
   data(){
     return {
@@ -135,74 +142,92 @@ export default{
           payload: 'type',
           payload_value: 'desc'
         }, {
-          title: 'Charge ascending',
-          payload: 'charge',
+          title: 'Amount ascending',
+          payload: 'amount',
           payload_value: 'asc'
         }, {
-          title: 'Charge descending',
-          payload: 'charge',
+          title: 'Amount descending',
+          payload: 'amount',
           payload_value: 'desc'
         }, {
-          title: 'Minimum amount ascending',
-          payload: 'min_amount',
+          title: 'Country ascending',
+          payload: 'country',
           payload_value: 'asc'
         }, {
-          title: 'Minimum amount descending',
-          payload: 'min_amount',
+          title: 'Country descending',
+          payload: 'country',
           payload_value: 'desc'
         }, {
-          title: 'Maximum amount ascending',
-          payload: 'max_amount',
+          title: 'Locality ascending',
+          payload: 'locality',
           payload_value: 'asc'
         }, {
-          title: 'Maximum amount descending',
-          payload: 'max_amount',
+          title: 'Locality descending',
+          payload: 'locality',
+          payload_value: 'desc'
+        }, {
+          title: 'Start ascending',
+          payload: 'start',
+          payload_value: 'asc'
+        }, {
+          title: 'Start descending',
+          payload: 'start',
+          payload_value: 'desc'
+        }, {
+          title: 'End ascending',
+          payload: 'end',
+          payload_value: 'asc'
+        }, {
+          title: 'End descending',
+          payload: 'end',
           payload_value: 'desc'
         }]
-      }]
+      }],
+      currentFilter: null,
+      currentSort: null,
+      activePage: 1,
+      numPages: null,
+      limit: 5
     }
   },
   components: {
     'empty': require('components/increment/generic/empty/Empty.vue'),
     'browse-images-modal': require('components/increment/generic/image/BrowseModal.vue'),
     'basic-filter': require('components/increment/generic/filter/Basic.vue'),
-    'increment-modal': require('components/increment/generic/modal/Modal.vue')
+    'increment-modal': require('components/increment/generic/modal/Modal.vue'),
+    Pager
   },
   methods: {
     redirect(params){
       ROUTER.push(params)
     },
-    _retrieve(sort, filter){
+    retrieve(sort, filter){
+      if(sort !== null){
+        this.currentSort = sort
+      }
+      if(filter !== null){
+        this.currentFilter = filter
+      }
       let parameter = {
         condition: [{
-          column: filter.column,
+          column: this.currentFilter.column,
           clause: 'like',
-          value: filter.value + '%'
+          value: '%' + this.currentFilter.value + '%'
         }],
-        sort: sort
-      }
-      this.APIRequest('coupons/retrieve', parameter).then(response => {
-        $('#loading').css({display: 'none'})
-        if(response.data.length > 0){
-          this.data = response.data
-        }else{
-          this.data = null
-        }
-      })
-    },
-    retrieve(sort){
-      let parameter = {
-        sort: {
-          created_at: 'desc'
-        }
+        sort: this.currentSort,
+        limit: this.limit,
+        offset: (this.activePage > 0) ? ((this.activePage - 1) * this.limit) : this.activePage
       }
       $('#loading').css({display: 'block'})
       this.APIRequest('coupons/retrieve', parameter).then(response => {
         $('#loading').css({display: 'none'})
+        console.log(response)
         if(response.data.length > 0){
           this.data = response.data
+          this.numPages = parseInt(response.size / this.limit) + (response.size % this.limit) ? 1 : 0
         }else{
           this.data = null
+          this.numPages = null
         }
       })
     },
