@@ -119,7 +119,6 @@ export default{
       $('#loading').css({display: 'block'})
       this.APIRequest('ledger/summary_ledger', parameter).then(response => {
         this.datas = response.data
-        console.log('response', response)
         $('#loading').css({display: 'none'})
       })
     }
