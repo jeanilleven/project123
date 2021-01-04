@@ -1,6 +1,6 @@
 <template>
-  <div v-if="data !== null">
-    <div class="summary-container-item" v-for="(item, index) in data" :key="index">
+  <div v-if="datas !== null">
+    <div class="summary-container-item" v-for="(item, index) in datas" :key="index">
       <span class="header">{{item.created_at_human}}</span>
       <span class="body">
         <label>
@@ -15,14 +15,14 @@
         <label style="padding: 10px 10px 10px 0px;" class="text-primary action-link">
           <!--  @click="redirect((item.payload === 'request' ? '/requests/' : '/peer_charge/') + item.payload_value)" -->
 
-          {{item.payload_value}}
+          {{item.payment_payload}}
         </label>
       </span>
     </div>
-    <div class="icnre-row text-center" v-if="data !== null">
+    <div class="icnre-row text-center" v-if="datas !== null">
       <span class="view-more" @click="redirect('/ledgers')">View more</span>
     </div>
-    <empty v-if="data === null" :title="'Looks like your ledger is empty!'" :action="'Deposit now or start requesting money.'"></empty>
+    <empty v-if="datas === null" :title="'Looks like your ledger is empty!'" :action="'Deposit now or start requesting money.'"></empty>
   </div>
 </template>
 <style lang="scss" scoped>
@@ -91,7 +91,7 @@ export default{
     return {
       user: AUTH.user,
       auth: AUTH,
-      data: []
+      datas: []
     }
   },
   props: ['data'],
@@ -117,9 +117,9 @@ export default{
       }
       console.log('parameter', parameter)
       $('#loading').css({display: 'block'})
-      this.APIRequest('ledgers/summary_ledger', parameter).then(response => {
-        console.log('response', response)
-        this.data = response.data
+      this.APIRequest('ledger/summary_ledger', parameter).then(response => {
+        this.datas = response.data
+        $('#loading').css({display: 'none'})
       })
     }
   }
