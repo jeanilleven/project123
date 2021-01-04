@@ -1,7 +1,7 @@
 <template>
   <div v-if="datas !== null">
     <div class="summary-container-item" v-for="(item, index) in datas" :key="index">
-      <span class="header" style="color: black;">{{item.created_at_human}}</span>
+      <span class="header">{{item.created_at_human}}</span>
       <span class="body">
         <label>
           {{item.description}}
