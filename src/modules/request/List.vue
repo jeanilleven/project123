@@ -480,7 +480,8 @@ export default{
         value: filter.value + '%',
         column: filter.column,
         type: this.user.type,
-        account_id: this.user.userID
+        account_id: this.user.userID,
+        account_paramater: true
       }
       setTimeout(() => {
         $('#loading').css({display: 'block'})
@@ -489,7 +490,6 @@ export default{
           $('#loading').css({display: 'none'})
           if(response.data !== null){
             this.data = response.data
-            console.log(this.data)
             this.size = parseInt(response.size)
             this.locations = response.locations
           }else{

@@ -9,7 +9,7 @@
         <button class="btn btn-primary" style="margin-top: 3%; margin-bottom: 3%" v-if="item.status !== 'GRANTED'" @click="verify(item)">Verify Account</button>
       </center>
     </div>
-    <basic :item="item" v-if="item.account !== null"></basic>
+    <basic :item="item"></basic>
     <educations :data="item.educations" v-if="item.educations !== null"></educations>
     <works :data="item.works" v-if="item.works !== null"></works>
     <ids :data="item.cards" v-if="item.cards !== null"></ids>
@@ -65,9 +65,7 @@ export default{
   data(){
     return {
       user: AUTH.user,
-      data: null,
-      sample: [],
-      datum: null
+      data: null
     }
   },
   props: ['item'],

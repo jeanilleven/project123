@@ -22,7 +22,7 @@
         </label>
         <label style="padding: 10px 10px 10px 0px;" class="text-primary action-link">
           <!--  @click="redirect((item.payload === 'request' ? '/requests/' : '/peer_charge/') + item.payload_value)" -->
-          {{item.payload_value}}
+          {{item.payment_payload_value}}
         </label>
       </span>
     </div>
