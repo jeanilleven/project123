@@ -14,8 +14,8 @@
         </label>
         <label style="padding: 10px 10px 10px 0px;" class="text-primary action-link">
           <!--  @click="redirect((item.payload === 'request' ? '/requests/' : '/peer_charge/') + item.payload_value)" -->
-
-          {{item.payment_payload}}
+          
+          {{item.payment_payload_value}}
         </label>
       </span>
     </div>
@@ -115,7 +115,6 @@ export default{
         value: filter.value + '%',
         column: filter.column
       }
-      console.log('parameter', parameter)
       $('#loading').css({display: 'block'})
       this.APIRequest('ledger/summary_ledger', parameter).then(response => {
         this.datas = response.data

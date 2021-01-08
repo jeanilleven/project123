@@ -147,7 +147,6 @@ export default{
       ROUTER.push(parameter)
     },
     retrieve(sort, filter){
-      console.log(this.user)
       let parameter = {
         account_id: this.user.userID,
         offset: 0,
@@ -156,7 +155,6 @@ export default{
         value: filter.value + '%',
         column: filter.column
       }
-      console.log('parameter', parameter)
       setTimeout(() => {
         $('#loading').css({display: 'block'})
         this.APIRequest('ledgers/summary', parameter).then(response => {
