@@ -39,11 +39,18 @@
           <td>{{item.end}}</td>
           <td>
             <button class="btn btn-primary" @click="showModal('update', item)"><i class="fa fa-edit"></i></button>
-            <button class="btn btn-danger" @click="remove(item.id)"><i class="fa fa-trash"></i></button>
+            <button class="btn btn-danger" @click="removeMessage(item)"><i class="fa fa-trash"></i></button>
           </td>
         </tr>
       </tbody>
     </table>
+    <Confirmation
+    ref="confirm"
+    :title="'Confirmation'"
+    :message="'Are you sure you want to delete this coupon?'"
+    @onConfirm="remove($event)"
+    >
+    </Confirmation>
     <Pager
       :pages="numPages"
       :active="activePage"
@@ -107,6 +114,7 @@ import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
 import ModalProperty from 'src/modules/admin/CreateCoupons.js'
 import Pager from 'src/components/increment/generic/pager/Pager.vue'
+import Confirmation from 'src/components/increment/generic/modal/Confirmation.vue'
 export default{
   mounted(){
     $('#loading').css({display: 'block'})
@@ -195,7 +203,8 @@ export default{
     'browse-images-modal': require('components/increment/generic/image/BrowseModal.vue'),
     'basic-filter': require('components/increment/generic/filter/Basic.vue'),
     'increment-modal': require('components/increment/generic/modal/Modal.vue'),
-    Pager
+    Pager,
+    Confirmation
   },
   methods: {
     redirect(params){
@@ -231,13 +240,17 @@ export default{
         }
       })
     },
-    remove(id){
+    removeMessage(item){
+      this.$refs.confirm.show(item.id)
+    },
+    remove(event){
+      console.log('id here', event.id)
       let parameter = {
-        id: id
+        id: event.id
       }
       $('#loading').css({display: 'block'})
       this.APIRequest('coupons/delete', parameter).then(response => {
-        this._retrieve({type: 'asc'}, {column: 'created_at', value: ''})
+        this.retrieve({created_at: 'asc'}, {column: 'created_at', value: ''})
       })
     },
     showModal(action, item = null){
