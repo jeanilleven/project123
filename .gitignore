@@ -13,3 +13,4 @@ src/config.js
 api/.env
 dist/
 payhiram/
+static/firebase-messaging-sw.js
