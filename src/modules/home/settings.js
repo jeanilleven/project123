@@ -19,7 +19,7 @@ export default {
     buttonsFlag: true,
     appUrl: {
       android: 'https://play.google.com/store/apps/details?id=com.payhiram',
-      ios: null
+      ios: 'https://apps.apple.com/us/app/payhiram/id1532365205'
     }
   }, {
     position: 'second',
