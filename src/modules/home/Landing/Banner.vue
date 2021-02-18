@@ -12,7 +12,7 @@
         </span>
           <div class="row">
               <img width="200" class="mt-4 mr-2 app" :src="require('assets/img/playstoreblack.png')" @click="externalLink('https://play.google.com/store/apps/details?id=com.payhiram')"/>
-              <img width="200" class="mt-4 mr-2 app" :src="require('assets/img/appstoreblack.png')" @click="externalLink('appstore.test')"/>
+              <img width="200" class="mt-4 mr-2 app" :src="require('assets/img/appstoreblack.png')" @click="externalLink('https://apps.apple.com/us/app/payhiram/id1532365205')"/>
           </div>
           <!-- <span style="width: 100%; float: left;" >
             <button class="btn custom-btn bg-black" @click="externalLink('https://play.google.com/store/apps/details?id=com.payhiram')">
