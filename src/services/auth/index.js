@@ -191,6 +191,7 @@ export default {
       }, (response) => {
         this.setToken(null)
         this.tokenData.verifyingToken = false
+        this.tokenData.loading = false
         ROUTER.push({
           path: this.currentPath
         })
@@ -198,6 +199,7 @@ export default {
       return true
     }else{
       this.tokenData.verifyingToken = false
+      this.tokenData.loading = false
       this.setUser(null)
       return false
     }
