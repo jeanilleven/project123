@@ -55,7 +55,7 @@ Vue.mixin({
     APIFailRequestHandler(link, jqXHR, errorCallback){
       switch(jqXHR.status){
         case 400:
-          $('#connectionError').modal('show')
+          // $('#connectionError').modal('show')
           AUTH.deaunthenticate()
           break
         case 401: // Unauthorized
@@ -71,7 +71,7 @@ Vue.mixin({
           if(errorCallback){
             errorCallback(jqXHR.responseJSON, jqXHR.status * 1)
           }
-          $('#connectionError').modal('show')
+          // $('#connectionError').modal('show')
       }
     }
   }
