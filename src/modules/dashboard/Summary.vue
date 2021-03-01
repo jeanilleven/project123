@@ -108,15 +108,12 @@ export default{
     retrieve(sort, filter){
       let parameter = {
         account_id: this.user.userID,
-        account_code: this.user.subAccount.account_id,
+        account_code: this.user.code,
         offset: 0,
-        limit: 5,
-        sort: sort,
-        value: filter.value + '%',
-        column: filter.column
+        limit: 5
       }
       $('#loading').css({display: 'block'})
-      this.APIRequest('ledger/summary_ledger', parameter).then(response => {
+      this.APIRequest('ledger/history', parameter).then(response => {
         this.datas = response.data
         $('#loading').css({display: 'none'})
       })
