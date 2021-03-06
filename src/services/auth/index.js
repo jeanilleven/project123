@@ -65,6 +65,7 @@ export default {
   currentPath: false,
   attachmentValue: null,
   setUser(userID, username, email, type, status, profile, notifSetting, subAccount, code){
+    let vue = new Vue()
     if(userID === null){
       username = null
       email = null
@@ -84,11 +85,14 @@ export default {
     this.user.notifSetting = notifSetting
     this.user.subAccount = subAccount
     this.user.code = code
+    $('#loading').css({display: 'none'})
     localStorage.setItem('account_id', this.user.userID)
+    // this.redirect('/requests')
     setTimeout(() => {
+      this.tokenData.verifyingToken = false
       this.tokenData.loading = false
-      this.proceedToLogin()
-    }, 1000)
+      this.updateData()
+    }, 100)
   },
   setToken(token){
     this.tokenData.token = token
@@ -127,11 +131,12 @@ export default {
             if(response.data.length > 0){
               this.otpDataHolder.userInfo = userInfo
               this.otpDataHolder.data = response.data
-              this.checkOtp(response.data[0].notification_settings)
+              // this.proceedToLogin()
+              // this.checkOtp(response.data[0].notification_settings)
             }
           })
-          this.retrieveNotifications(userInfo.id)
-          this.retrieveMessages(userInfo.id, userInfo.account_type)
+          // this.retrieveNotifications(userInfo.id)
+          // this.retrieveMessages(userInfo.id, userInfo.account_type)
           if(callback){
             callback(userInfo)
           }
@@ -167,23 +172,26 @@ export default {
           let profile = response.data[0].account_profile
           let notifSetting = response.data[0].notification_settings
           let subAccount = response.data[0].sub_account
-          this.setUser(userInfo.id, userInfo.username, userInfo.email, userInfo.account_type, userInfo.status, profile, notifSetting, subAccount, userInfo.code)
-        }).done(response => {
           this.tokenData.verifyingToken = false
           this.tokenData.loading = false
+          this.setUser(userInfo.id, userInfo.username, userInfo.email, userInfo.account_type, userInfo.status, profile, notifSetting, subAccount, userInfo.code)
+        }).done(response => {
           let location = window.location.href
+          this.tokenData.verifyingToken = false
+          this.tokenData.loading = false
           if(this.currentPath){
             // ROUTER.push(this.currentPath)
           }else{
             window.location.href = location
           }
         })
-        this.retrieveNotifications(userInfo.id)
-        this.retrieveMessages(userInfo.id, userInfo.account_type)
-        this.getGoogleCode()
+        // this.retrieveNotifications(userInfo.id)
+        // this.retrieveMessages(userInfo.id, userInfo.account_type)
+        // this.getGoogleCode()
       }, (response) => {
         this.setToken(null)
         this.tokenData.verifyingToken = false
+        this.tokenData.loading = false
         ROUTER.push({
           path: this.currentPath
         })
@@ -191,6 +199,7 @@ export default {
       return true
     }else{
       this.tokenData.verifyingToken = false
+      this.tokenData.loading = false
       this.setUser(null)
       return false
     }
@@ -318,21 +327,23 @@ export default {
           show: true
         })
       }else{
-        this.proceedToLogin()
+        this.updateData()
       }
     }else{
-      this.proceedToLogin()
+      this.updateData()
     }
   },
-  proceedToLogin(){
+  updateData(){
     this.setToken(this.tokenData.token)
     let userInfo = this.otpDataHolder.userInfo
     let data = this.otpDataHolder.data
-    let profile = data[0].account_profile
-    let notifSetting = data[0].notification_settings
-    let subAccount = data[0].sub_account
-    this.setUser(userInfo.id, userInfo.username, userInfo.email, userInfo.account_type, userInfo.status, profile, notifSetting, subAccount)
     ROUTER.push('/requests')
+    if(data && data.length > 0){
+      let profile = data[0].account_profile
+      let notifSetting = data[0].notification_settings
+      let subAccount = data[0].sub_account
+      this.setUser(userInfo.id, userInfo.username, userInfo.email, userInfo.account_type, userInfo.status, profile, notifSetting, subAccount, userInfo.code)
+    }
   },
   setGoogleCode(code, scope){
     localStorage.setItem('google_code', code)

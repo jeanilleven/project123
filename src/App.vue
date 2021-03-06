@@ -6,7 +6,7 @@
        <system-sidebar></system-sidebar>
        <!-- <support-messenger></support-messenger> -->
        <system-footer></system-footer>
-       <tutorial></tutorial>
+       <!-- <tutorial></tutorial> -->
        <guide></guide>
       </div>
       <div v-else-if="tokenData.loading === true">
@@ -221,7 +221,7 @@ export default {
     'privacy-policy': () => import('modules/docs/PrivacyPolicy.vue'),
     'terms-and-conditions': () => import('modules/docs/TermsAndConditions.vue'),
     'support-messenger': () => import('components/increment/support/Support.vue'),
-    'tutorial': () => import('components/increment/generic/tutorial/Tutorial.vue'),
+    // 'tutorial': () => import('components/increment/generic/tutorial/Tutorial.vue'),
     'error-modal': () => import('components/increment/generic/modal/Error.vue'),
     'lazy-loading': () => import('components/increment/generic/lazy/loading.vue')
   }

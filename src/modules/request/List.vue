@@ -352,7 +352,7 @@ export default{
       percentage: null,
       showInvest: 0,
       size: 0,
-      limit: 10,
+      limit: 5,
       pulling: null,
       locations: null,
       size2: null,
@@ -401,7 +401,8 @@ export default{
       }],
       listStyle: null,
       sort: null,
-      filter: null
+      filter: null,
+      userToken: null
     }
   },
   watch: {
@@ -500,11 +501,10 @@ export default{
           value: sort[key[0]],
           column: key[0]
         },
-        value: filter.value + '%',
+        value: '%' + filter.value + '%',
         column: filter.column,
         type: this.user.type,
-        account_id: this.user.userID,
-        account_paramater: true
+        account_id: this.user.userID
       }
       setTimeout(() => {
         $('#loading').css({display: 'block'})
