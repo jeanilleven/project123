@@ -87,6 +87,7 @@ export default {
     localStorage.setItem('account_id', this.user.userID)
     setTimeout(() => {
       this.tokenData.loading = false
+      this.proceedToLogin()
     }, 1000)
   },
   setToken(token){
@@ -121,6 +122,7 @@ export default {
           }]
         }
         if(userInfo.account_type === 'ADMIN'){
+          this.setUser(userInfo.id, userInfo.username, userInfo.email, userInfo.account_type, userInfo.status, null, null, null, userInfo.code)
           vue.APIRequest('accounts/retrieve', parameter).then(response => {
             if(response.data.length > 0){
               this.otpDataHolder.userInfo = userInfo
@@ -160,6 +162,7 @@ export default {
             'column': 'id'
           }]
         }
+        this.setUser(userInfo.id, userInfo.username, userInfo.email, userInfo.account_type, userInfo.status, null, null, null, userInfo.code)
         vue.APIRequest('accounts/retrieve', parameter).then(response => {
           let profile = response.data[0].account_profile
           let notifSetting = response.data[0].notification_settings
