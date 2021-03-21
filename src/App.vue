@@ -12,7 +12,7 @@
       <div v-else-if="tokenData.loading === true">
         <lazy-loading></lazy-loading>
       </div>
-      <div v-else-if="tokenData.token === null && parseInt(user.userID) <= 0 && tokenData.loading === false">
+      <div v-else-if="tokenData.token === null &&  parseInt(user.userID) <= 0 && tokenData.loading === false">
         <login-header></login-header>
         <system-content></system-content>
         <landing-footer></landing-footer>
