@@ -401,9 +401,10 @@
 }
 </style>
 <script>
-import AUTH from '../../services/auth'
-import CONFIG from '../../config.js'
-import ROUTER from '../../router'
+import AUTH from 'src/services/auth'
+import CONFIG from 'src/config.js'
+import ROUTER from 'src/router'
+import COMMON from 'src/common.js'
 export default {
   mounted(){
   },
@@ -411,20 +412,8 @@ export default {
     return{
       user: AUTH.user,
       config: CONFIG,
-      menu: [
-        {id: 1, users: 'ALL', parent_id: 0, description: 'Dashboard', icon: 'fa fa-tachometer', path: 'dashboard', flag: false, subMenu: null},
-        {id: 2, users: 'ALL', parent_id: 0, description: 'Requested', icon: 'fa fa-arrow-right', path: 'requests', flag: false, subMenu: null},
-        {id: 3, users: 'INVESTOR', parent_id: 0, description: 'Invested', icon: 'fa fa-arrow-left', path: 'investments', flag: false, subMenu: null},
-        {id: 4, users: 'ALL', parent_id: 0, description: 'Payments', icon: 'fa fa-money', path: 'payments', flag: false, subMenu: null},
-        {id: 5, users: 'ALL', parent_id: 0, description: 'Deposit', icon: 'fa fa-money', path: 'deposits', flag: false, subMenu: null},
-        {id: 5, users: 'ALL', parent_id: 0, description: 'Withdrawals', icon: 'fa fa-money', path: 'withdrawals', flag: false, subMenu: null}
-      ],
-      menuOff: [
-        {id: 1, users: 'ALL', parent_id: 0, description: 'Dashboard', icon: 'fa fa-tachometer', path: 'dashboard', flag: false, subMenu: null},
-        {id: 2, users: 'ALL', parent_id: 0, description: 'Requested', icon: 'fa fa-arrow-right', path: 'requests', flag: false, subMenu: null},
-        {id: 3, users: 'INVESTOR', parent_id: 0, description: 'Invested', icon: 'fa fa-arrow-left', path: 'investments', flag: false, subMenu: null},
-        {id: 4, users: 'ALL', parent_id: 0, description: 'Payments', icon: 'fa fa-money', path: 'payments', flag: false, subMenu: null}
-      ],
+      menu: COMMON.sidebarMenu,
+      menuOff: COMMON.sidebarMenu,
       toggleSidebar: 'fa fa-toggle-on',
       hide: '',
       flag: false,
