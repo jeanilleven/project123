@@ -6,13 +6,13 @@
        <system-sidebar></system-sidebar>
        <!-- <support-messenger></support-messenger> -->
        <system-footer></system-footer>
-       <tutorial></tutorial>
+       <!-- <tutorial></tutorial> -->
        <guide></guide>
       </div>
       <div v-else-if="tokenData.loading === true">
         <lazy-loading></lazy-loading>
       </div>
-      <div v-else-if="tokenData.token === null && parseInt(user.userID) <= 0 && tokenData.loading === false">
+      <div v-else-if="tokenData.token === null &&  parseInt(user.userID) <= 0 && tokenData.loading === false">
         <login-header></login-header>
         <system-content></system-content>
         <landing-footer></landing-footer>
@@ -211,8 +211,8 @@ export default {
   },
   components: {
     'login-header': () => import('modules/home/Landing/Header.vue'),
-    'system-header': () => import('components/increment/generic/frame/Header.vue'),
-    'system-sidebar': () => import('components/increment/generic/frame/Sidebar.vue'),
+    'system-header': () => import('modules/frame/Header.vue'),
+    'system-sidebar': () => import('modules/frame/Sidebar.vue'),
     'system-content': () => import('modules/frame/Content.vue'),
     'system-footer': () => import('components/increment/generic/frame/Footer.vue'),
     'system-loading': () => import('components/loader/Loading.vue'),
@@ -221,7 +221,7 @@ export default {
     'privacy-policy': () => import('modules/docs/PrivacyPolicy.vue'),
     'terms-and-conditions': () => import('modules/docs/TermsAndConditions.vue'),
     'support-messenger': () => import('components/increment/support/Support.vue'),
-    'tutorial': () => import('components/increment/generic/tutorial/Tutorial.vue'),
+    // 'tutorial': () => import('components/increment/generic/tutorial/Tutorial.vue'),
     'error-modal': () => import('components/increment/generic/modal/Error.vue'),
     'lazy-loading': () => import('components/increment/generic/lazy/loading.vue')
   }

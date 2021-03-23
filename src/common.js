@@ -3,24 +3,15 @@ let APP_EMAIL = 'support@payhiram.ph'
 export default {
   sidebarMenu: [
     {accountType: 'ALL', showOnAdmin: true, accountStatus: 'ALL', description: 'Requests', icon: 'fa fa-arrow-right', path: 'requests', flag: false, subMenu: null},
-    // {accountType: 'ALL', showOnAdmin: true, accountStatus: 'ALL', description: 'Marketplace', icon: 'fas fa-store-alt', path: 'marketplace', flag: false, subMenu: null},
-    // {accountType: 'ALL', showOnAdmin: true, accountStatus: 'ALL', description: 'Rentals', icon: 'fas fa-hand-holding-heart', path: 'rentals', flag: false, subMenu: null},
-    // {accountType: 'ALL', accountStatus: 'ALL', description: 'Transfer', icon: 'fa fa-arrow-right', path: 'transfer', flag: false, subMenu: null},
     {accountType: 'ALL', showOnAdmin: true, accountStatus: 'ALL', description: 'Dashboard', icon: 'fa fa-tachometer', path: 'dashboard', flag: false, subMenu: null},
-    // {accountType: 'MERCHANT', showOnAdmin: true, accountStatus: 'ALL', description: 'My Products', icon: 'fas fa-store-alt', path: 'products', flag: false, subMenu: null},
-    // {accountType: 'MERCHANT', showOnAdmin: true, accountStatus: 'ALL', description: 'Rental Requests', icon: 'fas fa-store-alt', path: 'rentalRequests', flag: false, subMenu: null},
-    // {accountType: 'MERCHANT', showOnAdmin: true, accountStatus: 'ALL', description: 'Installments Requests', icon: 'fas fa-store-alt', path: 'InstallmentRequests', flag: false, subMenu: null},
-    // {accountType: 'INVESTOR', accountStatus: 'ALL', description: 'Invested', icon: 'fa fa-arrow-left', path: 'investments', flag: false, subMenu: null},
-    // {accountType: 'ALL', accountStatus: 'ALL', description: 'Payments', icon: 'fa fa-money', path: 'payments', flag: false, subMenu: null},
     {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ADMIN', description: 'Coupons', icon: 'fas fa-stamp', path: 'coupons', flag: false, subMenu: null},
     {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ADMIN', description: 'Accounts', icon: 'fas fa-users', path: 'accounts', flag: false, subMenu: null},
     {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ADMIN', description: 'Deposits', icon: 'fas fa-piggy-bank', path: 'adminDeposits', flag: false, subMenu: null},
     {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ADMIN', description: 'Withdrawals', icon: 'fas fa-money-check', path: 'adminWithdrawals', flag: false, subMenu: null},
-    {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ADMIN', description: 'System Notifications', icon: 'fas fa-bell', path: 'systemNotification', flag: false, subMenu: null},
     {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ADMIN', description: 'Transfer Charges', icon: 'fas fa-stamp', path: 'transfer_charges', flag: false, subMenu: null},
     {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ADMIN', description: 'Resolution Tickets', icon: 'fas fa-bug', path: 'tickets', flag: false, subMenu: null},
-    {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ADMIN', description: 'Settings', icon: 'fa fa-cog', path: 'scopeLocation', flag: false, subMenu: null},
     {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ADMIN', description: 'Enable Support', icon: 'fas fa-toggle-off', path: 'enableSupport', flag: false, subMenu: null}
+    {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ADMIN', description: 'Settings', icon: 'fa fa-cog', path: 'scopeLocation', flag: false, subMenu: null}
   ],
   profileMenu: [
   // {
@@ -53,19 +44,10 @@ export default {
   header: ['status', 'notification'], // 'messenger', '',
   settingsMenu: [
     {title: 'Profile', type: 'profile', allowed: ['cellular_number', 'address', 'sex', 'birth_date']},
-    // {title: 'Educations', type: 'educations', allowed: []},
-    // {title: 'Work Experience', type: 'work-experience', allowed: []},
-    // {title: 'Idenfication Cards', type: 'identifications', allowed: []},
-    // {title: 'Guarantor', type: 'guarantor', allowed: []},
     {title: 'Account', type: 'account', allowed: []},
-    // {title: 'Payment Accounts', type: 'payment_method', allowed: []},
-    // {title: 'Billing Information', type: 'billing_information', allowed: []},
-    {title: 'Business Setting', type: 'merchant', allowed: ['prefix']},
+    // {title: 'Business Setting', type: 'merchant', allowed: ['prefix']},
     {title: 'Notifications', type: 'notification', allowed: []},
-    {title: 'Educational Background', type: 'educations', allowed: []},
-    {title: 'Work Experiences', type: 'work-experience', allowed: []},
-    {title: 'Identifications', type: 'identifications', allowed: []},
-    {title: 'Guarantor', type: 'guarantor', allowed: []}
+    {title: 'Identifications', type: 'identifications', allowed: []}
   ],
   referral: {
     message: 'to help them in case of they want to send cash online.',
