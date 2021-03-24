@@ -51,7 +51,10 @@ export default {
           value: 'USER',
           column: 'account_type',
           clause: '!='
-        }]
+        }],
+        sort: {
+          account_type: 'asc'
+        }
       }
       $('#loading').css({display: 'block'})
       this.APIRequest('accounts/retrieve', parameter).then(response => {

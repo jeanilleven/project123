@@ -1,5 +1,5 @@
 <template>
-<div id="holder"> 
+<div id="holder">
   <div class="title" style="margin-top: 25px;">
     <label class="text-primary action-link" @click="redirect('/tickets')"><i class="fas fa-arrow-left"></i> <b> back </b>to previous</label>
   </div>
@@ -20,26 +20,28 @@
         </div>
         <span><b>Image attachments</b></span><br>
 
-        <multiple-img-uploader  v-if="data.length !== 0" :imageList="imageList" :isEditableProp="editable"/>   
+        <multiple-img-uploader  v-if="data.length !== 0" :imageList="imageList" :isEditableProp="editable"/>
         <button type="button" class="btn btn-primary mb-5" @click="update()" id="update">Update</button>
 
       </form>
     </div>
     <div class="col-2" id="uneditableDetail">
       <div>
-        <ticket-type v-if="data.length !== 0" :isEditable="{isEditable: user.userID === data.account_id, typeResult: data.type}"/>
+        <ticket-type v-if="data.length !== 1" :isEditable="{isEditable: user.userID === data.account_id, typeResult: data.type}"/>
       <hr>
       <span>Assignee</span>
       <p @click="showAssignees()" style="color:grey; cursor: pointer;">{{ assignee ? assignee : 'no assigned resolver'}}</p>
       <assignees ref="assign"></assignees>
       <hr>
       <span>Status</span>
-      <p style="color:grey">{{data.status}}</p>
+      <select :required="true" class="form-control">
+        <option v-for="(option, index) in options" :selected="option.name === data.status" v-bind:key="index">{{option.name}}</option>
+      </select>
       </div>
     </div>
   </div>
 </div>
- 
+
 </template>
 
 <script>
@@ -69,7 +71,18 @@ export default {
       parameter: {
         image: null
       },
-      assignee: null
+      assignee: null,
+      options: [
+        {
+          name: 'open'
+        },
+        {
+          name: 'pending'
+        },
+        {
+          name: 'close'
+        }
+      ]
     }
   },
   components: {
@@ -115,12 +128,12 @@ export default {
         if(response.data.length > 0){
           this.data = response.data[0]
           this.timeIntervalRes = this.getticketTimePassed(this.data.created_at)
-          this.data.status = this.data.status.toLowerCase()
           if(this.data.images !== null) {
             console.log(this.data.images)
             this.imageList = this.data.images.split(' ')
           }
           this.editable = this.user.userID === this.data.account_id
+          this.statusSelected = this.data.status.toLowerCase()
           switch(this.data.status.toLowerCase()){
             case 'open':
               this.status = 'opened'
