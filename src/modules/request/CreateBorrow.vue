@@ -3,10 +3,10 @@
     <span class="content">
       <span class="inputs">
         <div class="alert alert-danger" role="alert" style="margin-top: 25px;">
-          Hi <b>{{user.username}}!</b> Investors are excited to fulfil your request! Just a gentle reminder that you can't change any information of the request once posted.
+          Hi <b>{{user.username}}!</b> Investors are excited to fulfill your request! Just a gentle reminder that you can't change any information of the request once posted.
         </div>
         <div class="form-group" style="width: 100%; float: left;">
-          <label for="address" style="width: 100%;">Select type of fulfilment <b class="text-danger">*</b></label>
+          <label for="address" style="width: 100%;">Select type of fulfillment <b class="text-danger">*</b></label>
           <div class="card" v-for="(item, index) in common.fulfillmentTypesBorrow" :key="index" :class="{'bg-primary': request.type == item.value}" @click="request.type = item.value, request.money_type = item.money_type" :style="{display: request.attachment_payload !== null && item.value !== 101 ? 'none' : 'block'}">
             <div class="card-body">
               <label class="card-title"><b>{{item.label}}</b></label>
@@ -106,7 +106,7 @@
         <span  class="incre-row" style="line-height: 45px;">
           <label class="pull-left">Amount</label>
           <label class="pull-right"><b>{{auth.displayAmountWithCurrency(request.amount, request.currency)}}</b></label>
-        </span> 
+        </span>
         <div>
           <span style="line-height: 45px;" class="incre-row">
             <label class="pull-left">Interest</label>

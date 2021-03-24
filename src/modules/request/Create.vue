@@ -3,10 +3,10 @@
     <span class="content">
       <span class="inputs">
         <div class="alert alert-danger" role="alert" style="margin-top: 25px;">
-          Hi <b>{{user.username}}!</b> Investors are excited to fulfil your request! Just a gentle reminder that you can't change any information of the request once posted.
+          Hi <b>{{user.username}}!</b> Investors are excited to fulfill your request! Just a gentle reminder that you can't change any information of the request once posted.
         </div>
         <div class="form-group">
-          <label for="address" style="width: 100%;">Select type of fulfilment <b class="text-danger">*</b></label>
+          <label for="address" style="width: 100%;" >Select type of fulfillment <b class="text-danger">*</b></label>
           <div class="card" v-for="(item, index) in common.fulfillmentTypes" :key="index" :class="{'bg-secondary': request.type == item.value}" @click="request.type = item.value, request.money_type = item.money_type">
             <div class="card-body">
               <label class="card-title"><b>{{item.label}}</b></label>
@@ -46,7 +46,7 @@
               v-on:inputChange="onClearVueGoogle()"
             >
             </vue-google-autocomplete>
-            <!-- <button class="btn btn-primary btn-custom pull-right" style="width: 15%!important;" @click="showMap()"> 
+            <!-- <button class="btn btn-primary btn-custom pull-right" style="width: 15%!important;" @click="showMap()">
               Add location
             </button> -->
           </div>
@@ -86,9 +86,9 @@
         <span  class="incre-row" style="line-height: 45px;">
           <label class="pull-left">Amount</label>
           <label class="pull-right"><b>{{auth.displayAmountWithCurrency(request.amount, request.currency)}}</b></label>
-        </span> 
+        </span>
         <button class="btn btn-secondary pull-right btn-custom" style="margin-bottom: 10px; width: 100%!important;" @click="showPromoField()" v-if="couponFlag === false">Promo</button>
-        <div v-if="couponFlag == true && request.coupon === null"> 
+        <div v-if="couponFlag == true && request.coupon === null">
           <input type='text' class="form-control form-control-custom" v-model="coupon" placeholder='Type promo code here' style="width: 58%!important; float: left;"/>
           <button class="btn btn-primary pull-right btn-custom" style="margin-bottom: 10px; width: 20%!important; float: left; margin-left: 1%;" @click="applyPromo()">Apply</button>
           <button class="btn btn-danger pull-right btn-custom" style="margin-bottom: 10px; width: 20%!important; float: left; margin-left: 1%;" @click="cancelPromo()">Cancel</button>
