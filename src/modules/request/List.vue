@@ -337,10 +337,10 @@ export default{
   mounted(){
     if(this.$route.params.code){
       setTimeout(() => {
-        this.retrieve({created_at: 'desc'}, {column: 'code', value: this.$route.params.code})
+        this.retrieve({created_at: 'desc'}, {column: 'code', value: this.$route.params.code}, {isPersonal: false})
       }, 500)
     }else{
-      this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
+      this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''}, {isPeronal: false})
     }
   },
   data(){
@@ -474,9 +474,9 @@ export default{
       $('#createReportModal').modal('show')
     },
     showMyRequest(){
-      this.retrieve({created_at: 'desc'}, {column: 'account_id', value: this.user.userID})
+      this.retrieve({created_at: 'desc'}, {column: 'account_id', value: this.user.userID}, {isPersonal: true})
     },
-    retrieve(sort, filter){
+    retrieve(sort, filter, personal){
       // if(this.user.type === 'USER'){
       //   filter.column = 'account_id'
       //   filter.value = this.user.userID
@@ -495,6 +495,7 @@ export default{
       }
       let key = Object.keys(sort)
       let parameter = {
+        target: 'all',
         limit: this.limit,
         offset: (this.activePage - 1) * this.limit,
         sort: {
@@ -504,17 +505,19 @@ export default{
         value: '%' + filter.value + '%',
         column: filter.column,
         type: this.user.type,
-        account_id: this.user.userID
+        account_id: this.user.userID,
+        isPersonal: personal.isPersonal
       }
       setTimeout(() => {
         $('#loading').css({display: 'block'})
         this.APIRequest('requests/retrieve', parameter).then(response => {
           AUTH.user.ledger.amount = response.ledger
           $('#loading').css({display: 'none'})
-          if(response.data !== null){
+          console.log('test: ', response)
+          if(response.data.length > 0){
             this.data = response.data
             this.size = parseInt(response.size)
-            this.locations = response.locations
+            this.locations = response.locations ? response.locations : null
           }else{
             this.data = null
             this.size = 0
