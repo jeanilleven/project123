@@ -349,6 +349,14 @@ export default{
     meta: {
       tokenRequired: true
     }
+  },
+  {
+    path: '/enableSupport',
+    name: 'enableSupport',
+    component: resolve => require(['modules/support/EnableSupport.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
   }
   ]
 }

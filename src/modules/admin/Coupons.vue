@@ -3,14 +3,14 @@
     <div class="incre-row">
       <button class="btn btn-primary pull-right" @click="showModal('create')">Add</button>
     </div>
-    <basic-filter 
-      v-bind:category="category" 
+    <basic-filter
+      v-bind:category="category"
       :activeCategoryIndex="0"
       :activeSortingIndex="0"
       @changeSortEvent="retrieve($event.sort, $event.filter)"
       @changeStyle="manageGrid($event)"
       :grid="['list', 'th-large']"></basic-filter>
-    
+
     <table class="table table-bordered table-responsive" v-if="data !== null">
       <thead>
         <tr>
@@ -38,8 +38,8 @@
           <td>{{item.start}}</td>
           <td>{{item.end}}</td>
           <td>
-            <button class="btn btn-primary" @click="showModal('update', item)"><i class="fa fa-edit"></i></button>
-            <button class="btn btn-danger" @click="removeMessage(item)"><i class="fa fa-trash"></i></button>
+            <button class="btn btn-secondary" @click="showModal('update', item)"><div class=" mx-auto"><i class="fa fa-edit" style="padding: 0"></i></div></button>
+            <button class="btn btn-danger" @click="removeMessage(item)"><i class="fa fa-trash" style="padding: 0"></i></button>
           </td>
         </tr>
       </tbody>
@@ -51,12 +51,13 @@
     @onConfirm="remove($event)"
     >
     </Confirmation>
-    <Pager
+    <button class="btn pull-right btn-primary" @click="seeMore()">See More</button>
+    <!-- <Pager
       :pages="numPages"
       :active="activePage"
       :limit="limit"
       v-if="data !== null"
-    />
+    /> -->
     <empty v-if="data === null" :title="'No coupons added!'" :action="'Click add to create.'"></empty>
     <browse-images-modal></browse-images-modal>
     <increment-modal :property="modalProperty"></increment-modal>
@@ -134,14 +135,14 @@ export default{
       category: [{
         title: 'Sort by',
         sorting: [{
-          title: 'Date posted ascending',
-          payload: 'created_at',
-          payload_value: 'asc'
-        }, {
-          title: 'Date posted descending',
-          payload: 'created_at',
-          payload_value: 'desc'
-        }, {
+        //   title: 'Date posted ascending',
+        //   payload: 'created_at',
+        //   payload_value: 'asc'
+        // }, {
+        //   title: 'Date posted descending',
+        //   payload: 'created_at',
+        //   payload_value: 'desc'
+        // }, {
           title: 'Type ascending',
           payload: 'type',
           payload_value: 'asc'
@@ -193,7 +194,7 @@ export default{
       }],
       currentFilter: null,
       currentSort: null,
-      activePage: 1,
+      activePage: 0,
       numPages: null,
       limit: 5
     }
@@ -210,6 +211,11 @@ export default{
     redirect(params){
       ROUTER.push(params)
     },
+    seeMore(){
+      this.limit = this.limit + 5
+      console.log(this.limit)
+      this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
+    },
     retrieve(sort, filter){
       if(sort !== null){
         this.currentSort = sort
@@ -225,7 +231,7 @@ export default{
         }],
         sort: this.currentSort,
         limit: this.limit,
-        offset: (this.activePage > 0) ? ((this.activePage - 1) * this.limit) : this.activePage
+        offset: this.activePage
       }
       $('#loading').css({display: 'block'})
       this.APIRequest('coupons/retrieve', parameter).then(response => {
@@ -266,7 +272,7 @@ export default{
         case 'update':
           let modalData = {...this.modalProperty}
           let parameter = {
-            title: 'Update Requests',
+            title: 'Update Coupons',
             route: 'coupons/update',
             button: {
               left: 'Cancel',
