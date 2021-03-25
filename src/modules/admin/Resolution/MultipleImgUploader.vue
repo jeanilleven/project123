@@ -1,7 +1,7 @@
   <template>
-  <div class="d-flex"> 
-            
-    <div class="col-7 preview d-flex justify-content-center align-items-center" 
+  <div class="d-flex">
+
+    <div class="col-7 preview d-flex justify-content-center align-items-center"
       :style="[previewImg == null ? {'opacity': '0.3', 'background-color': 'grey'}: {'border': 'solid 1px black'}]">
       <i v-if="previewImg == null" class="fas fa-image" style="font-size: 150px;"></i>
       <img v-else :src="previewImg" alt="preview image">
@@ -144,7 +144,7 @@ export default {
   width: 100%;
   opacity: 0;
   transition: .3s ease;
-  background: rgba(255,255,255, 0.9);  
+  background: rgba(255,255,255, 0.9);
   text-align: center;
 }
 #selectImg{
