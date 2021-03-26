@@ -25,7 +25,7 @@
               <!--<select v-if="item.assigned_to !== null">
                 <option v-for="(option, index) in item.assigned_to" :value="option" :key="index">{{option}}</option>
               </select>-->
-              <p v-else>No Assigned</p>
+              <p v-else>No Assigned </p>
           </td>
           <td>{{item.status}}</td>
         </tr>
