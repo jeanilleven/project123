@@ -337,10 +337,10 @@ export default{
   mounted(){
     if(this.$route.params.code){
       setTimeout(() => {
-        this.retrieve({created_at: 'desc'}, {column: 'code', value: this.$route.params.code}, {isPersonal: false})
+        this.retrieve({created_at: 'desc'}, {column: 'code', value: this.$route.params.code})
       }, 500)
     }else{
-      this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''}, {isPeronal: false})
+      this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
     }
   },
   data(){
@@ -402,7 +402,8 @@ export default{
       listStyle: null,
       sort: null,
       filter: null,
-      userToken: null
+      userToken: null,
+      isPersonal: false
     }
   },
   watch: {
@@ -474,13 +475,15 @@ export default{
       $('#createReportModal').modal('show')
     },
     showMyRequest(){
-      this.retrieve({created_at: 'desc'}, {column: 'account_id', value: this.user.userID}, {isPersonal: true})
+      this.isPersonal = true
+      this.retrieve({created_at: 'desc'}, {column: 'account_id', value: this.user.userID})
     },
-    retrieve(sort, filter, personal){
+    retrieve(sort, filter){
       // if(this.user.type === 'USER'){
       //   filter.column = 'account_id'
       //   filter.value = this.user.userID
       // }
+      console.log('personal ', this.isPersonal)
       if(sort !== null){
         this.sort = sort
       }
@@ -494,19 +497,36 @@ export default{
         filter = this.filter
       }
       let key = Object.keys(sort)
-      let parameter = {
-        target: 'all',
-        limit: this.limit,
-        offset: (this.activePage - 1) * this.limit,
-        sort: {
-          value: sort[key[0]],
-          column: key[0]
-        },
-        value: '%' + filter.value + '%',
-        column: filter.column,
-        type: this.user.type,
-        account_id: this.user.userID,
-        isPersonal: personal.isPersonal
+      let parameter = null
+      if(this.isPersonal === true) {
+        parameter = {
+          target: 'all',
+          limit: this.limit,
+          offset: (this.activePage - 1) * this.limit,
+          sort: {
+            value: sort[key[0]],
+            column: key[0]
+          },
+          value: '%' + filter.value + '%',
+          column: filter.column,
+          type: this.user.type,
+          account_id: this.user.userID,
+          isPersonal: this.isPersonal
+        }
+      } else {
+        parameter = {
+          target: 'all',
+          limit: this.limit,
+          offset: (this.activePage - 1) * this.limit,
+          sort: {
+            value: sort[key[0]],
+            column: key[0]
+          },
+          value: '%' + filter.value + '%',
+          column: filter.column,
+          type: this.user.type,
+          account_id: this.user.userID
+        }
       }
       setTimeout(() => {
         $('#loading').css({display: 'block'})
@@ -514,7 +534,7 @@ export default{
           AUTH.user.ledger.amount = response.ledger
           $('#loading').css({display: 'none'})
           console.log('test: ', response)
-          if(response.data.length > 0){
+          if(response.data !== null){
             this.data = response.data
             this.size = parseInt(response.size)
             this.locations = response.locations ? response.locations : null
