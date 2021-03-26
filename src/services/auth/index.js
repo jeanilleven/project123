@@ -122,7 +122,7 @@ export default {
       this.tokenData.token = response.token
       this.setToken(this.tokenData.token)
       vue.APIRequest('authenticate/user', {}, (userInfo) => {
-        if(userInfo.account_type === 'ADMIN' || userInfo.account_type === 'MARKETING' || userInfo.account_type === 'ACCOUNTANT' || userInfo.account_type === 'PARTNER' || userInfo.account_type === 'INVESTOR' || userInfo.account_type === 'USER'){
+        if(userInfo.account_type !== 'USER' && userInfo.account_type !== 'PARTNER'){
           this.setUser(userInfo, null, null)
         }else{
           this.deaunthenticate()
