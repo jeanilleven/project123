@@ -8,9 +8,10 @@
             {{location}}
           </button>
         </label>
+        <button v-if="isShow" class="btn btn-primary pull-right" style="float:left !important" @click="showPublicRequest()">back</button>
         <button class="btn btn-primary pull-right" @click="redirect('/createRequest')">Post a request</button>
         <button class="btn btn-primary pull-right" style="margin-left: 10px;margin-right: 10px;" @click="redirect('/createRequestBorrow')">Post borrow request</button>
-        <button class="btn btn-primary pull-right" @click="showMyRequest()">View my request</button>
+        <button class="btn btn-primary pull-right" @click="showMyRequest('isShow','isProposal')">View my request</button>
         <!-- <button class="btn btn-primary pull-right" @click="showRequestModal('create')">Post a request</button> -->
       </div>
       <basic-filter 
@@ -92,8 +93,8 @@
         </small>
         <span>
           <div v-if="parseInt(item.account_id) !== user.userID">
-            <button class="btn btn-secondary send" style="margin-right: 5px;" @click="showInvestmentModal(item)" v-if="parseInt(item.type) > 100 && user.type !== 'USER'">Send Proposal</button>
-            <button class="btn btn-secondary send" style="margin-right: 5px;" @click="showChargeModal(item)" v-if="parseInt(item.type) < 101 && user.type !== 'USER'">Send Proposal</button>
+            <button class="btn btn-secondary send" style="margin-right: 5px;" @click="showInvestmentModal(item)" v-if="parseInt(item.type) > 100 && user.type !== 'USER' && isProposal">Send Proposal</button>
+            <button class="btn btn-secondary send" style="margin-right: 5px;" @click="showChargeModal(item)" v-if="parseInt(item.type) < 101 && user.type !== 'USER' && isProposal">Send Proposal</button>
             <!-- <button class="btn btn-warning" style="margin-right: 5px;" @click="bookmark(item.id)">
               <i class="fas fa-star" v-if="item.bookmark === true"></i>
               Bookmark</button> -->
@@ -402,7 +403,10 @@ export default{
       listStyle: null,
       sort: null,
       filter: null,
-      userToken: null
+      userToken: null,
+      isPersonal: false,
+      isShow: false,
+      isProposal: true
     }
   },
   watch: {
@@ -474,6 +478,15 @@ export default{
       $('#createReportModal').modal('show')
     },
     showMyRequest(){
+      this.isPersonal = true
+      this.isShow = true
+      this.isProposal = false
+      this.retrieve({created_at: 'desc'}, {column: 'account_id', value: this.user.userID})
+    },
+    showPublicRequest(){
+      this.isPersonal = false
+      this.isShow = false
+      this.isProposal = true
       this.retrieve({created_at: 'desc'}, {column: 'account_id', value: this.user.userID})
     },
     retrieve(sort, filter){
@@ -481,6 +494,7 @@ export default{
       //   filter.column = 'account_id'
       //   filter.value = this.user.userID
       // }
+      console.log('personal ', this.isPersonal)
       if(sort !== null){
         this.sort = sort
       }
@@ -494,27 +508,47 @@ export default{
         filter = this.filter
       }
       let key = Object.keys(sort)
-      let parameter = {
-        limit: this.limit,
-        offset: (this.activePage - 1) * this.limit,
-        sort: {
-          value: sort[key[0]],
-          column: key[0]
-        },
-        value: '%' + filter.value + '%',
-        column: filter.column,
-        type: this.user.type,
-        account_id: this.user.userID
+      let parameter = null
+      if(this.isPersonal === true) {
+        parameter = {
+          target: 'all',
+          limit: this.limit,
+          offset: (this.activePage - 1) * this.limit,
+          sort: {
+            value: sort[key[0]],
+            column: key[0]
+          },
+          value: '%' + filter.value + '%',
+          column: filter.column,
+          type: this.user.type,
+          account_id: this.user.userID,
+          isPersonal: this.isPersonal
+        }
+      } else {
+        parameter = {
+          target: 'all',
+          limit: this.limit,
+          offset: (this.activePage - 1) * this.limit,
+          sort: {
+            value: sort[key[0]],
+            column: key[0]
+          },
+          value: '%' + filter.value + '%',
+          column: filter.column,
+          type: this.user.type,
+          account_id: this.user.userID
+        }
       }
       setTimeout(() => {
         $('#loading').css({display: 'block'})
         this.APIRequest('requests/retrieve', parameter).then(response => {
           AUTH.user.ledger.amount = response.ledger
           $('#loading').css({display: 'none'})
+          console.log('test: ', response)
           if(response.data !== null){
             this.data = response.data
             this.size = parseInt(response.size)
-            this.locations = response.locations
+            this.locations = response.locations ? response.locations : null
           }else{
             this.data = null
             this.size = 0

@@ -36,6 +36,9 @@
         </tr>
       </tbody>
     </table>
+    <div>
+      <button class="btn btn-primary pull-right" @click="seeMore()">See More</button>
+    </div>
 
     <!-- <Pager
       :pages="numPages"
@@ -79,7 +82,7 @@ export default{
       data: null,
       auth: AUTH,
       limit: 5,
-      activePage: 1,
+      activePage: 0,
       numPages: null,
       modalProperty: propertyModal
     }
@@ -148,13 +151,17 @@ export default{
     setOnRemoveItem(item){
       this.$refs.confirmation.show(item.id)
     },
+    seeMore(){
+      this.limit = this.limit + 5
+      this.retrieve()
+    },
     retrieve(){
       let parameter = {
         sort: {
           created_at: 'desc'
         },
         limit: this.limit,
-        offset: (this.activePage > 0) ? ((this.activePage - 1) * this.limit) : this.activePage
+        offset: this.activePage
       }
       $('#loading').css({display: 'block'})
       this.APIRequest('location_scopes/retrieve', parameter).then(response => {

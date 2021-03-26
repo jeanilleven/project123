@@ -26,6 +26,10 @@
         </label>
       </span>
     </div>
+    <div class="mt-5 pull-right">
+      <button class="btn btn-warning"  @click="redirect('/dashboard')">Back</button>
+      <button class="btn btn-primary" @click="seeMore()">See More</button>
+    </div>
     <empty v-if="data === null" :title="'Looks like your ledger is empty!'" :action="'Deposit now or start requesting money.'"></empty>
   </div>
 </template>
@@ -93,6 +97,7 @@ export default{
       data: null,
       activePage: 0,
       size: 0,
+      limit: 5,
       auth: AUTH,
       category: [{
         title: 'Sort by',
@@ -144,17 +149,12 @@ export default{
       let key = Object.keys(sort)
       let parameter = {
         account_id: this.user.userID,
+        account_code: this.user.code,
         offset: 0,
-        limit: 50,
-        sort: {
-          column: key[0],
-          value: sort[key[0]]
-        },
-        value: filter.value + '%',
-        column: filter.column
+        limit: this.limit
       }
       $('#loading').css({display: 'none'})
-      this.APIRequest('ledgers/summary', parameter).then(response => {
+      this.APIRequest('ledger/history', parameter).then(response => {
         $('#loading').css({display: 'none'})
         if(response.data !== null){
           this.data = response.data
@@ -164,6 +164,10 @@ export default{
           this.size = null
         }
       })
+    },
+    seeMore(){
+      this.limit = this.limit + 5
+      this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
     },
     manageGrid(event){
       switch(event){

@@ -19,6 +19,7 @@ export default {
     {accountType: 'ACCOUNTANT', showOnAdmin: true, accountStatus: 'ACCOUNTANT', description: 'Transfer Charges', icon: 'fas fa-stamp', path: 'adminDeposits', flag: false, subMenu: null},
     {accountType: 'ACCOUNTANT', showOnAdmin: true, accountStatus: 'ACCOUNTANT', description: 'Resolution Tickets', icon: 'fas fa-bug', path: 'coupons', flag: false, subMenu: null},
     {accountType: 'ACCOUNTANT', showOnAdmin: true, accountStatus: 'ACCOUNTANT', description: 'Resolution Tickets', icon: 'fas fa-bug', path: 'Transfer Charges', flag: false, subMenu: null}
+    {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ADMIN', description: 'Scope', icon: 'fas fa-map-marker-alt', path: 'scopeLocation', flag: false, subMenu: null}
   ],
 
   profileMenu: [

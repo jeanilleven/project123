@@ -1,6 +1,6 @@
 <template>
 <div class="holder">
-  <button 
+  <button
     class="btn btn-primary pull-right"
     style="margin-bottom: 25px; float:right"
     @click="createTicket()">
@@ -47,7 +47,7 @@ export default {
       data: [],
       user: AUTH.user,
       auth: AUTH,
-      limit: 50,
+      limit: 5,
       activePage: 1,
       numPages: null,
       statusType: ''
@@ -85,17 +85,17 @@ export default {
           this.numPages = null
         }
       })
-    },
-    showMessage(item, index){
-      AUTH.messenger.title = item.code
-      AUTH.messenger.data = item
     }
+    // showMessage(item, index){
+    //   AUTH.messenger.title = item.code
+    //   AUTH.messenger.data = item
+    // }
   }
 }
 </script>
 <style lang="scss" scoped>
 @import "~assets/style/colors.scss";
-.holder{    
+.holder{
   width: 98%;
   float: left;
   margin-right: 2%;
