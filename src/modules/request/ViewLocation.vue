@@ -24,7 +24,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-danger" @click="hideAddressModal()">Cancel</button>
-          <button type="button" class="btn btn-primary" @click="submit()">dsfsdf</button>
+          <button type="button" class="btn btn-primary" @click="submit()">Submit</button>
         </div>
       </div>
     </div>
