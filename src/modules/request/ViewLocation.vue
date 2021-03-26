@@ -24,7 +24,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-danger" @click="hideAddressModal()">Cancel</button>
-          <button type="button" class="btn btn-primary" @click="submit()">Submit</button>
+          <button type="button" class="btn btn-primary" @click="submit()">dsfsdf</button>
         </div>
       </div>
     </div>
@@ -83,6 +83,7 @@ export default{
       this.selectedItem = item
       this.address = item.account.information.address
       this.retrieveLocation(item)
+      this.locationMessage = null
       $('#addAddressAccount').modal('show')
     },
     retrieveLocation(item){
@@ -93,44 +94,33 @@ export default{
           clause: '='
         }]
       }
-      this.APIRequest('location_scopes/retrieve', parameter).then(response => {
+      this.APIRequest('locations/retrieve', parameter).then(response => {
         if(response.data.length > 0){
-          this.local = response.data[0]
           this.localCode = response.data[0].code
         }else{
-          this.local = null
           this.localCode = null
         }
       })
     },
     hideAddressModal(){
       this.selectedItem = null
-      this.local = null
       $('#addAddressAccount').modal('hide')
     },
     submit(){
-      let parameter = null
-      let route = null
       if(this.selectedItem === null){
         return
       }
-      if(this.local === null){
-        parameter = {
-          account_id: this.selectedItem.id,
-          code: this.localCode,
-          country: this.address
-        }
-        route = 'location_scopes/create'
-      }else{
-        parameter = {
-          id: this.local.id,
-          code: this.localCode
-        }
-        route = 'location_scopes/update'
+      if(this.localCode === null){
+        this.locationMessage = 'Please fill in the field.'
       }
-      this.APIRequest(route, parameter).then(response => {
-        if(response.data){
+      let parameter = {
+        account_id: this.selectedItem.id,
+        code: this.localCode
+      }
+      this.APIRequest('locations/updateCode', parameter).then(response => {
+        if(response.data === true || response.data === 'true'){
           this.locationMessage = 'Successfully updated!'
+          this.hideAddressModal()
         }else{
           this.locationMessage = 'Error update!'
         }
