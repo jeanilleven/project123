@@ -8,9 +8,10 @@
             {{location}}
           </button>
         </label>
+        <button v-if="isShow" class="btn btn-primary pull-right" style="float:left !important" @click="showPublicRequest()">back</button>
         <button class="btn btn-primary pull-right" @click="redirect('/createRequest')">Post a request</button>
         <button class="btn btn-primary pull-right" style="margin-left: 10px;margin-right: 10px;" @click="redirect('/createRequestBorrow')">Post borrow request</button>
-        <button class="btn btn-primary pull-right" @click="showMyRequest()">View my request</button>
+        <button class="btn btn-primary pull-right" @click="showMyRequest('isShow','isProposal')">View my request</button>
         <!-- <button class="btn btn-primary pull-right" @click="showRequestModal('create')">Post a request</button> -->
       </div>
       <basic-filter 
@@ -92,8 +93,8 @@
         </small>
         <span>
           <div v-if="parseInt(item.account_id) !== user.userID">
-            <button class="btn btn-secondary send" style="margin-right: 5px;" @click="showInvestmentModal(item)" v-if="parseInt(item.type) > 100 && user.type !== 'USER'">Send Proposal</button>
-            <button class="btn btn-secondary send" style="margin-right: 5px;" @click="showChargeModal(item)" v-if="parseInt(item.type) < 101 && user.type !== 'USER'">Send Proposal</button>
+            <button class="btn btn-secondary send" style="margin-right: 5px;" @click="showInvestmentModal(item)" v-if="parseInt(item.type) > 100 && user.type !== 'USER' && isProposal">Send Proposal</button>
+            <button class="btn btn-secondary send" style="margin-right: 5px;" @click="showChargeModal(item)" v-if="parseInt(item.type) < 101 && user.type !== 'USER' && isProposal">Send Proposal</button>
             <!-- <button class="btn btn-warning" style="margin-right: 5px;" @click="bookmark(item.id)">
               <i class="fas fa-star" v-if="item.bookmark === true"></i>
               Bookmark</button> -->
@@ -403,7 +404,9 @@ export default{
       sort: null,
       filter: null,
       userToken: null,
-      isPersonal: false
+      isPersonal: false,
+      isShow: false,
+      isProposal: true
     }
   },
   watch: {
@@ -476,6 +479,14 @@ export default{
     },
     showMyRequest(){
       this.isPersonal = true
+      this.isShow = true
+      this.isProposal = false
+      this.retrieve({created_at: 'desc'}, {column: 'account_id', value: this.user.userID})
+    },
+    showPublicRequest(){
+      this.isPersonal = false
+      this.isShow = false
+      this.isProposal = true
       this.retrieve({created_at: 'desc'}, {column: 'account_id', value: this.user.userID})
     },
     retrieve(sort, filter){
