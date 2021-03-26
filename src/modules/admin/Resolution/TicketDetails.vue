@@ -34,8 +34,8 @@
       <assignees ref="assign"></assignees>
       <hr>
       <span>Status</span>
-      <select :required="true" class="form-control">
-        <option v-for="(option, index) in options" :selected="option.name === data.status" v-bind:key="index">{{option.name}}</option>
+      <select :required="true" class="form-control" v-model="data.status">
+        <option v-for="(option, index) in options" :selected="data.status" v-bind:key="index">{{option.name}}</option>
       </select>
       </div>
     </div>
@@ -80,7 +80,7 @@ export default {
           name: 'pending'
         },
         {
-          name: 'close'
+          name: 'closed'
         }
       ]
     }
@@ -101,8 +101,10 @@ export default {
         title: this.title,
         content: this.title,
         images: images,
-        assigned_to: this.assignee
+        assigned_to: this.assignee,
+        status: this.data.status
       }
+      // console.log(parameter.status, 'oo')
       $('#loading').css({display: 'block'})
       this.APIRequest('tickets/update', parameter).then(response => {
         $('#loading').css({display: 'none'})

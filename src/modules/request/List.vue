@@ -402,7 +402,8 @@ export default{
       listStyle: null,
       sort: null,
       filter: null,
-      userToken: null
+      userToken: null,
+      isPersonal: false
     }
   },
   watch: {
@@ -474,6 +475,7 @@ export default{
       $('#createReportModal').modal('show')
     },
     showMyRequest(){
+      this.isPersonal = true
       this.retrieve({created_at: 'desc'}, {column: 'account_id', value: this.user.userID})
     },
     retrieve(sort, filter){
@@ -481,6 +483,7 @@ export default{
       //   filter.column = 'account_id'
       //   filter.value = this.user.userID
       // }
+      console.log('personal ', this.isPersonal)
       if(sort !== null){
         this.sort = sort
       }
@@ -494,27 +497,47 @@ export default{
         filter = this.filter
       }
       let key = Object.keys(sort)
-      let parameter = {
-        limit: this.limit,
-        offset: (this.activePage - 1) * this.limit,
-        sort: {
-          value: sort[key[0]],
-          column: key[0]
-        },
-        value: '%' + filter.value + '%',
-        column: filter.column,
-        type: this.user.type,
-        account_id: this.user.userID
+      let parameter = null
+      if(this.isPersonal === true) {
+        parameter = {
+          target: 'all',
+          limit: this.limit,
+          offset: (this.activePage - 1) * this.limit,
+          sort: {
+            value: sort[key[0]],
+            column: key[0]
+          },
+          value: '%' + filter.value + '%',
+          column: filter.column,
+          type: this.user.type,
+          account_id: this.user.userID,
+          isPersonal: this.isPersonal
+        }
+      } else {
+        parameter = {
+          target: 'all',
+          limit: this.limit,
+          offset: (this.activePage - 1) * this.limit,
+          sort: {
+            value: sort[key[0]],
+            column: key[0]
+          },
+          value: '%' + filter.value + '%',
+          column: filter.column,
+          type: this.user.type,
+          account_id: this.user.userID
+        }
       }
       setTimeout(() => {
         $('#loading').css({display: 'block'})
         this.APIRequest('requests/retrieve', parameter).then(response => {
           AUTH.user.ledger.amount = response.ledger
           $('#loading').css({display: 'none'})
+          console.log('test: ', response)
           if(response.data !== null){
             this.data = response.data
             this.size = parseInt(response.size)
-            this.locations = response.locations
+            this.locations = response.locations ? response.locations : null
           }else{
             this.data = null
             this.size = 0
