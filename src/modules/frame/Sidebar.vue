@@ -14,19 +14,19 @@
                 </span>
                 <i v-bind:class="toggleSidebar + ' pull-right'" aria-hidden="true" v-on:click="changeToggleSidebarIcon()" id="toggleIcon"></i>
             </li>
-            <li v-for="item, index in menu" v-bind:class="{ 'active-menu': item.flag === true }" v-on:click="setActive(index)" v-if="(((item.users === user.type || item.users === 'ALL') && user.type !== 'ADMIN') || user.type === 'ADMIN') && menuFlag === true" class="menu-holder">
+            <li v-for="item, index in menu" v-bind:class="{ 'active-menu': item.flag === true }" v-on:click="setActive(index)" v-if="((item.accountType === user.type || item.accountType === 'ALL'))" class="menu-holder">
               <i v-bind:class="item.icon" class=" visible"></i> 
               <label>{{item.description}}</label>
               <ul class="sub-menu" v-if="item.subMenu !== null">
-                <li v-for="itemSub, indexSub in item.subMenu" v-bind:class="{ 'active-menu': itemSub.flag === true }" v-on:click="setActiveSubMenu(index, indexSub)" v-if="((itemSub.users === user.type || itemSub.users === 'ALL') && itemSub.type !== 'ADMIN') || itemSub.type === 'ADMIN'">
+                <li v-for="itemSub, indexSub in item.subMenu" v-bind:class="{ 'active-menu': itemSub.flag === true }" v-on:click="setActiveSubMenu(index, indexSub)">
                   <i v-bind:class="itemSub.icon" class=" visible"></i>
                   <label>{{itemSub.description}}</label>
                 </li>
               </ul>
             </li>
-            <li v-for="item, index in menuOff" v-bind:class="{ 'active-menu': item.flag === true }" v-on:click="setActiveOff(index)" v-if="(((item.users === user.type || item.users === 'ALL') && user.type !== 'ADMIN') || user.type === 'ADMIN') && menuFlag === false" class="menu-holder-hidden">
+<!--             <li v-for="item, index in menuOff" v-bind:class="{ 'active-menu': item.flag === true }" v-on:click="setActiveOff(index)" v-if="(item.accountType === user.type || item.accountType === 'ALL')" class="menu-holder-hidden">
               <i v-bind:class="item.icon"></i>
-            </li>
+            </li> -->
           </ul>
         </div>
       </div>
@@ -189,6 +189,7 @@
   line-height: 50px;
   overflow: hidden;
   text-align: right;
+  display: none;
 }
 
 .menu-holder-hidden i{
@@ -344,6 +345,10 @@
   }
   .collapse.show{
     display: block !important;
+  }
+
+  .menu-holder-hidden{
+    display: block;
   }
 }
 @media (max-width: 239px){

@@ -11,14 +11,17 @@ export default {
     {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ADMIN', description: 'Transfer Charges', icon: 'fas fa-stamp', path: 'transfer_charges', flag: false, subMenu: null},
     {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ADMIN', description: 'Resolution Tickets', icon: 'fas fa-bug', path: 'tickets', flag: false, subMenu: null},
     {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ADMIN', description: 'Enable Support', icon: 'fas fa-headset', path: 'enableSupport', flag: false, subMenu: null},
-    {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ADMIN', description: 'Scope', icon: 'fas fa-map-marker-alt', path: 'scopeLocation', flag: false, subMenu: null}
+    {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ADMIN', description: 'Scope', icon: 'fas fa-map-marker-alt', path: 'scopeLocation', flag: false, subMenu: null},
+    {accountType: 'MARKETING', showOnAdmin: false, accountStatus: 'MARKETING', description: 'Coupons', icon: 'fas fa-stamp', path: 'coupons', flag: false, subMenu: null},
+    {accountType: 'MARKETING', showOnAdmin: false, accountStatus: 'MARKETING', description: 'Transfer Charges', icon: 'fas fa-stamp', path: 'transfer_charges', flag: false, subMenu: null},
+    {accountType: 'MARKETING', showOnAdmin: false, accountStatus: 'MARKETING', description: 'Resolution Tickets', icon: 'fas fa-bug', path: 'tickets', flag: false, subMenu: null},
+    {accountType: 'ACCOUNTANT', showOnAdmin: false, accountStatus: 'ACCOUNTANT', description: 'Coupons', icon: 'fas fa-stamp', path: 'adminWithdrawals', flag: false, subMenu: null},
+    {accountType: 'ACCOUNTANT', showOnAdmin: false, accountStatus: 'ACCOUNTANT', description: 'Transfer Charges', icon: 'fas fa-stamp', path: 'adminDeposits', flag: false, subMenu: null},
+    {accountType: 'ACCOUNTANT', showOnAdmin: false, accountStatus: 'ACCOUNTANT', description: 'Resolution Tickets', icon: 'fas fa-bug', path: 'coupons', flag: false, subMenu: null},
+    {accountType: 'ACCOUNTANT', showOnAdmin: false, accountStatus: 'ACCOUNTANT', description: 'Resolution Tickets', icon: 'fas fa-bug', path: 'Transfer Charges', flag: false, subMenu: null}
   ],
+
   profileMenu: [
-  // {
-  //   title: 'My Bookmarks',
-  //   icon: 'fa fa-star',
-  //   route: '/bookmarks'
-  // },
     {
       title: 'My Profile',
       icon: 'fa fa-cog',
