@@ -8,6 +8,7 @@
       @changeStyle="manageGrid($event)"
       :grid="['list', 'th-large']"
       style="margin-top: 25px;"></basic-filter>
+      <button class="btn btn-primary"  @click="redirect('/dashboard')">Back</button>
     <div class="summary-container-item" v-for="item, index in data" v-if="data !== null">
       <span class="header">{{item.created_at_human}}</span>
       <span class="body">
@@ -27,7 +28,7 @@
       </span>
     </div>
     <div class="mt-5 pull-right">
-      <button class="btn btn-warning"  @click="redirect('/dashboard')">Back</button>
+      
       <button class="btn btn-primary" @click="seeMore()">See More</button>
     </div>
     <empty v-if="data === null" :title="'Looks like your ledger is empty!'" :action="'Deposit now or start requesting money.'"></empty>
