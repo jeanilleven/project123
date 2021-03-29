@@ -134,7 +134,7 @@
           </span>
         </div>
         <button class="btn btn-primary pull-right btn-custom" style="margin-bottom: 20px; width: 100%!important;" @click="post()">Post</button>
-        <button class="btn btn-primary pull-right btn-custom" style="margin-bottom: 100px; width: 100%!important;" @click="redirect('/requests')">Cancel</button>
+        <button class="btn btn-danger pull-right btn-custom" style="margin-bottom: 100px; width: 100%!important;" @click="redirect('/requests')">Cancel</button>
       </span>
     </span>
     <browse-images-modal></browse-images-modal>
