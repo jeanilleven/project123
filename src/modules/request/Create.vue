@@ -81,7 +81,7 @@
         </span>
         <span  class="incre-row" style="line-height: 45px;">
           <label class="pull-left">Your current balance</label>
-          <label class="pull-right text-primary"><b>{{auth.displayAmountWithCurrency(auth.user.ledger.amount, auth.user.ledger.currency)}}</b></label>
+          <label class="pull-right text-primary"><b>{{parseInt(auth.displayAmountWithCurrency(auth.user.ledger.amount, auth.user.ledger.currency))}}</b></label>
         </span>
         <span  class="incre-row" style="line-height: 45px;">
           <label class="pull-left">Amount</label>
@@ -108,7 +108,8 @@
             <label class="pull-right"><b>{{auth.displayAmountWithCurrency(parseInt(request.amount), request.currency)}}</b></label>
           </span>
         </div>
-        <button class="btn btn-primary pull-right btn-custom" style="margin-bottom: 100px; width: 100%!important;" @click="post()" v-if="couponFlag === false || (couponFlag === true && request.coupon !== null)">Post</button>
+        <button class="btn btn-primary pull-right btn-custom" style="margin-bottom:20px; width: 100%!important;" @click="post()" v-if="couponFlag === false || (couponFlag === true && request.coupon !== null)">Post</button>
+        <button class="btn btn-primary pull-right btn-custom" style="margin-bottom: 100px; width: 100%!important;" @click="redirect('/requests')">Cancel</button>
       </span>
     </span>
     <browse-images-modal></browse-images-modal>
