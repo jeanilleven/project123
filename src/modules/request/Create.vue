@@ -109,7 +109,7 @@
           </span>
         </div>
         <button class="btn btn-primary pull-right btn-custom" style="margin-bottom:20px; width: 100%!important;" @click="post()" v-if="couponFlag === false || (couponFlag === true && request.coupon !== null)">Post</button>
-        <button class="btn btn-primary pull-right btn-custom" style="margin-bottom: 100px; width: 100%!important;" @click="redirect('/requests')">Cancel</button>
+        <button class="btn btn-danger pull-right btn-custom" style="margin-bottom: 100px; width: 100%!important;" @click="redirect('/requests')">Cancel</button>
       </span>
     </span>
     <browse-images-modal></browse-images-modal>
@@ -340,7 +340,7 @@ export default {
     post(){
       this.checkBalance()
       if(this.errorMessage !== null){
-        return
+        return this.redirect('/requests')
       }
       if(parseInt(this.request.amount) < COMMON.MINIMUM_WITHDRAWAL){
         this.errorMessage = 'Minimum transaction is ' + AUTH.displayAmount(COMMON.MINIMUM_WITHDRAWAL)
