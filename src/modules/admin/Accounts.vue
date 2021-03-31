@@ -35,8 +35,8 @@
             <i class="fa fa-pencil text-primary" style="margin-left: 10px;" @click="setEditTypeIndex(index, item)" v-if="editTypeIndex !== index"></i>
             <span v-if="editTypeIndex === index">
               <select class="form-control" v-model="newAccountType" style="float: left; width: 70%;">
-                <option v-if="user.type === 'ADMIN'" v-for="(typeItem, typeIndex) in ['USER', 'PARTNER', 'ACCOUNTANT', 'MARKETING', 'INVESTOR', 'ADMIN']" :key="typeIndex">{{typeItem}}</option>
-                <option v-else v-for="(typeItem, typeIndex) in ['USER', 'PARTNER', 'ACCOUNTANT', 'MARKETING', 'INVESTOR']" :key="typeIndex">{{typeItem}}</option>
+                <option v-if="user.type === 'ADMIN'" v-for="(typeItem, typeIndex) in ['USER', 'PARTNER', 'ACCOUNTANT', 'MARKETING', 'INVESTOR', 'ADMIN', 'SUPPORT']" :key="typeIndex">{{typeItem}}</option>
+                <option v-else v-for="(typeItem, typeIndex) in ['USER', 'PARTNER', 'ACCOUNTANT', 'MARKETING', 'INVESTOR', 'SUPPORT']" :key="typeIndex">{{typeItem}}</option>
               </select>
               <i class="fa fa-check text-primary" style="margin-left: 5px; float: left;" @click="updateType(item, index)"></i>
               <i class="fa fa-times text-danger" style="margin-left: 5px; float: left;" @click="setEditTypeIndex(index, item)"></i>
@@ -66,13 +66,16 @@
         </tr>
       </tbody>
     </table>
+    <div>
+      <button class="btn btn-primary pull-right" @click="seeMore()">See More</button>
+    </div>
 
-     <Pager
+     <!-- <Pager
       :pages="numPages"
       :active="activePage"
       :limit="limit"
       v-if="data !== null"
-    />
+    /> -->
 
     <empty v-if="data === null" :title="'No accounts available!'" :action="'Keep growing.'"></empty>
     <profile :item="selecteditem"></profile>
@@ -155,7 +158,7 @@ export default{
       selecteditem: null,
       config: CONFIG,
       limit: 5,
-      activePage: 1,
+      activePage: 0,
       numPages: null,
       category: [{
         title: 'Sort by',
@@ -246,6 +249,11 @@ export default{
     redirect(params){
       ROUTER.push(params)
     },
+    seeMore() {
+      this.limit = this.limit + 5
+      console.log('Reading', this.limit)
+      this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
+    },
     retrieve(sort, filter){
       if(sort !== null){
         this.sort = sort
@@ -267,7 +275,7 @@ export default{
         }],
         sort: sort,
         limit: this.limit,
-        offset: (this.activePage > 0) ? ((this.activePage - 1) * this.limit) : this.activePage
+        offset: this.activePage
       }
       this.APIRequest('accounts/retrieve_accounts', parameter).then(response => {
         $('#loading').css({display: 'none'})

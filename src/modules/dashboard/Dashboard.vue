@@ -1,19 +1,11 @@
 <template>
   <div class="dashboard-wrapper" v-if="data !== null">
-<!--     <button class="btn btn-primary" @click="redirect('/signup/janpalugod1234@gmail.com/LB1Q48DE0MZJ73X529W6IRAPHNGVCSYO')">Test</button>
-    <button class="btn btn-primary" @click="redirect('/profile/guarantor')">Test</button> -->
     <div class="dashboard-left-container">
-      <ledgers :data="data"></ledgers>
-<!--       <my-requests :data="data.ledger.personal_total_requests"></my-requests>
-      <requests :data="data.ledger.total_requests" :currency="data.ledger.currency"></requests> -->
-      <!-- <approved :data="data.ledger.approved"></approved> -->
-      <!-- <available :data="data.ledger.available"></available> -->
-      <!-- <scanner></scanner> -->
+      <ledgers :data="data.ledger"></ledgers>
     </div>
     <div class="dashboard-right-container">
-      <!-- <pending-transaction :withdrawal="data.ledger.withdrawal" :installment="data.ledger.installment_request" :rental="data.ledger.rental_request"></pending-transaction> -->
       <label style="margin-top: 15px;"><b>Ledger Summary</b></label>
-      <summary-ledger :data="data.data"></summary-ledger>
+      <summary-ledger :data="data.history"></summary-ledger>
     </div>
   </div>
 </template>
@@ -134,13 +126,7 @@ export default{
   },
   components: {
     'ledgers': require('modules/dashboard/Ledger.vue'),
-    // 'requests': require('modules/dashboard/Requests.vue'),
-    // 'my-requests': require('modules/dashboard/MyRequests.vue'),
-    // 'available': require('modules/dashboard/Available.vue'),
-    // 'approved': require('modules/dashboard/Approved.vue'),
     'summary-ledger': require('modules/dashboard/Summary.vue')
-    // 'pending-transaction': require('modules/dashboard/PendingTransaction.vue'),
-    // 'scanner': Scanner
   },
   methods: {
     redirect(parameter){
@@ -153,11 +139,11 @@ export default{
       }
       setTimeout(() => {
         $('#loading').css({display: 'block'})
-        this.APIRequest('ledger/summary', parameter).then(response => {
+        this.APIRequest('ledger/dashboard', parameter).then(response => {
           $('#loading').css({display: 'none'})
           if(response !== null){
             this.data = response.data
-            AUTH.user.ledger.amount = response.data
+            AUTH.user.ledger.amount = response.data.ledger
           }else{
             this.data = null
             AUTH.user.ledger.amount = null

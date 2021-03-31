@@ -10,12 +10,12 @@
       </center>
     </div>
     <basic :item="item"></basic>
-    <educations :data="item.educations" v-if="item.educations !== null"></educations>
+    <!-- <educations :data="item.educations" v-if="item.educations !== null"></educations>
     <works :data="item.works" v-if="item.works !== null"></works>
-    <ids :data="item.cards" v-if="item.cards !== null"></ids>
+    <ids :data="item.cards" v-if="item.cards !== null"></ids> -->
     <!-- <payments :data="item.cards" v-if="item.cards !== null"></payments> -->
-    <comakers :data="item.comakers" v-if="item.comakers !== null && item.payload === 'request'"></comakers>
-    <guarantors :data="item.guarantors" v-if="item.guarantors !== null"></guarantors>
+    <!-- <comakers :data="item.comakers" v-if="item.comakers !== null && item.payload === 'request'"></comakers>
+    <guarantors :data="item.guarantors" v-if="item.guarantors !== null"></guarantors> -->
 <!--     <reviews :item="item" v-if="item.account !== null"></reviews> -->
     <!-- <div class="text-center">
       <button class="btn danger action p-3 text-white">Decline</button>
@@ -94,6 +94,7 @@ export default{
 
     },
     location(item){
+      console.log('[location]', item)
       this.$refs.locate.showAddressModal(item)
     }
   }
