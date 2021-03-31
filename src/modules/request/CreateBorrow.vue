@@ -101,6 +101,7 @@
         </span>
         <span  class="incre-row" style="line-height: 45px;">
           <label class="pull-left">Your current balance</label>
+          {{auth.user.amount}}
           <label class="pull-right text-primary"><b>{{auth.displayAmountWithCurrency(auth.user.ledger.amount, auth.user.ledger.currency)}}</b></label>
         </span>
         <span  class="incre-row" style="line-height: 45px;">
