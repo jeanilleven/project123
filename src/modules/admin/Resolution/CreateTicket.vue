@@ -1,5 +1,5 @@
 <template>
-<div id="holder"> 
+<div id="holder">
   <div class="title" style="margin-top: 25px;">
     <label class="text-primary action-link" @click="redirect('/tickets')"><i class="fas fa-arrow-left"></i> <b> back </b>to previous</label>
   </div>
@@ -24,7 +24,7 @@
         </div>
         <span><b>Image attachments</b></span><br>
 
-        <multiple-img-uploader :imageList="imageList" :isEditableProp="editable"/>                    
+        <multiple-img-uploader :imageList="imageList" :isEditableProp="editable"/>
         <button type="button" class="btn btn-primary mb-5" @click="create()" id="update">Submit</button>
       </form>
     </div>
@@ -54,6 +54,7 @@ import TimeInterval from './TimeInterval.js'
 import TicketType from './TicketTypes.js'
 import TicketTypeComp from './TicketType.vue'
 import CONFIG from 'src/config.js'
+import Comments from './Comments.vue'
 
 export default {
   data() {
@@ -79,7 +80,8 @@ export default {
   components: {
     'ticket-type': TicketTypeComp,
     'multiple-img-uploader': MultipleImgUploader,
-    'assignees': require('modules/admin/Resolution/Assignees.vue')
+    'assignees': require('modules/admin/Resolution/Assignees.vue'),
+    Comments
   },
   methods: {
     showAssignees(){
