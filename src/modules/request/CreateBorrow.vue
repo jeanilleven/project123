@@ -134,7 +134,8 @@
             <label class="pull-right"><b>{{auth.displayAmountWithCurrency(parseInt(request.amount), request.currency)}}</b></label>
           </span>
         </div>
-        <button class="btn btn-primary pull-right btn-custom" style="margin-bottom: 100px; width: 100%!important;" @click="post()">Post</button>
+        <button class="btn btn-primary pull-right btn-custom" style="margin-bottom: 20px; width: 100%!important;" @click="post()">Post</button>
+        <button class="btn btn-danger pull-right btn-custom" style="margin-bottom: 100px; width: 100%!important;" @click="redirect('/requests')">Cancel</button>
       </span>
     </span>
     <browse-images-modal></browse-images-modal>
@@ -264,6 +265,7 @@ import DatePicker from 'vue2-datepicker'
 import 'vue2-datepicker/index.css'
 export default {
   mounted(){
+    console.log('[LEDGER]', this.user)
     this.today = new Date()
     let day = this.today.getDate()
     let month = this.today.getMonth() + 1

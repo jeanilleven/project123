@@ -11,14 +11,20 @@ export default {
     {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ADMIN', description: 'Transfer Charges', icon: 'fas fa-stamp', path: 'transfer_charges', flag: false, subMenu: null},
     {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ADMIN', description: 'Resolution Tickets', icon: 'fas fa-bug', path: 'tickets', flag: false, subMenu: null},
     {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ADMIN', description: 'Enable Support', icon: 'fas fa-headset', path: 'enableSupport', flag: false, subMenu: null},
-    {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ADMIN', description: 'Scope', icon: 'fas fa-map-marker-alt', path: 'scopeLocation', flag: false, subMenu: null}
+    {accountType: 'ADMIN', showOnAdmin: true, accountStatus: 'ADMIN', description: 'Scope', icon: 'fas fa-map-marker-alt', path: 'scopeLocation', flag: false, subMenu: null},
+    {accountType: 'MARKETING', showOnAdmin: false, accountStatus: 'MARKETING', description: 'Coupons', icon: 'fas fa-stamp', path: 'coupons', flag: false, subMenu: null},
+    {accountType: 'MARKETING', showOnAdmin: false, accountStatus: 'MARKETING', description: 'Enable Support', icon: 'fas fa-stamp', path: 'enableSupport', flag: false, subMenu: null},
+    {accountType: 'MARKETING', showOnAdmin: false, accountStatus: 'MARKETING', description: 'Resolution Tickets', icon: 'fas fa-bug', path: 'tickets', flag: false, subMenu: null},
+    {accountType: 'ACCOUNTANT', showOnAdmin: false, accountStatus: 'ACCOUNTANT', description: 'Withdrawals', icon: 'fas fa-stamp', path: 'adminWithdrawals', flag: false, subMenu: null},
+    {accountType: 'ACCOUNTANT', showOnAdmin: false, accountStatus: 'ACCOUNTANT', description: 'Deposits', icon: 'fas fa-stamp', path: 'adminDeposits', flag: false, subMenu: null},
+    {accountType: 'ACCOUNTANT', showOnAdmin: false, accountStatus: 'ACCOUNTANT', description: 'Transfer Charges', icon: 'fas fa-bug', path: 'transfer_charges', flag: false, subMenu: null},
+    {accountType: 'SUPPORT', showOnAdmin: false, accountStatus: 'SUPPORT', description: 'accounts', icon: 'fas fa-stamp', path: 'accounts', flag: false, subMenu: null},
+    {accountType: 'SUPPORT', showOnAdmin: false, accountStatus: 'SUPPORT', description: 'Resolution Tickets', icon: 'fas fa-stamp', path: 'tickets', flag: false, subMenu: null},
+    {accountType: 'SUPPORT', showOnAdmin: false, accountStatus: 'SUPPORT', description: 'Enable Support', icon: 'fas fa-bug', path: 'enableSupport', flag: false, subMenu: null},
+    {accountType: 'SUPPORT', showOnAdmin: false, accountStatus: 'SUPPORT', description: 'Scope', icon: 'fas fa-bug', path: 'scopeLocation', flag: false, subMenu: null}
   ],
+
   profileMenu: [
-  // {
-  //   title: 'My Bookmarks',
-  //   icon: 'fa fa-star',
-  //   route: '/bookmarks'
-  // },
     {
       title: 'My Profile',
       icon: 'fa fa-cog',

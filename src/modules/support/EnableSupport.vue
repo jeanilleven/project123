@@ -14,19 +14,20 @@
           <td>Payload Value</td>
           <td>Assigned To</td>
           <td>Status</td>
-          <td>Action</td>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(item, index) in data" :key="index">
           <td>{{item.payload}}</td>
           <td>{{item.payload_value}}</td>
-          <td><select :required="true" v-if="item.assigned_to"><option v-for="(option, index) in item.assigned_to" :value="option.name" :key="option.id">{{option.name}}</option></select></td>
-          <td>{{item.status}}</td>
           <td>
-            <button class="btn btn-secondary" @click="showModal('update', item)"><div class=" mx-auto"><i class="fa fa-edit" style="padding: 0"></i></div></button>
-            <button class="btn btn-danger" @click="removeMessage(item)"><i class="fa fa-trash" style="padding: 0"></i></button>
+              <p v-if="item.assigned_to !== null">{{item.assigned_to}}</p>
+              <!--<select v-if="item.assigned_to !== null">
+                <option v-for="(option, index) in item.assigned_to" :value="option" :key="index">{{option}}</option>
+              </select>-->
+              <p v-else>No Assigned </p>
           </td>
+          <td>{{item.status}}</td>
         </tr>
       </tbody>
     </table>
@@ -181,27 +182,15 @@ export default{
       $('#loading').css({display: 'block'})
       this.APIRequest('enable_supports/retrieve', parameter).then(response => {
         $('#loading').css({display: 'none'})
-        console.log(response)
+        console.log('[Enable Supports]', response.data)
         if(response.data.length > 0){
           this.data = response.data
+          console.log(this.data)
           this.numPages = parseInt(response.size / this.limit) + (response.size % this.limit) ? 1 : 0
         }else{
           this.data = null
           this.numPages = null
         }
-      })
-    },
-    removeMessage(item){
-      this.$refs.confirm.show(item.id)
-    },
-    remove(event){
-      console.log('id here', event.id)
-      let parameter = {
-        id: event.id
-      }
-      $('#loading').css({display: 'block'})
-      this.APIRequest('enable_supports/delete', parameter).then(response => {
-        this.retrieve({created_at: 'asc'}, {column: 'created_at', value: ''})
       })
     },
     manageGrid(event){
