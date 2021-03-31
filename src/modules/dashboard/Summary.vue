@@ -1,12 +1,12 @@
 <template>
-  <div v-if="datas !== null">
-    <div class="summary-container-item" v-for="(item, index) in datas" :key="index">
+  <div v-if="data !== null">
+    <div class="summary-container-item" v-for="(item, index) in data" :key="index">
       <span class="header">{{item.created_at_human}}</span>
       <span class="body">
         <label>
           {{item.description}}
         </label>
-        <label v-bind:class="{'text-danger': parseFloat(item.amount) <= 0, 'text-primary': parseFloat(item.amount) > 0}" class="pull-right amount"><b>+ {{auth.displayAmountWithCurrency(item.amount, item.currency)}}</b></label>
+        <label v-bind:class="{'text-danger': parseFloat(item.amount) <= 0, 'text-primary': parseFloat(item.amount) > 0}" class="pull-right amount"><b>{{auth.displayAmountWithCurrency(item.amount, item.currency)}}</b></label>
       </span>
       <span class="footer" v-if="item.payload !== null">
         <label style="padding: 10px 0px 10px 0px;">
@@ -19,10 +19,10 @@
         </label>
       </span>
     </div>
-    <div class="icnre-row text-center" v-if="datas !== null">
+    <div class="icnre-row text-center" v-if="data !== null">
       <span class="view-more" @click="redirect('/ledgers')">View more</span>
     </div>
-    <empty v-if="datas === null" :title="'Looks like your ledger is empty!'" :action="'Deposit now or start requesting money.'"></empty>
+    <empty v-if="data === null" :title="'Looks like your ledger is empty!'" :action="'Deposit now or start requesting money.'"></empty>
   </div>
 </template>
 <style lang="scss" scoped>
@@ -80,18 +80,16 @@
 }
 </style>
 <script>
-import ROUTER from '../../router'
-import AUTH from '../../services/auth'
-import CONFIG from '../../config.js'
+import ROUTER from 'src/router'
+import AUTH from 'src/services/auth'
+import CONFIG from 'src/config.js'
 export default{
   mounted(){
-    this.retrieve({column: 'created_at', value: 'desc'}, {column: 'created_at', value: ''})
   },
   data(){
     return {
       user: AUTH.user,
-      auth: AUTH,
-      datas: []
+      auth: AUTH
     }
   },
   props: ['data'],
@@ -104,19 +102,6 @@ export default{
     },
     showInvestments(item){
       console.log(item)
-    },
-    retrieve(sort, filter){
-      let parameter = {
-        account_id: this.user.userID,
-        account_code: this.user.code,
-        offset: 0,
-        limit: 5
-      }
-      $('#loading').css({display: 'block'})
-      this.APIRequest('ledger/history', parameter).then(response => {
-        this.datas = response.data
-        $('#loading').css({display: 'none'})
-      })
     }
   }
 }

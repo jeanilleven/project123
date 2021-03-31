@@ -20,8 +20,14 @@
         <tr v-for="(item, index) in data" :key="index">
           <td>{{item.payload}}</td>
           <td>{{item.payload_value}}</td>
-          <td>{{item.assigned_to}}</td>
-          <td>{{item.status}}</td> 
+          <td>
+              <p v-if="item.assigned_to !== null">{{item.assigned_to}}</p>
+              <!--<select v-if="item.assigned_to !== null">
+                <option v-for="(option, index) in item.assigned_to" :value="option" :key="index">{{option}}</option>
+              </select>-->
+              <p v-else>No Assigned </p>
+          </td>
+          <td>{{item.status}}</td>
         </tr>
       </tbody>
     </table>
@@ -94,12 +100,13 @@ export default{
   data(){
     return {
       user: AUTH.user,
-      data: null,
       auth: AUTH,
       newAttachment: {
         activeId: null,
         file: null
       },
+      data: null,
+      option: [],
       config: CONFIG,
       category: [{
         title: 'Sort by',
@@ -175,9 +182,10 @@ export default{
       $('#loading').css({display: 'block'})
       this.APIRequest('enable_supports/retrieve', parameter).then(response => {
         $('#loading').css({display: 'none'})
-        console.log(response)
+        console.log('[Enable Supports]', response.data)
         if(response.data.length > 0){
           this.data = response.data
+          console.log(this.data)
           this.numPages = parseInt(response.size / this.limit) + (response.size % this.limit) ? 1 : 0
         }else{
           this.data = null

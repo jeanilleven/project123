@@ -38,7 +38,7 @@
           <td>{{item.start}}</td>
           <td>{{item.end}}</td>
           <td>
-            <button class="btn btn-secondary" @click="showModal('update', item)"><div class=" mx-auto"><i class="fa fa-edit" style="padding: 0"></i></div></button>
+            <button class="btn btn-secondary" @click="showModal('update', item)"><i class="fa fa-edit" style="padding: 0"></i></button>
             <button class="btn btn-danger" @click="removeMessage(item)"><i class="fa fa-trash" style="padding: 0"></i></button>
           </td>
         </tr>
@@ -312,10 +312,14 @@ export default{
               data.value = item.limit
             }
             if(data.variable === 'start'){
-              data.value = item.start
+              const d = new Date(item.start)
+              const dateTimeLocalValue = (new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString()).slice(0, -1)
+              data.value = dateTimeLocalValue
             }
             if(data.variable === 'end'){
-              data.value = item.end
+              const d = new Date(item.end)
+              const dateTimeLocalValue = (new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString()).slice(0, -1)
+              data.value = dateTimeLocalValue
             }
           })
           this.modalProperty = {...modalData}
