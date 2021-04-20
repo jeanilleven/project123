@@ -3,16 +3,16 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Uploaded ID</h5>
+          <h5 class="modal-title" id="exampleModalLabel">ID</h5>
           <button type="button" class="close" @click="hideModal()" aria-label="Close">
             <span aria-hidden="true" class="text-primary">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-          <div class="form-group" v-if="uploadImage !== null">
-             <img :src="config.BACKEND_URL + uploadImage">
+          <div class="form-group" v-if="uploadImage.length > 0" v-for="(item, index) in uploadImage" :key="index">
+             <img :src="config.BACKEND_URL + item.payload_value">
           </div>
-          <div class="form-group" v-if="uploadImage === null">
+          <div class="form-group" v-if="uploadImage.length <= 0">
             <label>{{uploadMessage}}</label>
           </div>
         </div>
@@ -24,6 +24,10 @@
   </div>
 </template>
 <style scoped>
+img {
+  width: 50%;
+  height: 50%;
+}
 .action {
   width:40%;
 }
@@ -59,7 +63,7 @@ export default{
     return {
       user: AUTH.user,
       config: CONFIG,
-      uploadImage: null,
+      uploadImage: [],
       uploadMessage: 'No Uploaded ID'
     }
   },
@@ -76,14 +80,17 @@ export default{
       $('#viewIdModal').modal('hide')
     },
     retrieve(item){
+      this.uploadImage = []
       let parameter = {
         account_id: item.id,
         payload: 'upload_image'
       }
       $('#loading').css({display: 'block'})
       this.APIRequest('account_cards/retrieve', parameter).then(response => {
-        this.uploadImage = response.data[0].content[0].payload_value
         $('#loading').css({display: 'none'})
+        response.data[0].content.forEach(element => {
+          this.uploadImage.push(element)
+        })
       })
     }
   }
