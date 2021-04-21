@@ -12,11 +12,12 @@
       <form>
         <div class="form-group">
           <label for="text"><b>Title</b></label>
-          <input type="text" class="form-control" v-model="title" id="text">
+          <label id="text">{{title}}</label>
+          <!-- <input type="text" class="form-control" v-model="title" id="text"> -->
         </div>
         <div class="form-group">
           <label for="pwd"><b>Details</b></label>
-          <textarea type="password" v-model="detail" class="form-control"  id="pwd"/>
+          <p type="password" class="form-control"  id="pwd">{{ detail }}</p>
         </div>
         <span><b>Image attachments</b></span><br>
 
@@ -40,6 +41,7 @@
       </div>
     </div>
   </div>
+  <comments v-if="data !== null" :id="data.id"/>
 </div>
 
 </template>
@@ -51,6 +53,7 @@ import AUTH from 'src/services/auth'
 import TimeInterval from './TimeInterval.js'
 import TicketType from './TicketTypes.js'
 import TicketTypeComp from './TicketType.vue'
+import Comments from './Comments.vue'
 
 export default {
   created() {
@@ -88,7 +91,8 @@ export default {
   components: {
     'multiple-img-uploader': MultipleImgUploader,
     'ticket-type': TicketTypeComp,
-    'assignees': require('modules/admin/Resolution/Assignees.vue')
+    'assignees': require('modules/admin/Resolution/Assignees.vue'),
+    'comments': Comments
   },
   methods: {
     showAssignees(){
@@ -131,7 +135,6 @@ export default {
           this.data = response.data[0]
           this.timeIntervalRes = this.getticketTimePassed(this.data.created_at)
           if(this.data.images !== null) {
-            console.log(this.data.images)
             this.imageList = this.data.images.split(' ')
           }
           this.editable = this.user.userID === this.data.account_id
@@ -160,7 +163,6 @@ export default {
       var difference = (current - ticketCreation)
       let result = this.timeInterval.getticketTimePassed(difference)
       let timePassedFormat = ''
-      console.log(difference, result)
       if(result.length === 1) {
         timePassedFormat += result[0].interval + ' ' + result[0].unit + (result[0].interval > 1 ? 's' : '')
         return timePassedFormat

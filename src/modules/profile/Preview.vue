@@ -6,6 +6,7 @@
     <div style="margin-right: 15%; margin-left: 15%;">
       <center>
         <button class="btn btn-primary" style="margin-top: 3%; margin-bottom: 3%" @click="location(item)">Scope Location</button>
+        <button class="btn btn-primary" style="margin-top: 3%; margin-bottom: 3%" @click="viewId(item)">Uploaded ID</button>
         <button class="btn btn-primary" style="margin-top: 3%; margin-bottom: 3%" v-if="item.status !== 'GRANTED'" @click="verify(item)">Verify Account</button>
       </center>
     </div>
@@ -26,6 +27,9 @@
     <view-location
      ref="locate"
     ></view-location>
+    <view-modal
+     ref="upload"
+    ></view-modal>
     <Confirmation
       ref="confirm"
       :title="'Validation'"
@@ -80,6 +84,7 @@ export default{
     'comakers': require('modules/profile/CoMakers.vue'),
     'guarantors': require('modules/profile/Guarantors.vue'),
     'view-location': require('modules/request/ViewLocation.vue'),
+    'view-modal': require('modules/request/ViewIdModal.vue'),
     Confirmation
   },
   methods: {
@@ -94,8 +99,10 @@ export default{
 
     },
     location(item){
-      console.log('[location]', item)
       this.$refs.locate.showAddressModal(item)
+    },
+    viewId(item){
+      this.$refs.upload.showModal(item)
     }
   }
 }
