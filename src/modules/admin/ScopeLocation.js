@@ -87,7 +87,7 @@ export default {
     placeholder: 'Latitude',
     value: null,
     required: false,
-    id: 'latitud',
+    id: 'latitude',
     type: 'input',
     inputType: 'text',
     validation: {
