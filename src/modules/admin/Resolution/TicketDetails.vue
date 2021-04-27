@@ -12,11 +12,12 @@
       <form>
         <div class="form-group">
           <label for="text"><b>Title</b></label>
-          <input type="text" class="form-control" v-model="title" id="text">
+          <label id="text">{{title}}</label>
+          <!-- <input type="text" class="form-control" v-model="title" id="text"> -->
         </div>
         <div class="form-group">
           <label for="pwd"><b>Details</b></label>
-          <textarea type="password" v-model="detail" class="form-control"  id="pwd"/>
+          <p type="password" class="form-control"  id="pwd">{{ detail }}</p>
         </div>
         <span><b>Image attachments</b></span><br>
 
