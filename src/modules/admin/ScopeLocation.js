@@ -80,6 +80,34 @@ export default {
       size: 1,
       type: 'text'
     }
+  }, {
+    row: 'full',
+    label: 'Latitude',
+    variable: 'latitude',
+    placeholder: 'Latitude',
+    value: null,
+    required: false,
+    id: 'latitud',
+    type: 'input',
+    inputType: 'text',
+    validation: {
+      size: 1,
+      type: 'text'
+    }
+  }, {
+    row: 'full',
+    label: 'Longitude',
+    variable: 'longitude',
+    placeholder: 'Longitude',
+    value: null,
+    required: false,
+    id: 'longitude',
+    type: 'input',
+    inputType: 'text',
+    validation: {
+      size: 1,
+      type: 'text'
+    }
   }],
   route: 'location_scopes/create',
   button: {

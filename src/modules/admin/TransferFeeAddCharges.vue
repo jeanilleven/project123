@@ -17,6 +17,7 @@
           <td>Date</td>
           <td>Scope</td>
           <td>Destination</td>
+          <td>Type</td>
           <td>Currency</td>
           <td>Minimum Amount</td>
           <td>Maximum Amount</td>
@@ -28,6 +29,7 @@
           <td>{{item.effective_date}}</td>
           <td>{{item.scope}}</td>
           <td>{{item.destination}}</td>
+          <td>{{item.type}}</td>
           <td>{{item.currency}}</td>
           <td class="text-primary">{{auth.displayAmountWithCurrency(item.min_amount, item.currency)}}</td>
           <td class="text-primary">{{auth.displayAmountWithCurrency(item.max_amount, item.currency)}}</td>

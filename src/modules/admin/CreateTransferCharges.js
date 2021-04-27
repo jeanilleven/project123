@@ -5,6 +5,13 @@ let currency = countries.list.map((item, index) => {
     value: item.currency
   }
 })
+var types = [{
+  label: 'Percentage',
+  value: 'percentage'
+}, {
+  label: 'Fixed Amount',
+  value: 'fixed_amount'
+}]
 export default {
   id: 'createTransferChargesModal',
   size: 'modal-md',
@@ -52,6 +59,15 @@ export default {
       size: 1,
       type: 'text'
     }
+  }, {
+    row: 'full',
+    label: 'Type',
+    variable: 'type',
+    value: null,
+    required: true,
+    id: 'type',
+    type: 'select_specified',
+    options: types
   }, {
     row: 'full',
     label: 'Currency',
