@@ -45,14 +45,14 @@
             <td>Address</td>
             <td>{{item.account.information.address}}</td>
           </tr> -->
-          <tr v-if="user.type === 'ADMIN' && item.account.information.sex !== null">
+          <!-- <tr v-if="user.type === 'ADMIN' && item.account.information.sex !== null">
             <td>Gender</td>
             <td style="text-transform:UPPERCASE">{{item.account.information.sex}}</td>
           </tr>
           <tr v-if="user.type === 'ADMIN' && item.account.information.birth_date_human !== null">
             <td>Birth Date</td>
             <td>{{item.account.information.birth_date_human}}</td>
-          </tr>
+          </tr> -->
         </tbody>
       </table>
     </div>
@@ -82,7 +82,6 @@ import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
 export default{
   mounted(){
-    console.log(this.item)
   },
   data(){
     return {

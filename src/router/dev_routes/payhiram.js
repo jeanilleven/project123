@@ -127,6 +127,13 @@ export default{
       tokenRequired: true
     }
   }, {
+    path: '/adminLedgers/',
+    name: 'adminLedgers',
+    component: resolve => require(['modules/admin/Ledger.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  }, {
     path: '/adminWithdrawals/',
     name: 'adminWithdrawals',
     component: resolve => require(['modules/admin/Withdrawals.vue'], resolve),

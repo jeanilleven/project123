@@ -7,6 +7,13 @@
     <i class="fa fa-plus"></i>
     New Issue Ticket
   </button>
+  <basic-filter 
+      v-bind:category="category" 
+      :activeCategoryIndex="0"
+      :activeSortingIndex="0"
+      @changeSortEvent="retrieve($event.sort, $event.filter)"
+      @changeStyle="manageGrid($event)"
+      :grid="['list', 'th-large']"></basic-filter>
   <ticket-table :ticketData = "data"/>
    <Pager
       :pages="numPages"
@@ -29,6 +36,7 @@ import ROUTER from 'src/router'
 export default {
   name: 'ticket',
   components: {
+    'basic-filter': require('components/increment/generic/filter/Basic.vue'),
     // 'create': Create,
     'ticket-table': TableTicket,
     Pager,
@@ -37,7 +45,7 @@ export default {
   },
   created() {
     this.statusType = 'OPEN'
-    this.retrieve()
+    this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
     this.auth.messenger.data = null
   },
   mounted(){
@@ -48,37 +56,90 @@ export default {
       user: AUTH.user,
       auth: AUTH,
       limit: 5,
-      activePage: 1,
+      activePage: 0,
       numPages: null,
-      statusType: ''
+      statusType: '',
+      sort: null,
+      filter: null,
+      category: [{
+        title: 'Sort by',
+        sorting: [{
+          title: 'Content ascending',
+          payload: 'content',
+          payload_value: 'asc'
+        }, {
+          title: 'Content descending',
+          payload: 'content',
+          payload_value: 'desc'
+        }, {
+          title: 'Status ascending',
+          payload: 'status',
+          payload_value: 'asc'
+        }, {
+          title: 'Status descending',
+          payload: 'status',
+          payload_value: 'desc'
+        }, {
+          title: 'Title ascending',
+          payload: 'title',
+          payload_value: 'asc'
+        }, {
+          title: 'Title descending',
+          payload: 'title',
+          payload_value: 'desc'
+        }, {
+          title: 'Created ascending',
+          payload: 'created_at',
+          payload_value: 'asc'
+        }, {
+          title: 'Created descending',
+          payload: 'created_at',
+          payload_value: 'desc'
+        }]
+      }]
     }
   },
   methods: {
     createTicket() {
       ROUTER.push('/tickets/create/')
     },
-    retrieve() {
+    retrieve(sort, filter) {
+      if(sort !== null){
+        this.sort = sort
+      }
+      if(filter !== null){
+        this.filter = filter
+      }
+      if(sort === null && this.sort !== null){
+        sort = this.sort
+      }
+      if(filter === null && this.filter !== null){
+        filter = this.filter
+      }
       if(this.statusType.toUpperCase() === 'OPEN') {
         this.statusType = this.statusType.toUpperCase()
       }
       let parameter = {
-        condition: [{
-          value: this.statusType,
-          column: 'status',
-          clause: '='
-        }],
-        sort: {
-          status: 'desc'
-        },
+        condition: [
+          {
+            value: filter.value + '%',
+            column: filter.column,
+            clause: 'like'
+          },
+          {
+            value: this.statusType,
+            column: 'status',
+            clause: '='
+          }],
+        sort: sort,
         limit: this.limit,
-        offset: (this.activePage > 0) ? ((this.activePage - 1) * this.limit) : this.activePage
+        offset: this.activePage
       }
       $('#loading').css({display: 'block'})
       this.APIRequest('tickets/retrieve', parameter).then(response => {
         $('#loading').css({display: 'none'})
         if(response.data.length > 0){
           this.data = response.data
-          console.log('df', this.data)
           this.numPages = parseInt(response.size / this.limit) + (response.size % this.limit ? 1 : 0)
         }else{
           this.data = null
