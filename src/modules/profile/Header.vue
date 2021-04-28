@@ -14,8 +14,10 @@
         <span v-if="item.account.information.last_name !== null">{{item.account.information.last_name}}</span>
       </div>
       <p v-else class="text-white">{{item.account.username}}</p>
-      <ratings class="text-white" :ratings="item.rating" v-if="item !== null ? item.rating : 'No Ratings'"></ratings>
-      <p class="text-white"><i class="far fa-check-circle" color="primary"></i><i> {{item.status === 'NOT_VERIFIED' ? item.status : 'Verified'}}</i></p>
+      <ratings class="text-white" :ratings="rating" v-if="item !== null ? item.rating : 'No Ratings'"></ratings>
+      <!-- <ratings class="text-black" :ratings="rating"></ratings> -->
+      <p class="text-white"><i v-if="item.status === 'GRANTED' || item.status === 'VERIFIED'" class="far fa-check-circle" color="primary"></i><i> {{item.status === 'NOT_VERIFIED' ? item.status : 'Verified'}}</i></p>
+      <p class="text-white" v-if="location != null"><i> Scope Location: {{location}}</i></p>
       <br>
       <!-- <label class="text-white" v-if="item.account.information !== null"><b>{{item.account.information.address}}</b></label> -->
 
@@ -82,13 +84,29 @@ export default{
   data(){
     return {
       user: AUTH.user,
-      config: CONFIG
+      config: CONFIG,
+      rating: null
     }
   },
-  props: ['item'],
+  props: ['item', 'location'],
   methods: {
     redirect(parameter){
       ROUTER.push(parameter)
+    },
+    retrieveRatings(){
+      let parameter = {
+        condition: [{
+          value: this.$parent.$parent.item.id,
+          clause: '=',
+          column: 'account_id'
+        }]
+      }
+      $('#loading').css({display: 'block'})
+      this.APIRequest('account_informations/retrieve_account_info', parameter).then(response => {
+        $('#loading').css({display: 'none'})
+        console.log('[response]', response.data[0].rating)
+        this.rating = response.data[0].rating
+      })
     }
   },
   components: {

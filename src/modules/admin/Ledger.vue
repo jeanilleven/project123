@@ -1,5 +1,5 @@
 <template>
-  <div class="ledger-summary-container">
+  <div class="ledger-summary-container" style="margin-top: 5%">
     <basic-filter 
       v-bind:category="category" 
       :activeCategoryIndex="0"
@@ -10,35 +10,28 @@
     <table class="table table-bordered table-responsive"  v-if="data !== null">
       <thead>
         <td>Date</td>
-        <td>Username</td>
-        <td>Full Name</td>
-        <td>Deposit #</td>
-        <td>Via</td>
+        <td>Transaction Code</td>
+        <td>Sender's Code</td>
+        <td>Receiver's Code</td>
         <td>Amount</td>
-        <td>Status</td>
-        <td v-if="user.type === 'ADMIN'">Actions</td>
+        <td>Description</td>
       </thead>
       <tbody>
         <tr v-for="item, index in data" :key="index">
-          <td>{{item.date_human}}</td>
-          <td>{{item.account.username}}</td>
-          <td>{{item.account.information.first_name !== null || item.account.information.last_name !== null ? item.account.information.first_name + ' ' + item.account.information.last_name : 'N/A'}}</td>
-          <!-- <td>{{item.deposit_slip}}</td> -->
-          <td>{{item.code}}</td>
-          <!-- <td>{{item.bank}}</td> -->
-          <td>{{item.payload_value}}</td>
-          <td class="text-primary"><b>{{auth.displayAmountWithCurrency(item.amount, item.currency)}}</b></td>
-          <td>{{item.status}}</td>
-          <td v-if="user.type === 'ADMIN'">
-            <button class="btn btn-danger" style="margin-bottom: 10px;" @click="approve(item)" v-if="item.status === 'pending'">Approve</button>
-          </td>
+          <td>{{item.created_at}}</td>
+          <td>*****{{item.code.substring(56)}}</td>
+          <td>*****{{item.account_code.substring(24)}}</td>
+          <td>*****{{item.payment_payload_value.substring(24)}}</td>
+          <td v-if="item.amount > 0" class="text-primary"><b>{{auth.displayAmountWithCurrency(item.amount, item.currency)}}</b></td>
+          <td v-else class="text-danger"><b>{{auth.displayAmountWithCurrency(item.amount, item.currency)}}</b></td>
+          <td>{{item.description}}</td>
         </tr>
       </tbody>
     </table>
-    <empty v-if="data === null" :title="'No deposit yet!'" :action="'Keep growing.'"></empty>
-    <browse-images-modal></browse-images-modal>
-    <image-viewer :src="selectedImage"></image-viewer>
-    <authenticate-otp ref="authenticateOTP"></authenticate-otp>
+    <div>
+      <button class="btn btn-primary pull-right" @click="seeMore()">See More</button>
+    </div>
+    <empty v-if="data === null" :title="'No Transactions yet!'" :action="'Keep growing.'"></empty>
   </div>
 </template>
 <style scoped lang="scss">
@@ -109,7 +102,6 @@
 <script>
 import ROUTER from 'src/router'
 import AUTH from 'src/services/auth'
-import CONFIG from 'src/config.js'
 export default{
   mounted(){
     this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
@@ -119,11 +111,8 @@ export default{
       user: AUTH.user,
       data: null,
       auth: AUTH,
-      newAttachment: {
-        activeId: null,
-        file: null
-      },
-      config: CONFIG,
+      limit: 10,
+      activePage: 0,
       category: [{
         title: 'Sort by',
         sorting: [{
@@ -151,56 +140,38 @@ export default{
           payload: 'description',
           payload_value: 'desc'
         }, {
-          title: 'Status ascending',
-          payload: 'status',
+          title: 'Sender ascending',
+          payload: 'account_code',
           payload_value: 'asc'
         }, {
-          title: 'Status descending',
-          payload: 'status',
+          title: 'Sender descending',
+          payload: 'account_code',
+          payload_value: 'desc'
+        }, {
+          title: 'Receiver ascending',
+          payload: 'payment_payload_value',
+          payload_value: 'asc'
+        }, {
+          title: 'Receiver descending',
+          payload: 'payment_payload_value',
           payload_value: 'desc'
         }]
       }],
-      selectedImage: null,
       filter: null,
-      sort: null,
-      selectedItem: null
+      sort: null
     }
   },
   components: {
     'empty': require('components/increment/generic/empty/Empty.vue'),
-    'browse-images-modal': require('components/increment/generic/image/BrowseModal.vue'),
-    'basic-filter': require('components/increment/generic/filter/Basic.vue'),
-    'image-viewer': require('components/increment/generic/modal/Image.vue'),
-    'authenticate-otp': require('modules/transfer/Otp.vue')
+    'basic-filter': require('components/increment/generic/filter/Basic.vue')
   },
   methods: {
     redirect(params){
       ROUTER.push(params)
     },
-    showImages(id){
-      this.newAttachment.activeId = id
-      $('#browseImagesModal').modal('show')
-    },
-    viewImage(src){
-      this.selectedImage = src
-      setTimeout(() => {
-        $('#imageView').modal('show')
-      })
-    },
-    manageImageUrl(url){
-      this.newAttachment.file = url
-      this.attach(this.newAttachment)
-    },
-    attach(){
-      this.APIRequest('deposit_attachments/update', this.newAttachment).then(response => {
-        $('#loading').css({display: 'none'})
-        if(response.data !== null){
-          this.data = response.data
-        }else{
-          this.data = null
-        }
-        this.retrieve(this.sort, this.filter)
-      })
+    seeMore() {
+      this.limit = this.limit + 5
+      this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
     },
     retrieve(sort, filter){
       if(sort !== null){
@@ -221,16 +192,25 @@ export default{
           value: filter.value + '%',
           clause: 'like'
         }],
-        sort: sort
+        sort: sort,
+        limit: this.limit,
+        offset: this.activePage
       }
       $('#loading').css({display: 'block'})
-      this.APIRequest('deposits/retrieve_requests', parameter).then(response => {
+      this.APIRequest('ledger/transaction_history', parameter).then(response => {
+        console.log(response)
         $('#loading').css({display: 'none'})
-        if(response.data.length > 0){
-          this.data = response.data
+        if(response != null){
+          this.data = response
+          this.numPages = parseInt(response.size / this.limit) + (response.size % this.limit ? 1 : 0)
         }else{
           this.data = null
         }
+        // if(response.data.length > 0){
+        //   this.data = response
+        // }else{
+        //   this.data = null
+        // }
       })
     },
     manageGrid(event){
@@ -240,20 +220,6 @@ export default{
         case 'list': this.listStyle = 'list'
           break
       }
-    },
-    approve(item){
-      this.selectedItem = item
-      if(item.status === 'pending'){
-        this.$refs.authenticateOTP.show()
-      }
-    },
-    successOTP(){
-      this.selectedItem['from'] = this.user.userID
-      $('#loading').css({display: 'block'})
-      this.APIRequest('ledgers/create_on_deposit', this.selectedItem).then(response => {
-        $('#loading').css({display: 'none'})
-        this.retrieve(null, null)
-      })
     }
   }
 }
