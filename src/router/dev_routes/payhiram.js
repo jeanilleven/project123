@@ -364,6 +364,14 @@ export default{
     meta: {
       tokenRequired: true
     }
+  },
+  {
+    path: '/plans',
+    name: 'plans',
+    component: resolve => require(['modules/plan/index.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
   }
   ]
 }
