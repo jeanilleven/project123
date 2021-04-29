@@ -9,6 +9,42 @@
       @changeSortEvent="retrieve($event.sort, $event.filter)"
       @changeStyle="manageGrid($event)"
       :grid="['list', 'th-large']"></basic-filter>
+
+        <h2>&nbsp;</h2>
+        <br>
+
+        <ul class="nav nav-tabs nav-justified">
+          <li class="nav-item">
+            <a class="nav-link" @click.prevent="setActive('user')" :class="{ active: isActive('user') }" href="#user">User</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" @click.prevent="setActive('partner')" :class="{ active: isActive('partner') }" href="#partner">Partner</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" @click.prevent="setActive('accountant')" :class="{ active: isActive('accountant') }" href="#accountant">Accountant</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" @click.prevent="setActive('marketing')" :class="{ active: isActive('marketing') }" href="#marketing">Marketing</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" @click.prevent="setActive('investor')" :class="{ active: isActive('investor') }" href="#investor">Investor</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" @click.prevent="setActive('support')" :class="{ active: isActive('support') }" href="#support">Support</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" @click.prevent="setActive('admin')" :class="{ active: isActive('admin') }" href="#admin">Admin</a>
+          </li>
+        </ul>
+        <div class="tab-content py-3" id="myTabContent">
+          <div class="tab-pane fade" :class="{ 'active show': isActive('user') }" id="user">User content</div>
+          <div class="tab-pane fade" :class="{ 'active show': isActive('partner') }" id="partner">Partner content</div>
+          <div class="tab-pane fade" :class="{ 'active show': isActive('accountant') }" id="accountant">Accountant content</div>
+          <div class="tab-pane fade" :class="{ 'active show': isActive('marketing') }" id="marketing">Marketing content</div>
+          <div class="tab-pane fade" :class="{ 'active show': isActive('investor') }" id="investor">Investor content</div>  
+          <div class="tab-pane fade" :class="{ 'active show': isActive('support') }" id="support">Support content</div>  
+          <div class="tab-pane fade" :class="{ 'active show': isActive('admin') }" id="admin">Admin content</div>  
+        </div>
     
     <table class="table table-bordered table-responsive" v-if="data !== null">
       <thead>
@@ -203,7 +239,8 @@ export default{
       selectedLocation: null,
       editTypeIndex: null,
       newAccountType: null,
-      selectedAccount: null
+      selectedAccount: null,
+      activeItem: 'home'
     }
   },
   components: {
@@ -301,6 +338,18 @@ export default{
       })
       $('#profileModal').modal('hide')
     },
+    updateStat(item){
+      let parameter = {
+        id: item.id.id,
+        status: 'NOT_VERIFIED'
+      }
+      $('#loading').css({display: 'block'})
+      this.APIRequest('accounts/update_verification', parameter).then(response => {
+        $('#loading').css({display: 'none'})
+        this.retrieve(null, null)
+      })
+      $('#profileModal').modal('hide')
+    },
     update(item){
       if(item.status !== 'NOT_VERIFIED'){
         let parameter = {
@@ -373,6 +422,12 @@ export default{
         $('#loading').css({display: 'none'})
         this.retrieve(null, null)
       })
+    },
+    isActive (menuItem) {
+      return this.activeItem === menuItem
+    },
+    setActive (menuItem) {
+      this.activeItem = menuItem
     }
   }
 }

@@ -8,7 +8,7 @@
         <button v-if="localCode === null" class="btn btn-primary" style="margin-top: 3%; margin-bottom: 3%" @click="location(item)">Scope Location</button>
         <button v-if="item.status != 'BLOCKED'" class="btn btn-danger" style="margin-top: 3%; margin-bottom: 3%" @click="verify(item, message = 'a')">Block Account</button>
         <button v-else class="btn btn-danger" style="margin-top: 3%; margin-bottom: 3%" @click="verify(item, message = 'c')">Unblock Account</button>
-        <button class="btn btn-primary" style="margin-top: 3%; margin-bottom: 3%" v-if="item.status !== 'GRANTED' && item.status != 'BLOCKED'" @click="verify(item, message = 'b')">Verify Account</button>
+        <button class="btn btn-primary" style="margin-top: 3%; margin-bottom: 3%" v-if="item.status !== 'GRANTED' && item.status !== 'BLOCKED'" @click="verify(item, message = 'b')">Verify Account</button>
       </center>
     </div>
     <basic :item="item"></basic>
@@ -101,7 +101,7 @@ export default{
       this.$parent.$parent.update(data)
     },
     unblockUser(data){
-      this.$parent.$parent.update(data)
+      this.$parent.$parent.updateStat(data)
     },
     blockUser(data){
       this.$parent.$parent.updateUserStatus(data)
