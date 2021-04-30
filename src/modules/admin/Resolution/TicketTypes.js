@@ -1,8 +1,8 @@
 export default {
   types: [
     {
-      type: 'bug',
-      color: 'red',
+      type: 'Bug',
+      color: 'Red',
       description: 'Something isn\'t working',
       textColor: 'white'
     },
@@ -39,6 +39,30 @@ export default {
     {
       type: 'question',
       color: 'pink',
+      description: 'Something isn\'t working',
+      textColor: 'black'
+    },
+    {
+      type: 'TRANSACTION ISSUE',
+      color: 'blue',
+      description: 'Something isn\'t working',
+      textColor: 'black'
+    },
+    {
+      type: 'ACCOUNT ISSUE',
+      color: 'orange',
+      description: 'Something isn\'t working',
+      textColor: 'black'
+    },
+    {
+      type: 'VERIFICATION ISSUE',
+      color: 'red',
+      description: 'Something isn\'t working',
+      textColor: 'black'
+    },
+    {
+      type: 'OTHERS',
+      color: 'green',
       description: 'Something isn\'t working',
       textColor: 'black'
     }
