@@ -10,8 +10,11 @@
         </label>
         <button v-if="isShow" class="btn btn-primary pull-right" style="float:left !important" @click="showPublicRequest()">back</button>
         <button class="btn btn-primary pull-right" @click="redirect('/createRequest')">Post a request</button>
-        <button class="btn btn-primary pull-right" style="margin-left: 10px;margin-right: 10px;" @click="redirect('/createRequestBorrow')">Post borrow request</button>
-        <button class="btn btn-primary pull-right" @click="showMyRequest('isShow','isProposal')">View my request</button>
+        <!-- <button class="btn btn-primary pull-right" style="margin-right: 8px;" @click="redirect('/createRequestBorrow')">Post borrow request</button> -->
+        <button class="btn btn-primary pull-right" style="margin-right: 8px;" @click="showMyRequest('isShow','isProposal')">View my request</button>
+        <button class="btn btn-primary pull-right" style="margin-right: 8px;" @click="showMyRequest('isShow','isProposal')">OnGoing Requests</button>
+        <button class="btn btn-primary pull-right" style="margin-right: 8px;" @click="showMyRequest('isShow','isProposal')">OnDelivery Reqest</button>
+        <button class="btn btn-primary pull-right" style="margin-right: 8px;" @click="showMyRequest('isShow','isProposal')">Completed Reqest</button>
         <!-- <button class="btn btn-primary pull-right" @click="showRequestModal('create')">Post a request</button> -->
       </div>
       <basic-filter 

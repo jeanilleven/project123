@@ -17,8 +17,8 @@
         <td>Description</td>
       </thead>
       <tbody>
-        <tr v-for="item, index in data" :key="index">
-          <td>{{item.created_at}}</td>
+        <tr v-for="(item, index) in data" :key="index">
+          <td>{{item.created_at_human}}</td>
           <td>*****{{item.code.substring(56)}}</td>
           <td>*****{{item.account_code.substring(24)}}</td>
           <td>*****{{item.payment_payload_value.substring(24)}}</td>
@@ -198,10 +198,10 @@ export default{
       }
       $('#loading').css({display: 'block'})
       this.APIRequest('ledger/transaction_history', parameter).then(response => {
-        console.log(response)
         $('#loading').css({display: 'none'})
         if(response != null){
-          this.data = response
+          this.data = response.data
+          console.log('[res]', response.data)
           this.numPages = parseInt(response.size / this.limit) + (response.size % this.limit ? 1 : 0)
         }else{
           this.data = null
