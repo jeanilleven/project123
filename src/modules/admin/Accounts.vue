@@ -15,25 +15,25 @@
 
         <ul class="nav nav-tabs nav-justified">
           <li class="nav-item">
-            <a class="nav-link" @click.prevent="setActive('user')" :class="{ active: isActive('user') }" href="#user">User</a>
+            <a class="nav-link" @click.prevent="setActive('USER')" :class="{ active: isActive('user') }" href="#user">User</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" @click.prevent="setActive('partner')" :class="{ active: isActive('partner') }" href="#partner">Partner</a>
+            <a class="nav-link" @click.prevent="setActive('PARTNER')" :class="{ active: isActive('partner') }" href="#partner">Partner</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" @click.prevent="setActive('accountant')" :class="{ active: isActive('accountant') }" href="#accountant">Accountant</a>
+            <a class="nav-link" @click.prevent="setActive('ACCOUNTANT')" :class="{ active: isActive('accountant') }" href="#accountant">Accountant</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" @click.prevent="setActive('marketing')" :class="{ active: isActive('marketing') }" href="#marketing">Marketing</a>
+            <a class="nav-link" @click.prevent="setActive('MARKETING')" :class="{ active: isActive('marketing') }" href="#marketing">Marketing</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" @click.prevent="setActive('investor')" :class="{ active: isActive('investor') }" href="#investor">Investor</a>
+            <a class="nav-link" @click.prevent="setActive('INVESTOR')" :class="{ active: isActive('investor') }" href="#investor">Investor</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" @click.prevent="setActive('support')" :class="{ active: isActive('support') }" href="#support">Support</a>
+            <a class="nav-link" @click.prevent="setActive('SUPPORT')" :class="{ active: isActive('support') }" href="#support">Support</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" @click.prevent="setActive('admin')" :class="{ active: isActive('admin') }" href="#admin">Admin</a>
+            <a class="nav-link" @click.prevent="setActive('ADMIN')" :class="{ active: isActive('admin') }" href="#admin">Admin</a>
           </li>
         </ul>
         <div class="tab-content py-3" id="myTabContent">
@@ -45,8 +45,7 @@
           <div class="tab-pane fade" :class="{ 'active show': isActive('support') }" id="support">Support content</div>  
           <div class="tab-pane fade" :class="{ 'active show': isActive('admin') }" id="admin">Admin content</div>  
         </div>
-    
-    <table class="table table-bordered table-responsive" v-if="data !== null">
+    <table class="table table-bordered table-responsive" v-if="data.length > 0">
       <thead>
         <tr>
           <td>Date</td>
@@ -60,7 +59,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item, index) in data" :key="index">
+        <tr v-for="(item, index) in returnData" :key="index">
           <td>{{item.created_at}}</td>
           <td>
             <label class="action-link text-primary" @click="showProfileModal(item)">{{item.username}}</label>
@@ -103,7 +102,7 @@
       </tbody>
     </table>
     <div>
-      <button class="btn btn-primary pull-right" @click="seeMore()">See More</button>
+      <button class="btn btn-primary pull-right" v-if="data.length > 0" @click="seeMore()">See More</button>
     </div>
 
      <!-- <Pager
@@ -113,12 +112,16 @@
       v-if="data !== null"
     /> -->
 
-    <empty v-if="data === null" :title="'No accounts available!'" :action="'Keep growing.'"></empty>
+    <empty v-if="data.length <= 0" :title="'No accounts available!'" :action="'Keep growing.'"></empty>
     <profile :item="selecteditem"></profile>
     <increment-modal :property="scopeLocation"></increment-modal>
   </div>
 </template>
 <style scoped>
+.py-3{
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
 .ledger-summary-container{
   width: 100%;
   float: left;
@@ -186,10 +189,15 @@ export default{
     $('#loading').css({display: 'block'})
     this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
   },
+  computed: {
+    returnData(){
+      return this.data
+    }
+  },
   data(){
     return {
       user: AUTH.user,
-      data: null,
+      data: [],
       auth: AUTH,
       selecteditem: null,
       config: CONFIG,
@@ -315,13 +323,16 @@ export default{
         limit: this.limit,
         offset: this.activePage
       }
+      if(this.activeItem !== 'home'){
+        parameter['accountType'] = this.activeItem
+      }
       this.APIRequest('accounts/retrieve_accounts', parameter).then(response => {
         $('#loading').css({display: 'none'})
         if(response.data.length > 0){
           this.data = response.data
           this.numPages = parseInt(response.size / this.limit) + (response.size % this.limit ? 1 : 0)
         }else{
-          this.data = null
+          this.data = []
           this.numPages = null
         }
       })
@@ -428,6 +439,7 @@ export default{
     },
     setActive (menuItem) {
       this.activeItem = menuItem
+      this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
     }
   }
 }

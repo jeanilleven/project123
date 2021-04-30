@@ -11,10 +11,10 @@
         <button v-if="isShow" class="btn btn-primary pull-right" style="float:left !important" @click="showPublicRequest()">back</button>
         <button class="btn btn-primary pull-right" @click="redirect('/createRequest')">Post a request</button>
         <!-- <button class="btn btn-primary pull-right" style="margin-right: 8px;" @click="redirect('/createRequestBorrow')">Post borrow request</button> -->
-        <button class="btn btn-primary pull-right" style="margin-right: 8px;" @click="showMyRequest('isShow','isProposal')">View my request</button>
-        <button class="btn btn-primary pull-right" style="margin-right: 8px;" @click="showMyRequest('isShow','isProposal')">OnGoing Requests</button>
-        <button class="btn btn-primary pull-right" style="margin-right: 8px;" @click="showMyRequest('isShow','isProposal')">OnDelivery Reqest</button>
-        <button class="btn btn-primary pull-right" style="margin-right: 8px;" @click="showMyRequest('isShow','isProposal')">Completed Reqest</button>
+        <button class="btn btn-primary pull-right" style="margin-right: 8px;" @click="showMyRequest('personal')">View my request</button>
+        <button class="btn btn-primary pull-right" style="margin-right: 8px;" @click="showMyRequest('ongoing')">OnGoing Requests</button>
+        <button class="btn btn-primary pull-right" style="margin-right: 8px;" @click="showMyRequest('onDelivery')">OnDelivery Reqest</button>
+        <button class="btn btn-primary pull-right" style="margin-right: 8px;" @click="showMyRequest('completed')">Completed Reqest</button>
         <!-- <button class="btn btn-primary pull-right" @click="showRequestModal('create')">Post a request</button> -->
       </div>
       <basic-filter 
@@ -409,7 +409,8 @@ export default{
       userToken: null,
       isPersonal: false,
       isShow: false,
-      isProposal: true
+      isProposal: true,
+      currentTab: null
     }
   },
   watch: {
@@ -480,17 +481,18 @@ export default{
       this.selecteditemReport = item
       $('#createReportModal').modal('show')
     },
-    showMyRequest(){
+    showMyRequest(activeTab){
       this.isPersonal = true
       this.isShow = true
       this.isProposal = false
+      this.currentTab = activeTab
       this.retrieve({created_at: 'desc'}, {column: 'account_id', value: this.user.userID})
     },
     showPublicRequest(){
       this.isPersonal = false
       this.isShow = false
       this.isProposal = true
-      this.retrieve({created_at: 'desc'}, {column: 'account_id', value: this.user.userID})
+      this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
     },
     retrieve(sort, filter){
       // if(this.user.type === 'USER'){
@@ -512,35 +514,34 @@ export default{
       }
       let key = Object.keys(sort)
       let parameter = null
-      if(this.isPersonal === true) {
-        parameter = {
-          target: 'all',
-          limit: this.limit,
-          offset: (this.activePage - 1) * this.limit,
-          sort: {
-            value: sort[key[0]],
-            column: key[0]
-          },
-          value: '%' + filter.value + '%',
-          column: filter.column,
-          type: this.user.type,
-          account_id: this.user.userID,
-          isPersonal: this.isPersonal
-        }
-      } else {
-        parameter = {
-          target: 'all',
-          limit: this.limit,
-          offset: (this.activePage - 1) * this.limit,
-          sort: {
-            value: sort[key[0]],
-            column: key[0]
-          },
-          value: '%' + filter.value + '%',
-          column: filter.column,
-          type: this.user.type,
-          account_id: this.user.userID
-        }
+      parameter = {
+        account_id: this.user.userID,
+        limit: this.limit,
+        offset: (this.activePage - 1) * this.limit,
+        sort: {
+          value: sort[key[0]],
+          column: key[0]
+        },
+        value: '%' + filter.value + '%',
+        column: filter.column,
+        mode: 'all',
+        target: 'all',
+        shipping: 'all'
+      }
+      if(this.currentTab === 'personal'){
+        parameter['request_account_id'] = this.user.userID
+      }else if(this.currentTab === 'ongoing'){
+        parameter['status'] = 0
+        parameter['peer_status'] = 'requesting'
+      }else if(this.currentTab === 'onDelivery'){
+        parameter['status'] = 1
+        parameter['peer_status'] = 'approved'
+      }else if(this.currentTab === 'completed'){
+        parameter['status'] = 2
+        parameter['peer_status'] = 'approved'
+      }
+      if(this.currentTab === 'completed' || this.currentTab === 'ongoing' || this.currentTab === 'onDelivery'){
+        parameter['mode'] = 'history'
       }
       setTimeout(() => {
         $('#loading').css({display: 'block'})
