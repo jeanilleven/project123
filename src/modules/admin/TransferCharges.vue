@@ -250,6 +250,9 @@ export default{
               data.value = item.scope
             }
             if(data.variable === 'destination'){
+              data.value = item.destination
+            }
+            if(data.variable === 'type'){
               data.value = item.type
             }
             if(data.variable === 'minimum_amount'){
