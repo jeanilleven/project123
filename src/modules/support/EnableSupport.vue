@@ -10,15 +10,14 @@
     <table class="table table-bordered table-responsive" v-if="data !== null">
       <thead>
         <tr>
-          <td>Payload</td>
-          <td>Payload Value</td>
+          <td>Initiator</td>
           <td>Assigned To</td>
           <td>Status</td>
+          <td>Actions</td>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(item, index) in data" :key="index">
-          <td>{{item.payload}}</td>
           <td>{{item.payload_value}}</td>
           <td>
               <p v-if="item.assigned_to !== null">{{item.assigned_to}}</p>
@@ -27,7 +26,11 @@
               </select>-->
               <p v-else>No Assigned </p>
           </td>
-          <td>{{item.status}}</td>
+          <td>{{item.status == 0 ? 'PENDING' : item.status == 1 ? 'ON GOING' : 'COMPLETED'}}</td>
+          <td>
+            <button class="btn btn-secondary" @click="messageConfirm(item, a = 'a')"><i class="fa fa-check" style="padding: 0"></i></button>
+            <button class="btn btn-danger" @click="messageConfirm(item, a = 'b')"><i class="fa fa-times" style="padding: 0"></i></button>
+          </td>
         </tr>
       </tbody>
     </table>
@@ -37,6 +40,13 @@
       :limit="limit"
       v-if="data !== null"
     />
+    <Confirmation
+    ref="confirm"
+    :title="'Confirmation'"
+    :message="a == 'a' ? 'Are you sure you want to complete this transaction?' : 'Are you sure you want to cancel this transaction?'"
+    @onConfirm="a == 'a' ? complete($event) : remove($event)"
+    >
+    </Confirmation>
     <empty v-if="data === null" :title="'No enable support found!'" ></empty>
     <browse-images-modal></browse-images-modal>
 
@@ -93,6 +103,7 @@ import ROUTER from 'src/router'
 import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
 import Pager from 'src/components/increment/generic/pager/Pager.vue'
+import Confirmation from 'src/components/increment/generic/modal/Confirmation.vue'
 export default{
   mounted(){
     this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
@@ -148,7 +159,8 @@ export default{
       currentSort: null,
       activePage: 1,
       numPages: null,
-      limit: 5
+      limit: 5,
+      a: null
     }
   },
   components: {
@@ -156,7 +168,8 @@ export default{
     'browse-images-modal': require('components/increment/generic/image/BrowseModal.vue'),
     'basic-filter': require('components/increment/generic/filter/Basic.vue'),
     'increment-modal': require('components/increment/generic/modal/Modal.vue'),
-    Pager
+    Pager,
+    Confirmation
   },
   methods: {
     redirect(params){
@@ -200,6 +213,16 @@ export default{
         case 'list': this.listStyle = 'list'
           break
       }
+    },
+    messageConfirm(item, npx){
+      this.$refs.confirm.show(item.id, npx)
+      console.log(item, npx)
+    },
+    complete(item){
+      console.log('[]')
+    },
+    remove(item){
+      console.log('eerer')
     }
   }
 }
