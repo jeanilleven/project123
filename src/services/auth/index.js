@@ -291,8 +291,8 @@ export default {
     }
   },
   updateData(){
-    console.log('requests')
-    ROUTER.push('/requests')
+    console.log('dashboard')
+    ROUTER.push('/dashboard')
   },
   setGoogleCode(code, scope){
     localStorage.setItem('google_code', code)

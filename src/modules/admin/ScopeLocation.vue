@@ -7,11 +7,21 @@
       <button class="btn btn-primary pull-right mb-1" @click="showModal('create', null)">Add</button>
     </div>
 
+    <basic-filter 
+      v-bind:category="category" 
+      :activeCategoryIndex="0"
+      :activeSortingIndex="0"
+      @changeSortEvent="retrieve($event.sort, $event.filter)"
+      @changeStyle="manageGrid($event)"
+      :grid="['list', 'th-large']"></basic-filter>
+
     <table class="table table-bordered table-responsive" v-if="data !== null">
       <thead>
         <tr>
           <td>Code</td>
           <td>Location</td>
+          <td>Latitude</td>
+          <td>Longitude</td>
           <td>Actions</td>
         </tr>
       </thead>
@@ -24,6 +34,12 @@
             {{
               item.route + ', ' + item.city + ', ' + item.region + ', ' + item.country
             }}
+          </td>
+          <td>
+            {{item.latitude}}
+          </td>
+          <td>
+            {{item.longitude}}
           </td>
           <td>
             <button class="btn btn-primary" @click="showModal('update', item)">
@@ -74,7 +90,7 @@ export default{
     if(this.user.type !== 'ADMIN'){
       ROUTER.push('/marketplace')
     }
-    this.retrieve()
+    this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
   },
   data(){
     return {
@@ -84,7 +100,45 @@ export default{
       limit: 5,
       activePage: 0,
       numPages: null,
-      modalProperty: propertyModal
+      modalProperty: propertyModal,
+      filter: null,
+      sort: null,
+      category: [{
+        title: 'Sort by',
+        sorting: [{
+          title: 'Code ascending',
+          payload: 'code',
+          payload_value: 'asc'
+        }, {
+          title: 'Code descending',
+          payload: 'code',
+          payload_value: 'desc'
+        }, {
+          title: 'Location ascending',
+          payload: 'route',
+          payload_value: 'asc'
+        }, {
+          title: 'Location descending',
+          payload: 'route',
+          payload_value: 'desc'
+        }, {
+          title: 'Latitude ascending',
+          payload: 'latitude',
+          payload_value: 'asc'
+        }, {
+          title: 'Latitude descending',
+          payload: 'latitude',
+          payload_value: 'desc'
+        }, {
+          title: 'Longitude ascending',
+          payload: 'longitude',
+          payload_value: 'asc'
+        }, {
+          title: 'Longitude descending',
+          payload: 'longitude',
+          payload_value: 'desc'
+        }]
+      }]
     }
   },
   components: {
@@ -153,13 +207,28 @@ export default{
     },
     seeMore(){
       this.limit = this.limit + 5
-      this.retrieve()
+      this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
     },
-    retrieve(){
+    retrieve(sort, filter){
+      if(sort !== null){
+        this.sort = sort
+      }
+      if(filter !== null){
+        this.filter = filter
+      }
+      if(sort === null && this.sort !== null){
+        sort = this.sort
+      }
+      if(filter === null && this.filter !== null){
+        filter = this.filter
+      }
       let parameter = {
-        sort: {
-          created_at: 'desc'
-        },
+        condition: [{
+          value: filter.value + '%',
+          column: filter.column,
+          clause: 'like'
+        }],
+        sort: sort,
         limit: this.limit,
         offset: this.activePage
       }

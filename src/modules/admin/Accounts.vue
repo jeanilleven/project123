@@ -243,6 +243,8 @@ export default{
     },
     showProfileModal(item){
       this.selecteditem = item
+      this.$children[1].$children[0].retrieveLocation(item)
+      this.$children[1].$children[0].retrieveImage(item)
       this.selecteditem['payload'] = 'account'
       $('#profileModal').modal('show')
     },
@@ -251,7 +253,6 @@ export default{
     },
     seeMore() {
       this.limit = this.limit + 5
-      console.log('Reading', this.limit)
       this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
     },
     retrieve(sort, filter){
@@ -287,6 +288,18 @@ export default{
           this.numPages = null
         }
       })
+    },
+    updateUserStatus(item){
+      let parameter = {
+        id: item.id.id,
+        status: 'BLOCKED'
+      }
+      $('#loading').css({display: 'block'})
+      this.APIRequest('accounts/update_verification', parameter).then(response => {
+        $('#loading').css({display: 'none'})
+        this.retrieve(null, null)
+      })
+      $('#profileModal').modal('hide')
     },
     update(item){
       if(item.status !== 'NOT_VERIFIED'){

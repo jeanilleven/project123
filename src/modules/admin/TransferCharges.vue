@@ -14,8 +14,9 @@
     <table class="table table-bordered table-responsive" v-if="data !== null">
       <thead>
         <tr>
-          <td>Currency</td>
+          <td>Scope</td>
           <td>Type</td>
+          <td>Currency</td>
           <td>Minimum Amount</td>
           <td>Max Amount</td>
           <td>Charge</td>
@@ -25,11 +26,12 @@
       </thead>
       <tbody>
         <tr v-for="(item, index) in data" :key="index">
-          <td>{{item.currency}}</td>
+          <td>{{item.scope}}</td>
           <td>{{item.type}}</td>
+          <td>{{item.currency}}</td>
           <td class="text-primary">{{auth.displayAmountWithCurrency(item.min_amount, item.currency)}}</td>
           <td class="text-primary">{{auth.displayAmountWithCurrency(item.max_amount, item.currency)}}</td>
-          <td class="text-danger">{{auth.displayAmountWithCurrency(item.charge, item.currency)}}</td>
+          <td class="text-danger">{{item.charge}}</td>
           <td>{{item.created_at_human}}</td>
           <td>
             <button class="btn btn-primary" @click="showTransferModal('update', item)">Edit</button>
@@ -188,10 +190,8 @@ export default{
         }],
         sort: sort
       }
-      console.log(sort)
       this.APIRequest('fund_transfer_charges/retrieve_all', parameter).then(response => {
         $('#loading').css({display: 'none'})
-        console.log(response.data)
         if(response.data.length > 0){
           this.data = response.data
         }else{
