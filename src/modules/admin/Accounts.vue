@@ -202,6 +202,7 @@ export default{
       selecteditem: null,
       config: CONFIG,
       limit: 5,
+      offset: 0,
       activePage: 0,
       numPages: null,
       category: [{
@@ -297,7 +298,7 @@ export default{
       ROUTER.push(params)
     },
     seeMore() {
-      this.limit = this.limit + 5
+      this.offset = this.offset + 5
       this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
     },
     retrieve(sort, filter){
@@ -321,7 +322,7 @@ export default{
         }],
         sort: sort,
         limit: this.limit,
-        offset: this.activePage
+        offset: this.offset
       }
       if(this.activeItem !== 'home'){
         parameter['accountType'] = this.activeItem
