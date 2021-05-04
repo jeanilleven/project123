@@ -102,7 +102,8 @@
       </tbody>
     </table>
     <div>
-      <button class="btn btn-primary pull-right" v-if="data.length > 0" @click="seeMore()">See More</button>
+      <button class="btn btn-primary pull-right" style="margin-left: 10px;" @click="pagination(true)">Next</button>
+      <button class="btn btn-primary pull-right" @click="pagination(false)">Previous</button>
     </div>
 
      <!-- <Pager
@@ -300,6 +301,15 @@ export default{
     seeMore() {
       this.offset = this.offset + 5
       this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
+    },
+    pagination(flag){
+      if(flag === false && this.offset > 5){
+        this.offset = this.offset - 5
+        this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
+      }else{
+        this.offset = this.offset + 5
+        this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
+      }
     },
     retrieve(sort, filter){
       if(sort !== null){
