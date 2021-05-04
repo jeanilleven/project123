@@ -1,15 +1,20 @@
- <template>
+<template>
   <div class="request-list-wrapper">
     <div class="request-list-left-container">
-      <div class="incre-row">
+      <div class="incre-row" style="margin-bottom: 10px;">
         <label v-if="locations !== null" class="pull-left">
-          <button class="btn btn-warning">Tag Locations</button>
-          <button class="btn btn-primary" v-for="(location, index) in locations.locality" :key="index" style="margin-right: 5px;">
+          <button class="btn btn-warning" style="margin-bottom: 5px;">Tag Locations</button>
+          <button class="btn btn-primary" v-for="(location, index) in locations.locality" :key="index" style="margin-right: 5px; margin-bottom: 5px;">
             {{location}}
           </button>
         </label>
-        <button class="btn btn-primary pull-right" @click="redirect('/createRequest')">Post a request</button>
-        <button class="btn btn-primary pull-right" @click="showMyRequest()" style="margin-right: 10px;">View my request</button>
+        <button v-if="isShow" class="btn btn-primary pull-right" style="float:left !important" @click="showPublicRequest()">back</button>
+        <!-- <button class="btn btn-primary pull-right" @click="redirect('/createRequest')">Post a request</button> -->
+        <!-- <button class="btn btn-primary pull-right" style="margin-right: 8px;" @click="redirect('/createRequestBorrow')">Post borrow request</button> -->
+        <button class="btn btn-primary pull-right" style="margin-right: 8px;" @click="showMyRequest('personal')">View my request</button>
+        <button class="btn btn-primary pull-right" style="margin-right: 8px;" @click="showMyRequest('ongoing')">OnGoing Requests</button>
+        <button class="btn btn-primary pull-right" style="margin-right: 8px;" @click="showMyRequest('onDelivery')">OnDelivery Reqest</button>
+        <button class="btn btn-primary pull-right" style="margin-right: 8px;" @click="showMyRequest('completed')">Completed Reqest</button>
         <!-- <button class="btn btn-primary pull-right" @click="showRequestModal('create')">Post a request</button> -->
       </div>
       <basic-filter 
@@ -28,15 +33,22 @@
           <label class="action-link text-primary" @click="showProfileModal(item)">
             <i class="fas fa-user-circle" style="color: #555; padding-right: 5px;" v-if="item.account.profile === null"></i>
             <img :src="config.BACKEND_URL + item.account.profile.url" height="30px" width="30px;" style="border-radius: 50%;" v-else>
+          </label>
+          <label class="action-link text-primary" @click="showProfileModal(item)">
             {{item.account.username}}
           </label>
-          <label class="text-primary">
+          <label class="text-danger" v-if="item.coupon !== null && parseInt(item.account_id) === user.userID">
             <i class="fas fa-circle" style="font-size: 8px; color: #555; padding-right: 5px;"></i>
-            <b>{{auth.displayAmount(item.amount)}}</b>
+            <!-- <b>{{item.coupon.type === 'percentage' ? item.coupon.amount + '%' : auth.displayAmountWithCurrency(item.coupon.amount, item.coupon.currency)}} Discount</b> -->
           </label>
-          <label class="pull-right" v-if="parseInt(item.account_id) !== user.userID">
+          <label class="text-primary" v-if="item.max_charge !== null">
+            <i class="fas fa-circle" style="font-size: 8px; color: #555; padding-right: 5px;"></i>
+            Suggested Charge - {{auth.displayAmountWithCurrency(item.max_charge, item.currency)}}
+          </label>
+          <label class="pull-right">
             <div class="dropdown" id="dropdownMenuButtonDropdown">
-              <i class="fas fa-ellipsis-h text-gray more-options" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-target="dropdownMenuButtonDropdown" style="padding-top: 10px;">
+              <ratings :ratings="item.rating" v-if="item.rating !== null"></ratings>
+              <i v-if="parseInt(item.account_id) !== user.userID" class="fas fa-ellipsis-h text-gray more-options ml-3" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-target="dropdownMenuButtonDropdown" style="padding-top: 10px;">
               </i>
               <div class="dropdown-menu dropdown-more-options" aria-labelledby="dropdownMenuButton" >
                 <!-- <span class="dropdown-item action-link" @click="showRequestModal('update', item)" v-if="parseInt(item.account_id) === user.userID || (item.comakers !== null && user.userID === parseInt(item.comakers[0].comaker))">Edit</span> -->
@@ -45,39 +57,33 @@
             </div>
           </label>
         </span>
-        <span class="summary-header text-primary">
-          <label style="text-transform: UPPERCASE; margin-right: 25px;">
-            {{auth.showRequestType(item.type) + ' - ' + item.money_type}}
+        <label class="text-uppercase request">
+          {{auth.showRequestType(item.type) + ' - ' + item.money_type}}
+        </label>
+        <p class="float-right request">
+            <b class="amount">{{auth.displayAmountWithCurrency(item.amount, item.currency)}}</b>
+          </p>
+        <p v-if="item.location !== null" class="request">
+          <!-- {{item.location.route + ', ' + item.location.locality + ', ' + item.location.country}} -->
+        </p>
+        <p class="request">
+          Needed on: {{item.needed_on_human}}
+        </p>
+        <p class="request" v-if="parseInt(item.type) > 100">
+             Interest rate: {{item.interest}}% interest per Month for {{item.months_payable + ' ' + (parseInt(item.month_payable) > 1 ? 'months' : 'month')}}
+        </p>
+        <p class="request" v-if="parseInt(item.type) > 100">
+          Billing Cycle: {{item.billing_per_month_human}}
+        </p>
+        <p class="request" v-if="parseInt(item.type) > 100">
+          Total borrowed: {{auth.displayAmount(item.total)}}
+        </p>
+        <span class="body" v-if="item.attachment_payload !== null">
+          <label style="line-height: 50px;">
+            <i>With product attachments</i>
           </label>
         </span>
-        <span class="summary-header">
-          <label>
-           <b>Posted on:</b> {{item.created_at_human}}
-          </label>
-        </span>
-        <span class="summary-header">
-          <label v-if="item.location !== null">
-            <b>Location: </b>{{item.location.route + ', ' + item.location.locality + ', ' + item.location.country}}
-          </label>
-        </span>
-        <span class="summary-header">
-          <label>
-            <b>Needed on: </b> {{item.needed_on_human}}
-          </label>
-        </span>
-        <span class="summary-header">
-          <label v-if="parseInt(item.type) > 100">
-            <b>Interest: </b>{{item.interest}}% interest per Month for {{item.months_payable}} 
-            <label v-if="parseInt(item.months_payable) > 1">Months</label>
-            <label v-else>Month</label>
-          </label>
-        </span>
-        <span class="summary-header">
-          <label v-if="parseInt(item.type) > 100">
-            <b>Billing per month: </b> {{item.billing_per_month_human}}
-          </label>
-        </span>
-        <span class="body">
+        <span class="body request">
           <label style="text-align: justify;">
            {{item.reason}}
           </label>
@@ -85,16 +91,13 @@
         <span class="body" v-if="item.images !== null">
           <img :src="config.BACKEND_URL + imageItem.url" v-for="(imageItem, imageIndex) in item.images" :key="imageIndex" class="request-image" @click="showImage(config.BACKEND_URL + imageItem.url)" :style="{'width': (parseInt(100 / item.images.length) - 1) + '%', 'max-width': (parseInt(100 / item.images.length) - 1) + '%'}">
         </span>
-        <span class="footer">
-          <label>
-            Ratings <ratings :ratings="item.rating" v-if="item.rating !== null"></ratings>
-          </label>
-          <label v-if="parseInt(item.type) > 100">
-            Total Borrowed: {{auth.displayAmount(item.total)}}
-          </label>
+        <small class="body mt-2">
+            {{item.created_at_human}}
+        </small>
+        <span>
           <div v-if="parseInt(item.account_id) !== user.userID">
-            <button class="btn btn-primary" style="margin-right: 5px;" @click="showInvestmentModal(item)" v-if="parseInt(item.type) > 100 && user.type !== 'USER'">Invest</button>
-            <button class="btn btn-primary" style="margin-right: 5px;" @click="showChargeModal(item)" v-if="parseInt(item.type) < 101 && user.type !== 'USER'">Connect</button>
+            <button class="btn btn-secondary send" style="margin-right: 5px;" @click="showInvestmentModal(item)" v-if="parseInt(item.type) > 100 && user.type !== 'USER' && isProposal">Send Proposal</button>
+            <button class="btn btn-secondary send" style="margin-right: 5px;" @click="showChargeModal(item)" v-if="parseInt(item.type) < 101 && user.type !== 'USER' && isProposal">Send Proposal</button>
             <!-- <button class="btn btn-warning" style="margin-right: 5px;" @click="bookmark(item.id)">
               <i class="fas fa-star" v-if="item.bookmark === true"></i>
               Bookmark</button> -->
@@ -106,7 +109,7 @@
           <b-progress-bar :value="parseFloat(item.initial_amount) - item.amount" :variant="'bg-primary'" :label="parseInt((1 - (item.amount / parseFloat(item.initial_amount))) * 100) + '%'"></b-progress-bar>
         </b-progress>
 
-        <span class="peer-requests" v-if="item.account_id === user.userID && item.peers.peers !== null">
+        <!-- <span class="peer-requests" v-if="parseInt(item.account_id) === user.userID && item.peers.peers !== null">
           <div class="peer-header text-primary">
             <b>Peer request list</b>
           </div>
@@ -126,7 +129,7 @@
               <button class="btn pull-right" v-if="item.peers.status === true && item.account_id === user.userID" style="margin-right: 10px; height: 35px !important;">Approved</button>
             </span>
           </div>
-        </span>
+        </span> -->
       
       </div>
       <empty v-if="data === null" :title="'We just launched and we\'re still growing.'" :action="' Please check back soon, we will have tons of request for you.'" :icon="'far fa-smile'" :iconColor="'text-primary'"></empty>
@@ -139,10 +142,25 @@
     <increment-modal :property="requestModal"></increment-modal>
     <show-image-modal ref="showImage"></show-image-modal>
     <show-process-modal  ref="createChargesModal"></show-process-modal>
+    <PushNotification
+      ref="pushNotification"
+      :currentToken="userToken"
+      @update-token="onUpdateToken"
+      @new-message="onNewMessage" />
   </div>
 </template>
 <style scoped lang="scss">
 @import "~assets/style/colors.scss";
+.request {
+  font-size: 15px;
+}
+.amount {
+  color: $secondary;
+}
+.send {
+  float: right;
+  margin-bottom: 10px;
+}
 .request-list-wrapper{
   width: 100%;
   float: left;
@@ -151,21 +169,18 @@
   margin-top: 25px;
   margin-bottom: 100px;
 }
-
 .rl-container-header{
   width: 100%;
   float: left;
   height: 70px;
   border: solid 1px #ddd;
 }
-
 .rl-container-item{
   width: 100%;
   float: left;
-  border-radius: 5px;
   min-height: 50px;
   overflow-y: hidden;
-  border: solid 1px #ddd;
+  border-bottom: solid 1px #ddd;
   margin-bottom: 10px;
   padding-left: 10px;
   padding-right: 10px;
@@ -178,12 +193,27 @@
   color: #555;
 }
 .rl-container-item .summary-header{
-  width: 100%;
+  width: 32%;
   float: left;
-  line-height: 20px;
-  color: #555; 
+  background: $primary;
+  margin-right: 5px;
+  height: 75px;
+  display: table;
+  color: $white;
+  margin-bottom: 5px;
 }
-.rl-container-item .header label, .rl-container-item .summary-header label{
+.rl-container-item .summary-header label{
+  text-align: center;
+  width: 100%;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  display: table-cell;
+  vertical-align: middle;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+.rl-container-item .header label{
   margin-bottom: 0px;
   line-height: 30px;
 }
@@ -193,12 +223,10 @@
   min-height: 10px;
   overflow-y: hidden;
 }
-
 .rl-container-item .body label{
   margin-bottom: 0px;
   width: 100%;
 }
-
 .rl-container-item .footer{
   width: 100%;
   float: left;
@@ -207,22 +235,20 @@
   line-height: 40px;
   overflow-y: hidden;
 }
-
-.footer label{
-  float: left;
-}
-
 .footer button{
   float: right;
+  height: 50px !important;
+  border-radius: 7px !important;
+  margin-top: 25px;
+  margin-bottom: 25px;
+  width: 150px !important;
 }
-
 .request-list-left-container{
   float: left;
   width: 68%;
   min-height: 50px;
   overflow-y: hidden;
 }
-
 .request-list-right-container{
   float: left;
   width: 30%;
@@ -234,7 +260,6 @@
   height: 40px !important;
   line-height: 40px;
 }
-
 .dropdown-item{
   width: 100% !important;
   height: 40px !important;
@@ -243,34 +268,28 @@
   padding-top: 0px !important;
   line-height: 40px !important;
 }
-
 .dropdown-item:hover{
   background: #ddd !important;
 }
-
 .request-image{
   float: left;
   margin-right: 1%;
   max-height: auto;
   margin-bottom: 10px;
 }
-
 .request-image:hover{
   cursor: pointer;
   border: solid 1px $secondary;
 }
-
 .peer-requests{
   width: 100%;
   float: left;
   min-height: 10px;
   overflow-y: hidden;
 }
-
 .peer-header{
   line-height: 50px;
 }
-
 .peer-item{
   width: 100%;
   float: left;
@@ -279,7 +298,6 @@
   border-top: solid 1px $gray;
   line-height: 50px;
 }
-
 @media (max-width: 992px){
   .request-list-wrapper{
     margin-bottom: 200px;
@@ -291,15 +309,35 @@
   .footer button{
     float: left;
   }
+  .rl-container-item .summary-header{
+    width: 100%;
+    margin-right: 0%;
+  }
 }
-
 </style>
 <script>
 import ROUTER from 'src/router'
 import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
 import REQUEST from '../modal/CreateRequest.js'
+import PushNotification from '../../components/notification/pushNotification'
+import api from '../../services/api'
 export default{
+  created() {
+    var userLoggedId = 1
+    // check if user has a token
+    api.user_profile(userLoggedId).then((response) => {
+      this.userProfile = response.data
+      this.userToken = this.userProfile.push_notification.ask_for_permission.token
+      if (this.userProfile.push_notification.ask_for_permission) {
+        setTimeout(() => {
+          // Simulate it wont ask for permission in the first user access
+          this.askForPermission = true
+        }, 4000)
+        this.enableNotifications()
+      }
+    })
+  },
   mounted(){
     if(this.$route.params.code){
       setTimeout(() => {
@@ -318,7 +356,7 @@ export default{
       percentage: null,
       showInvest: 0,
       size: 0,
-      limit: 10,
+      limit: 5,
       pulling: null,
       locations: null,
       size2: null,
@@ -367,7 +405,12 @@ export default{
       }],
       listStyle: null,
       sort: null,
-      filter: null
+      filter: null,
+      userToken: null,
+      isPersonal: false,
+      isShow: false,
+      isProposal: true,
+      currentTab: null
     }
   },
   watch: {
@@ -379,6 +422,7 @@ export default{
       }else{
         this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
       }
+      return to
     }
   },
   components: {
@@ -391,7 +435,8 @@ export default{
     'empty': require('components/increment/generic/empty/EmptyDynamicIcon.vue'),
     'increment-modal': require('components/increment/generic/modal/Modal.vue'),
     'show-image-modal': require('components/increment/generic/modal/Image.vue'),
-    'show-process-modal': require('modules/request/ProcessModal.vue')
+    'show-process-modal': require('modules/request/ProcessModal.vue'),
+    PushNotification
   },
   methods: {
     redirect(parameter){
@@ -436,14 +481,25 @@ export default{
       this.selecteditemReport = item
       $('#createReportModal').modal('show')
     },
-    showMyRequest(){
+    showMyRequest(activeTab){
+      this.isPersonal = true
+      this.isShow = true
+      this.isProposal = false
+      this.currentTab = activeTab
       this.retrieve({created_at: 'desc'}, {column: 'account_id', value: this.user.userID})
+    },
+    showPublicRequest(){
+      this.isPersonal = false
+      this.isShow = false
+      this.isProposal = true
+      this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
     },
     retrieve(sort, filter){
       // if(this.user.type === 'USER'){
       //   filter.column = 'account_id'
       //   filter.value = this.user.userID
       // }
+      console.log('personal ', this.isPersonal)
       if(sort !== null){
         this.sort = sort
       }
@@ -457,27 +513,46 @@ export default{
         filter = this.filter
       }
       let key = Object.keys(sort)
-      let parameter = {
+      let parameter = null
+      parameter = {
+        account_id: this.user.userID,
         limit: this.limit,
         offset: (this.activePage - 1) * this.limit,
         sort: {
           value: sort[key[0]],
           column: key[0]
         },
-        value: filter.value + '%',
+        value: '%' + filter.value + '%',
         column: filter.column,
-        type: this.user.type,
-        account_id: this.user.userID
+        mode: 'all',
+        target: 'all',
+        shipping: 'all'
+      }
+      if(this.currentTab === 'personal'){
+        parameter['request_account_id'] = this.user.userID
+      }else if(this.currentTab === 'ongoing'){
+        parameter['status'] = 0
+        parameter['peer_status'] = 'requesting'
+      }else if(this.currentTab === 'onDelivery'){
+        parameter['status'] = 1
+        parameter['peer_status'] = 'approved'
+      }else if(this.currentTab === 'completed'){
+        parameter['status'] = 2
+        parameter['peer_status'] = 'approved'
+      }
+      if(this.currentTab === 'completed' || this.currentTab === 'ongoing' || this.currentTab === 'onDelivery'){
+        parameter['mode'] = 'history'
       }
       setTimeout(() => {
         $('#loading').css({display: 'block'})
         this.APIRequest('requests/retrieve', parameter).then(response => {
           AUTH.user.ledger.amount = response.ledger
           $('#loading').css({display: 'none'})
+          console.log('test: ', response)
           if(response.data !== null){
             this.data = response.data
             this.size = parseInt(response.size)
-            this.locations = response.locations
+            this.locations = response.locations ? response.locations : null
           }else{
             this.data = null
             this.size = 0
@@ -524,7 +599,7 @@ export default{
           let messengerParams = {
             member: peerItem.account_id,
             title: item.code,
-            payload: item.id,
+            payload: 'request',
             creator: this.user.userID
           }
           this.APIRequest('custom_messenger_groups/create', messengerParams).then(response => {
@@ -537,8 +612,33 @@ export default{
           $('#loading').css({display: 'none'})
         }
       })
+    },
+    enableNotifications () {
+      this.$refs.pushNotification.askForPermission()
+    },
+    onUpdateToken (newToken) {
+      this.userToken = newToken
+      // send token to the server
+      api.update_token(this.userProfile, this.userToken)
+    },
+    onNewMessage (message) {
+      /**
+       * Every messages which is fired by firebase is receive here
+       */
+      if (message.data.topic !== undefined || message.data.topic !== null) {
+        switch(message.data.topic.toLowerCase()) {
+          case 'acceptorder':
+            this.notificationTitle = 'NEW ORDER REQUEST'
+            break
+          case 'crockery':
+            this.notificationTitle = 'NEW CROCKERY REQUEST'
+            break
+        }
+        if(message.data.topic.toLowerCase() === 'acceptorder' || message.data.topic.toLowerCase() === 'crockery'){
+          this.notificationMessage.push(message.notification.body)
+        }
+      }
     }
   }
-
 }
 </script>

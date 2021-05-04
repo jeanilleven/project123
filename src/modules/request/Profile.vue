@@ -32,6 +32,8 @@ export default {
   components: {
     'preview': require('modules/profile/Preview.vue')
   },
+  mounted(){
+  },
   methods: {
     redirect(parameter){
       ROUTER.push(parameter)

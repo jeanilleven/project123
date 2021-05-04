@@ -11,6 +11,7 @@
         <li class="title"><b>Privacy and Terms</b></li>
         <li class="link"><a @click="openModal('#termsAndConditionsModal')">Terms & Conditions</a></li>
         <li class="link"><a @click="openModal('#privacyModal')">Privacy Policy</a></li>
+        <li class="link"><a @click="redirect('/faq')">FAQ</a></li>
 
       </ul>
       <span class="footer-widget community">
@@ -18,10 +19,19 @@
         <span class="link">
           <a target="_BLANK" class="text-gray" :href="'https://www.facebook.com/' + common.socialMedia.facebook" ><i class="fab fa-facebook"></i></a>
         </span>
+        <span class="link">
+          <a target="_BLANK" class="text-gray" :href="'https://www.twitter.com/' + common.socialMedia.facebook" ><i class="fab fa-twitter"></i></a>
+        </span>
+        <span class="link">
+          <a target="_BLANK" class="text-gray" :href="'https://www.instagram.com/' + common.socialMedia.facebook" ><i class="fab fa-instagram"></i></a>
+        </span>
+        <span class="link">
+          <a target="_BLANK" class="text-gray" :href="'https://www.linkedin.com/' + common.socialMedia.facebook" ><i class="fab fa-linkedin"></i></a>
+        </span>
       </span>
       
       <span class="copyright">
-        <label>Copyright @{{common.COPYRIGHT}}. All rights reserved.</label>
+        <label>Copyright @{{common.COPYRIGHT}}. A proud product of <b class="action-link" @click="external(common.COMPANY_URL)">{{common.COMPANY}}</b>.</label>
       </span>
     </div>
   </footer>
@@ -161,6 +171,9 @@ export default {
   methods: {
     redirect(parameter){
       ROUTER.push(parameter)
+    },
+    external(url){
+      window.open(url, '_BLANK')
     },
     openModal(id){
       $(id).modal('show')

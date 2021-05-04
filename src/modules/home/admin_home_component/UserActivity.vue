@@ -36,7 +36,7 @@ export default{
       this.userActivityList = [{
         last_name: 'Doe',
         first_name: 'John',
-        activity: 'Create transaction',
+        activity: 'Create ',
         is_online: true
       }, {
         last_name: 'Dela Cruz',

@@ -14,8 +14,10 @@ export default {
     type: null,
     status: null,
     profile: null,
+    information: null,
     amount: null,
     subAccount: null,
+    code: null,
     notifications: {
       data: null,
       current: null,
@@ -49,7 +51,8 @@ export default {
   tokenData: {
     token: null,
     tokenTimer: false,
-    verifyingToken: false
+    verifyingToken: false,
+    loading: false
   },
   otpDataHolder: {
     userInfo: null,
@@ -61,25 +64,38 @@ export default {
   },
   echo: null,
   currentPath: false,
-  setUser(userID, username, email, type, status, profile, notifSetting, subAccount){
-    if(userID === null){
-      username = null
-      email = null
-      type = null
-      status = null
-      profile = null
-      notifSetting = null
-      subAccount = null
+  attachmentValue: null,
+  setUser(user, notifSetting, subAccount){
+    $('#loading').css({display: 'none'})
+    let vue = new Vue()
+    if(user === null){
+      this.user.userID = 0
+      this.user.username = null
+      this.user.email = null
+      this.user.type = null
+      this.user.status = null
+      this.user.profile = null
+      this.user.information = null
+      this.user.subAccount = null
+      this.user.code = null
+    }else{
+      this.user.userID = user.id
+      this.user.username = user.username
+      this.user.email = user.email
+      this.user.type = user.account_type
+      this.user.status = user.status
+      this.user.profile = user.profile
+      this.user.information = user.information
+      this.user.subAccount = null
+      this.user.code = user.code
+      console.log('hi', user)
+      localStorage.setItem('account_id', this.user.userID)
+      setTimeout(() => {
+        this.tokenData.verifyingToken = false
+        this.tokenData.loading = false
+        this.updateData()
+      }, 100)
     }
-    this.user.userID = userID * 1
-    this.user.username = username
-    this.user.email = email
-    this.user.type = type
-    this.user.status = status
-    this.user.profile = profile
-    this.user.notifSetting = notifSetting
-    this.user.subAccount = subAccount
-    localStorage.setItem('account_id', this.user.userID)
   },
   setToken(token){
     this.tokenData.token = token
@@ -104,25 +120,12 @@ export default {
     }
     vue.APIRequest('authenticate', credentials, (response) => {
       this.tokenData.token = response.token
+      this.setToken(this.tokenData.token)
       vue.APIRequest('authenticate/user', {}, (userInfo) => {
-        let parameter = {
-          'condition': [{
-            'value': userInfo.id,
-            'clause': '=',
-            'column': 'id'
-          }]
-        }
-        vue.APIRequest('accounts/retrieve', parameter).then(response => {
-          if(response.data.length > 0){
-            this.otpDataHolder.userInfo = userInfo
-            this.otpDataHolder.data = response.data
-            this.checkOtp(response.data[0].notification_settings)
-          }
-        })
-        this.retrieveNotifications(userInfo.id)
-        this.retrieveMessages(userInfo.id, userInfo.account_type)
-        if(callback){
-          callback(userInfo)
+        if(userInfo.account_type !== 'USER' && userInfo.account_type !== 'PARTNER'){
+          this.setUser(userInfo, null, null)
+        }else{
+          this.deaunthenticate()
         }
       })
     }, (response, status) => {
@@ -131,40 +134,21 @@ export default {
       }
     })
   },
-  checkAuthentication(callback){
+  checkAuthentication(callback, flag = false){
     this.tokenData.verifyingToken = true
     let token = localStorage.getItem('usertoken')
     if(token){
+      if(flag === false){
+        this.tokenData.loading = true
+      }
       this.setToken(token)
       let vue = new Vue()
       vue.APIRequest('authenticate/user', {}, (userInfo) => {
-        let parameter = {
-          'condition': [{
-            'value': userInfo.id,
-            'clause': '=',
-            'column': 'id'
-          }]
-        }
-        vue.APIRequest('accounts/retrieve', parameter).then(response => {
-          let profile = response.data[0].account_profile
-          let notifSetting = response.data[0].notification_settings
-          let subAccount = response.data[0].sub_account
-          this.setUser(userInfo.id, userInfo.username, userInfo.email, userInfo.account_type, userInfo.status, profile, notifSetting, subAccount)
-        }).done(response => {
-          this.tokenData.verifyingToken = false
-          let location = window.location.href
-          if(this.currentPath){
-            // ROUTER.push(this.currentPath)
-          }else{
-            window.location.href = location
-          }
-        })
-        this.retrieveNotifications(userInfo.id)
-        this.retrieveMessages(userInfo.id, userInfo.account_type)
-        this.getGoogleCode()
+        this.setUser(userInfo, null, null)
       }, (response) => {
         this.setToken(null)
         this.tokenData.verifyingToken = false
+        this.tokenData.loading = false
         ROUTER.push({
           path: this.currentPath
         })
@@ -172,16 +156,19 @@ export default {
       return true
     }else{
       this.tokenData.verifyingToken = false
+      this.tokenData.loading = false
       this.setUser(null)
       return false
     }
 
   },
   deaunthenticate(){
+    this.tokenData.loading = false
     localStorage.removeItem('usertoken')
     localStorage.removeItem('account_id')
     localStorage.removeItem('google_code')
     localStorage.removeItem('google_scope')
+    localStorage.removeItem('xyzABCdefPayhiram')
     this.setUser(null)
     let vue = new Vue()
     vue.APIRequest('authenticate/invalidate')
@@ -277,6 +264,10 @@ export default {
   },
   validateEmail(email){
     let reg = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)+.[a-zA-Z0-9]*$/
+    let reqWhiteSpace = /\s/
+    if(reqWhiteSpace.test(email)){
+      return false
+    }
     if(reg.test(email) === false){
       return false
     }else{
@@ -293,21 +284,15 @@ export default {
           show: true
         })
       }else{
-        this.proceedToLogin()
+        this.updateData()
       }
     }else{
-      this.proceedToLogin()
+      this.updateData()
     }
   },
-  proceedToLogin(){
-    this.setToken(this.tokenData.token)
-    let userInfo = this.otpDataHolder.userInfo
-    let data = this.otpDataHolder.data
-    let profile = data[0].account_profile
-    let notifSetting = data[0].notification_settings
-    let subAccount = data[0].sub_account
-    this.setUser(userInfo.id, userInfo.username, userInfo.email, userInfo.account_type, userInfo.status, profile, notifSetting, subAccount)
-    ROUTER.push('/requests')
+  updateData(){
+    console.log('dashboard')
+    ROUTER.push('/dashboard')
   },
   setGoogleCode(code, scope){
     localStorage.setItem('google_code', code)
@@ -340,6 +325,7 @@ export default {
       case 1: return 'Send'
       case 2: return 'Withdrawal'
       case 3: return 'Deposit'
+      case 4: return 'Bills and Payments'
       case 101: return 'Lending'
       case 102: return 'Installment'
     }

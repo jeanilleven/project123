@@ -1,7 +1,7 @@
-import CONFIG from '../config'
+import CONFIG from 'src/config'
 import Vue from 'vue'
-import AUTH from '../services/auth'
-import ROUTER from '../router'
+import AUTH from 'src/services/auth'
+import ROUTER from 'src/router'
 Vue.mixin({
   mounted(){
 
@@ -55,7 +55,8 @@ Vue.mixin({
     APIFailRequestHandler(link, jqXHR, errorCallback){
       switch(jqXHR.status){
         case 400:
-          alert('Error Connection')
+          // $('#connectionError').modal('show')
+          AUTH.deaunthenticate()
           break
         case 401: // Unauthorized
           if(link === 'authenticate' || 'authenticate/user'){ // if error occured during authentication request
@@ -70,6 +71,7 @@ Vue.mixin({
           if(errorCallback){
             errorCallback(jqXHR.responseJSON, jqXHR.status * 1)
           }
+          // $('#connectionError').modal('show')
       }
     }
   }

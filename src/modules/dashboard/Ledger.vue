@@ -1,19 +1,23 @@
 <template>
-  <div class="ledgers-container-item bg-primary" > 
-    <label><b>Account Balance</b></label>
-    <label>{{auth.displayAmountWithCurrency(auth.user.ledger.amount, auth.user.ledger.currency)}}</label>
-    <span style="margin-bottom: 5px;">
-      <button class="btn btn-warning pull-left" style="margin-top: 4px;" @click="redirect('/withdrawals')">Withdraw</button>
-      <button class="btn btn-warning pull-right" style="margin-top: 4px;" @click="showDepositModal(data)">Deposit</button>
-    </span>
-    <deposit :item="selecteditem"></deposit>
-    <withdraw :item="selecteditem"></withdraw>
+  <div>
+    <div class="ledgers-container-item text-center bg-secondary" v-for="(item, index) in data" :key="index"> 
+<!--       <div class="dropdown">
+        <i class="fas fa-ellipsis-v -toggle pull-right text-white" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="margin-right: 3%; margin-top: 3%; cursor: pointer;"></i>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+          <a class="dropdown-item text-white" @click="showDepositModal(data)">Deposit</a>
+          <a class="dropdown-item secondary text-white" @click="redirect('/withdrawals')">Withdraw</a>
+        </div>
+      </div> -->
+      <label style="font-size: 11px;" class="text-white">Available Balance</label>
+      <label style="font-size: 18px;" class="text-white"><b>{{auth.displayAmountWithCurrency(item.available_balance, item.currency)}}</b></label>
+      <label style="font-size: 11px;" class="text-white">Current Balance: {{auth.displayAmountWithCurrency(item.current_balance, item.currency)}}</label>
+    </div>
   </div>
 </template>
-<style scoped lang="scss">
-@import "~assets/style/colors.scss";
-.bg-primary{
-  background: $primary !important;
+<style lang="scss" scoped>
+  @import "~assets/style/colors.scss";
+.dropdown-item{
+  background-color: $secondary;
 }
 .ledgers-container-item{
   width: 100%;
@@ -45,6 +49,10 @@
   padding-left: 10px;
   padding-right: 10px;
 }
+
+.bg-secondary{
+  background-color: $secondary !important;
+}
 </style>
 <script>
 import ROUTER from 'src/router'
@@ -63,13 +71,6 @@ export default{
   },
   props: ['data'],
   components: {
-    'deposit': require('modules/dashboard/Deposit.vue'),
-    'withdraw': require('modules/transfer/Withdraw.vue'),
-    'profile': require('modules/request/Profile.vue'),
-    'report': require('modules/request/Report.vue'),
-    'request-filter': require('modules/request/Filter.vue'),
-    'ratings': require('components/increment/generic/rating/DirectRatings.vue'),
-    'empty': require('components/increment/generic/empty/EmptyDynamicIcon.vue')
   },
   methods: {
     redirect(params){

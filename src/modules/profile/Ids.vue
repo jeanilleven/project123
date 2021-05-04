@@ -1,16 +1,23 @@
 <template>
   <div class="incre-row">
-    <label class="title"><b>Identification Cards</b></label>
+    <label class="title"><b>IDENTIFICATION CARDS</b></label>
     <div class="incre-row">
-      <div class="item" v-for="(item, index) in data" :key="index">
-        {{item.title}}
-        <i class="fas fa-check text-primary pull-right" v-if="item.verified === true"></i>
-        <img :src="config.BACKEND_URL + item.payload_value" v-if="user.type === 'ADMIN' && typeof item.payload_value !== 'undefined'" style="width: 100%; height: auto">
+      <div class="item" v-if="item.length > 0" v-for="(npx, index) in item" :key="index">
+        <!-- <i class="fas fa-id-card"></i> {{item.title}}
+        <i class="fas fa-check text-primary pull-right" v-if="item.verified === true"></i> -->
+        <img :src="config.BACKEND_URL + npx.payload_value" style="width: 100%; height: auto">
+      </div>
+      <div class="item" v-else>
+        <!-- <i class="fas fa-id-card"></i> -->
+        <p>No Image Attached</p>
       </div>
     </div>
   </div>
 </template>
 <style scoped>
+.fa-id-card {
+  font-size: 2em;
+}
 .incre-row .title{
   width: 100%;
   float: left;
@@ -63,7 +70,7 @@ export default{
       config: CONFIG
     }
   },
-  props: ['data'],
+  props: ['item'],
   methods: {
     redirect(parameter){
       ROUTER.push(parameter)

@@ -1,13 +1,14 @@
 <template>
   <div class="requested-container-item">
     <label class="header"><b>Requested Amount</b></label>
-    <label class="content" v-if="data !== null">{{auth.displayAmount(data)}}</label>
+    <label class="content" v-if="data !== null">{{auth.displayAmountWithCurrency(data, currency)}}</label>
     <span style="margin-bottom: 5px;" v-if="user.type !== 'USER'">
-      <button class="btn btn-primary" @click="redirect('/requests')">View requests</button>
+      <button class="btn btn-secondary" @click="redirect('/requests')">View requests</button>
     </span>
   </div>
 </template>
-<style scoped>
+<style lang="scss" scoped>
+  @import "~assets/style/colors.scss";
 .requested-container-item{
   width: 100%;
   float: left;
@@ -29,9 +30,9 @@
 }
 </style>
 <script>
-import ROUTER from '../../router'
-import AUTH from '../../services/auth'
-import CONFIG from '../../config.js'
+import ROUTER from 'src/router'
+import AUTH from 'src/services/auth'
+import CONFIG from 'src/config.js'
 export default{
   data(){
     return {
@@ -39,7 +40,7 @@ export default{
       auth: AUTH
     }
   },
-  props: ['data'],
+  props: ['data', 'currency'],
   methods: {
     redirect(url){
       ROUTER.push(url)

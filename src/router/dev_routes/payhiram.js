@@ -127,6 +127,13 @@ export default{
       tokenRequired: true
     }
   }, {
+    path: '/adminLedgers/',
+    name: 'adminLedgers',
+    component: resolve => require(['modules/admin/Ledger.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  }, {
     path: '/adminWithdrawals/',
     name: 'adminWithdrawals',
     component: resolve => require(['modules/admin/Withdrawals.vue'], resolve),
@@ -151,6 +158,13 @@ export default{
     path: '/transfer_charges/',
     name: 'transferCharges',
     component: resolve => require(['modules/admin/TransferCharges.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  }, {
+    path: '/transfer_fee_add_charges/',
+    name: 'transferFeeAddCharges',
+    component: resolve => require(['modules/admin/TransferFeeAddCharges.vue'], resolve),
     meta: {
       tokenRequired: true
     }
@@ -183,6 +197,13 @@ export default{
       tokenRequired: true
     }
   }, {
+    path: '/createRequestBorrow',
+    name: 'createRequestBorrow',
+    component: resolve => require(['modules/request/CreateBorrow.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  }, {
     path: '/thread/:code?',
     name: 'thread',
     component: resolve => require(['components/increment/messengervue/Payhiram.vue'], resolve),
@@ -195,6 +216,161 @@ export default{
     component: resolve => require(['modules/deposit/PaymentConfirmation.vue'], resolve),
     meta: {
       tokenRequired: false
+    }
+  }, {
+    path: '/systemNotification/',
+    name: 'systemNotification',
+    component: resolve => require(['components/increment/generic/system/NotificationList.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  }, {
+    path: '/test',
+    name: 'test',
+    component: resolve => require(['modules/test/Test.vue'], resolve),
+    meta: {
+      tokenRequired: false
+    }
+  }, {
+    path: '/faq',
+    name: 'faq',
+    component: resolve => require(['modules/docs/FAQ.vue'], resolve),
+    meta: {
+      tokenRequired: false
+    }
+  }, {
+    path: '/coupons',
+    name: 'coupons',
+    component: resolve => require(['modules/admin/Coupons.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  }, {
+    path: '/products',
+    name: 'products',
+    component: resolve => require(['components/increment/imarketvue/product/Products.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  },
+  {
+    path: '/product/edit/:code',
+    name: 'product',
+    component: resolve => require(['components/increment/imarketvue/product/EditProduct.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  },
+  {
+    path: '/marketplace',
+    name: 'marketplace',
+    component: resolve => require(['components/increment/imarketvue/marketplace/Marketplace.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  },
+  {
+    path: '/marketplace/product/:code/:status?',
+    name: 'marketplaceProduct',
+    component: resolve => require(['components/increment/imarketvue/marketplace/Product.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  },
+  {
+    path: '/rentals',
+    name: 'rentals',
+    component: resolve => require(['components/increment/imarketvue/rental/List.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  },
+  {
+    path: '/rental/booking/:code/:startDate/:endDate/:status?',
+    name: 'rentalBooking',
+    component: resolve => require(['components/increment/imarketvue/rental/Product.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  },
+  {
+    path: '/rentalRequests',
+    name: 'rentalRequests',
+    component: resolve => require(['components/increment/imarketvue/rental/Requests.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  },
+  {
+    path: '/installmentRequests',
+    name: 'installmentRequests',
+    component: resolve => require(['components/increment/imarketvue/installment/Requests.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  },
+  {
+    path: '/connection',
+    name: 'connection',
+    component: resolve => require(['modules/request/Connection.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  },
+  {
+    path: '/invitation/:code',
+    name: 'scannedConfirm',
+    component: resolve => require(['modules/request/ScannedConfirm.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  },
+  {
+    path: '/tickets',
+    name: 'issues',
+    component: resolve => require(['modules/admin/Resolution/Ticket.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  },
+  {
+    path: '/tickets/details/:id',
+    name: 'issuesDetail',
+    component: resolve => require(['modules/admin/Resolution/TicketDetails.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  },
+  {
+    path: '/tickets/create',
+    name: 'ticketCreate',
+    component: resolve => require(['modules/admin/Resolution/CreateTicket.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  },
+  {
+    path: '/scopeLocation',
+    name: 'scopeLocation',
+    component: resolve => require(['modules/admin/ScopeLocation.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  },
+  {
+    path: '/enableSupport',
+    name: 'enableSupport',
+    component: resolve => require(['modules/support/EnableSupport.vue'], resolve),
+    meta: {
+      tokenRequired: true
+    }
+  },
+  {
+    path: '/plans',
+    name: 'plans',
+    component: resolve => require(['modules/plan/index.vue'], resolve),
+    meta: {
+      tokenRequired: true
     }
   }
   ]

@@ -14,8 +14,8 @@
     <table class="table table-bordered table-responsive" v-if="data !== null">
       <thead>
         <tr>
+          <td>Scope</td>
           <td>Currency</td>
-          <td>Type</td>
           <td>Minimum Amount</td>
           <td>Max Amount</td>
           <td>Charge</td>
@@ -24,12 +24,12 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item, index) in data" :ke="index">
+        <tr v-for="(item, index) in data" :key="index">
+          <td>{{item.scope}}</td>
           <td>{{item.currency}}</td>
-          <td>{{item.type}}</td>
           <td class="text-primary">{{auth.displayAmountWithCurrency(item.min_amount, item.currency)}}</td>
           <td class="text-primary">{{auth.displayAmountWithCurrency(item.max_amount, item.currency)}}</td>
-          <td class="text-danger">{{auth.displayAmountWithCurrency(item.charge, item.currency)}}</td>
+          <td class="text-danger">{{item.type.toLowerCase() === 'percentage' ? item.charge + ' %' : item.currency + ' ' + item.charge}}</td>
           <td>{{item.created_at_human}}</td>
           <td>
             <button class="btn btn-primary" @click="showTransferModal('update', item)">Edit</button>
@@ -37,6 +37,15 @@
         </tr>
       </tbody>
     </table>
+
+      <Confirmation
+      :title="'Removal Confirmation'"
+      :message="'Are you sure you want to continue this action?'"
+      ref="confirmation"
+      @onConfirm="removeItem"
+      />
+
+
     <empty v-if="data === null" :title="'No charges specified!'" :action="'Click add to create.'"></empty>
     <browse-images-modal></browse-images-modal>
     <increment-modal :property="transferModal"></increment-modal>
@@ -92,11 +101,14 @@
 import ROUTER from 'src/router'
 import AUTH from 'src/services/auth'
 import CONFIG from 'src/config.js'
+import CURRENCY from 'src/services/currency.js'
+// import Pager from 'src/components/increment/generic/pager/Pager.vue'
+import Confirmation from 'src/components/increment/generic/modal/Confirmation.vue'
 import transferCharges from 'src/modules/admin/CreateTransferCharges.js'
 export default{
   mounted(){
     $('#loading').css({display: 'block'})
-    this._retrieve({type: 'asc'}, {column: 'created_at', value: ''})
+    this._retrieve({'created_at': 'asc'}, {column: 'created_at', value: ''})
   },
   data(){
     return {
@@ -159,7 +171,9 @@ export default{
     'empty': require('components/increment/generic/empty/Empty.vue'),
     'browse-images-modal': require('components/increment/generic/image/BrowseModal.vue'),
     'basic-filter': require('components/increment/generic/filter/Basic.vue'),
-    'increment-modal': require('components/increment/generic/modal/Modal.vue')
+    'increment-modal': require('components/increment/generic/modal/Modal.vue'),
+    // Pager,
+    Confirmation
   },
   methods: {
     redirect(params){
@@ -174,7 +188,7 @@ export default{
         }],
         sort: sort
       }
-      this.APIRequest('transfer_charges/retrieve', parameter).then(response => {
+      this.APIRequest('fund_transfer_charges/retrieve_all', parameter).then(response => {
         $('#loading').css({display: 'none'})
         if(response.data.length > 0){
           this.data = response.data
@@ -190,7 +204,7 @@ export default{
         }
       }
       $('#loading').css({display: 'block'})
-      this.APIRequest('transfer_charges/retrieve', parameter).then(response => {
+      this.APIRequest('fund_transfer_charges/retrieve_all', parameter).then(response => {
         $('#loading').css({display: 'none'})
         if(response.data.length > 0){
           this.data = response.data
@@ -212,7 +226,7 @@ export default{
           let modalData = {...this.transferModal}
           let parameter = {
             title: 'Update Requests',
-            route: 'transfer_charges/update',
+            route: 'fund_transfer_charges/update',
             button: {
               left: 'Cancel',
               right: 'Update'
@@ -229,13 +243,22 @@ export default{
           modalData = {...modalData, ...parameter} // updated data without
           let object = Object.keys(item)
           modalData.inputs.map(data => {
+            if(data.variable === 'effective_date'){
+              data.value = item.effective_date
+            }
+            if(data.variable === 'scope'){
+              data.value = item.scope
+            }
+            if(data.variable === 'destination'){
+              data.value = item.destination
+            }
             if(data.variable === 'type'){
               data.value = item.type
             }
-            if(data.variable === 'min_amount'){
+            if(data.variable === 'minimum_amount'){
               data.value = item.min_amount
             }
-            if(data.variable === 'max_amount'){
+            if(data.variable === 'maximum_amount'){
               data.value = item.max_amount
             }
             if(data.variable === 'charge'){
@@ -249,6 +272,18 @@ export default{
           break
       }
       $('#createTransferChargesModal').modal('show')
+    },
+    setRemoveItem(item){
+      this.$refs.confirmation.show(item.id)
+    },
+    removeItem(event){
+      let parameter = {
+        id: event.id
+      }
+      this.APIRequest('fund_transfer_charges/delete', parameter).then(response => {
+        $('#loading').css({display: 'none'})
+        this.retrieve()
+      })
     },
     manageGrid(event){
       switch(event){

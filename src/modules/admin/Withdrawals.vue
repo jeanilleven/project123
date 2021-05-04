@@ -7,9 +7,11 @@
       @changeSortEvent="retrieve($event.sort, $event.filter)"
       @changeStyle="manageGrid($event)"
       :grid="['list', 'th-large']"></basic-filter>
-    <table class="table table-bordered"  v-if="data !== null">
+    <table class="table table-bordered table-responsive"  v-if="data !== null">
       <thead>
+        <td>Date</td>
         <td>Username</td>
+        <td>Full Name</td>
         <td>Via</td>
         <td>Account name</td>
         <td>Account number</td>
@@ -20,7 +22,9 @@
       </thead>
       <tbody>
         <tr v-for="item, index in data">
+          <td>{{item.created_at_human}}</td>
           <td>{{item.account.username}}</td>
+          <td>{{item.account.information.first_name !== null || item.account.information.last_name !== null ? item.account.information.first_name + ' ' + item.account.information.last_name : 'N/A'}}</td>
           <td>{{item.bank}}</td>
           <td>{{item.account_name}}</td>
           <td>{{item.account_number}}</td>
@@ -33,7 +37,7 @@
         </tr>
       </tbody>
     </table>
-    <empty v-if="data === null" :title="'No deposit yet!'" :action="'Keep growing.'"></empty>
+    <empty v-if="data === null" :title="'No withdrawals yet!'" :action="'Keep growing.'"></empty>
     <browse-images-modal></browse-images-modal>
     <image-viewer :src="selectedImage"></image-viewer>
     <authenticate-otp ref="authenticateOTP"></authenticate-otp>

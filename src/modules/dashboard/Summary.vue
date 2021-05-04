@@ -1,19 +1,21 @@
 <template>
-  <div>
-    <div class="summary-container-item" v-for="item, index in data" v-if="data !== null">
+  <div v-if="data !== null">
+    <div class="summary-container-item" v-for="(item, index) in data" :key="index">
       <span class="header">{{item.created_at_human}}</span>
       <span class="body">
         <label>
           {{item.description}}
         </label>
-        <label v-bind:class="{'text-danger': parseFloat(item.amount) <= 0, 'text-primary': parseFloat(item.amount) > 0}"class="pull-right amount"><b>{{auth.displayAmountWithCurrency(item.amount, item.currency)}}</b></label>
+        <label v-bind:class="{'text-danger': parseFloat(item.amount) <= 0, 'text-primary': parseFloat(item.amount) > 0}" class="pull-right amount"><b>{{auth.displayAmountWithCurrency(item.amount, item.currency)}}</b></label>
       </span>
       <span class="footer" v-if="item.payload !== null">
         <label style="padding: 10px 0px 10px 0px;">
           Transaction ID:
         </label>
-        <label style="padding: 10px 10px 10px 0px;" class="text-primary action-link" @click="redirect((item.payload === 'request' ? '/requests/' : '/peer_charge/') + item.payload_value)">
-          {{item.payload_value}}
+        <label style="padding: 10px 10px 10px 0px;" class="text-primary action-link">
+          <!--  @click="redirect((item.payload === 'request' ? '/requests/' : '/peer_charge/') + item.payload_value)" -->
+          
+          *****{{item.code.substring(56)}}
         </label>
       </span>
     </div>
@@ -23,7 +25,18 @@
     <empty v-if="data === null" :title="'Looks like your ledger is empty!'" :action="'Deposit now or start requesting money.'"></empty>
   </div>
 </template>
-<style scoped>
+<style lang="scss" scoped>
+  @import "~assets/style/colors.scss";
+.text-primary {
+  color: $primary !important;
+}
+.amount {
+  font-size: 17px;
+}
+.view-more {
+  background-color: $primary !important;
+  color: white;
+}
 .summary-container-item{
   width: 100%;
   float: left;
@@ -51,6 +64,7 @@
 
 .summary-container-item .amount{
 }
+
 .view-more{
   height: 50px;
   line-height: 50px;
@@ -66,9 +80,9 @@
 }
 </style>
 <script>
-import ROUTER from '../../router'
-import AUTH from '../../services/auth'
-import CONFIG from '../../config.js'
+import ROUTER from 'src/router'
+import AUTH from 'src/services/auth'
+import CONFIG from 'src/config.js'
 export default{
   mounted(){
   },

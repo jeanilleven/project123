@@ -7,9 +7,11 @@
       @changeSortEvent="retrieve($event.sort, $event.filter)"
       @changeStyle="manageGrid($event)"
       :grid="['list', 'th-large']"></basic-filter>
-    <table class="table table-bordered"  v-if="data !== null">
+    <table class="table table-bordered table-responsive"  v-if="data !== null">
       <thead>
+        <td>Date</td>
         <td>Username</td>
+        <td>Full Name</td>
         <td>Deposit #</td>
         <td>Via</td>
         <td>Amount</td>
@@ -17,10 +19,14 @@
         <td v-if="user.type === 'ADMIN'">Actions</td>
       </thead>
       <tbody>
-        <tr v-for="item, index in data">
+        <tr v-for="item, index in data" :key="index">
+          <td>{{item.date_human}}</td>
           <td>{{item.account.username}}</td>
-          <td>{{item.deposit_slip}}</td>
-          <td>{{item.bank}}</td>
+          <td>{{item.account.information.first_name !== null || item.account.information.last_name !== null ? item.account.information.first_name + ' ' + item.account.information.last_name : 'N/A'}}</td>
+          <!-- <td>{{item.deposit_slip}}</td> -->
+          <td>{{item.code}}</td>
+          <!-- <td>{{item.bank}}</td> -->
+          <td>{{item.payload_value}}</td>
           <td class="text-primary"><b>{{auth.displayAmountWithCurrency(item.amount, item.currency)}}</b></td>
           <td>{{item.status}}</td>
           <td v-if="user.type === 'ADMIN'">
@@ -74,9 +80,6 @@
   min-height: 10px;
   overflow-y: hidden;
   padding-right: 10px;
-}
-
-.summary-container-item .amount{
 }
 
 .attachment-header{
@@ -221,7 +224,7 @@ export default{
         sort: sort
       }
       $('#loading').css({display: 'block'})
-      this.APIRequest('deposits/retrieve', parameter).then(response => {
+      this.APIRequest('deposits/retrieve_requests', parameter).then(response => {
         $('#loading').css({display: 'none'})
         if(response.data.length > 0){
           this.data = response.data
