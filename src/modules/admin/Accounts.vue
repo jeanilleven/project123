@@ -11,7 +11,7 @@
       :grid="['list', 'th-large']"></basic-filter>
 
       <div class="incre-row">
-        <ul class="nav nav-tabs nav-justified">
+        <ul class="nav nav-tabs nav-justified" style="line-height: 40px;">
           <li class="nav-item">
             <a class="nav-link" @click.prevent="setActive('USER')" :class="{ active: isActive('user') }" href="#user">User</a>
           </li>
@@ -100,10 +100,7 @@
         </tr>
       </tbody>
     </table>
-    <div>
-      <button class="btn btn-primary pull-right" style="margin-left: 10px;" @click="pagination(true)">Next</button>
-      <button class="btn btn-primary pull-right" @click="pagination(false)">Previous</button>
-    </div>
+
 
      <!-- <Pager
       :pages="numPages"
@@ -115,6 +112,10 @@
     <empty v-if="data.length <= 0" :title="'No accounts available!'" :action="'Keep growing.'"></empty>
     <profile :item="selecteditem"></profile>
     <increment-modal :property="scopeLocation"></increment-modal>
+    <div>
+      <button class="btn btn-primary pull-right" style="margin-left: 10px;" @click="pagination(true)">Next</button>
+      <button class="btn btn-primary pull-right" @click="pagination(false)">Previous</button>
+    </div>
   </div>
 </template>
 <style scoped>
