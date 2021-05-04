@@ -15,7 +15,7 @@
         <button class="btn btn-primary" style="margin-top: 3%; margin-bottom: 3%" @click="verify(item, 'ENTERPISE_VERIFIED')">Enterprise Verified</button>
       </div>
     </div>
-    <div class="incre-row">
+    <div class="incre-row" v-if="localCode !== null">
       <label class="title"><b>Location Assigned</b></label>
        <div class="incre-row" style="margin-bottom: 30px;">
           <label v-if="localCode !== null">
