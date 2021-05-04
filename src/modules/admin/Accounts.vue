@@ -102,12 +102,12 @@
       </tbody>
     </table>
     <div>
-      <button class="btn btn-primary pull-right" v-if="data.length > 0" @click="seeMore()">See More</button>
+      <button class="btn btn-primary pull-right" v-if="data.length > 0" @click="seeMore(sort, filter)">See More</button>
     </div>
 
      <!-- <Pager
       :pages="numPages"
-      :active="activePage"
+      :active="offset"
       :limit="limit"
       v-if="data !== null"
     /> -->
@@ -203,7 +203,6 @@ export default{
       config: CONFIG,
       limit: 5,
       offset: 0,
-      activePage: 0,
       numPages: null,
       category: [{
         title: 'Sort by',
@@ -297,9 +296,45 @@ export default{
     redirect(params){
       ROUTER.push(params)
     },
-    seeMore() {
-      this.offset = this.offset + 5
-      this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
+    seeMore(sort, filter) {
+      this.offset += this.limit
+      if(sort !== null){
+        this.sort = sort
+      }
+      if(filter !== null){
+        this.filter = filter
+      }
+      if(sort === null && this.sort !== null){
+        sort = this.sort
+      }
+      if(filter === null && this.filter !== null){
+        filter = this.filter
+      }
+      let parameter = {
+        condition: [{
+          value: filter.value + '%',
+          column: filter.column,
+          clause: 'like'
+        }],
+        sort: sort,
+        limit: this.limit,
+        offset: this.offset
+      }
+      if(this.activeItem !== 'home'){
+        parameter['accountType'] = this.activeItem
+      }
+      this.APIRequest('accounts/retrieve_accounts', parameter).then(response => {
+        $('#loading').css({display: 'none'})
+        if(response.data.length > 0){
+          response.data.forEach(element => {
+            this.data.push(element)
+          })
+          this.numPages = parseInt(response.size / this.limit) + (response.size % this.limit ? 1 : 0)
+        }else{
+          this.data = []
+          this.numPages = null
+        }
+      })
     },
     retrieve(sort, filter){
       if(sort !== null){
