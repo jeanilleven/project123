@@ -362,6 +362,18 @@ export default{
       })
       $('#profileModal').modal('hide')
     },
+    updateStatusByParams(item, status){
+      let parameter = {
+        id: item.id,
+        status: status
+      }
+      $('#loading').css({display: 'block'})
+      this.APIRequest('accounts/update_verification', parameter).then(response => {
+        $('#loading').css({display: 'none'})
+        this.retrieve(null, null)
+      })
+      $('#profileModal').modal('hide')
+    },
     update(item){
       if(item.status !== 'NOT_VERIFIED'){
         let parameter = {

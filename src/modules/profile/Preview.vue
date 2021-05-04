@@ -3,13 +3,23 @@
     <profile-header :item="item" v-if="item.account !== null" :location="localCode"></profile-header>
     <br>
     <br>
-    <div style="margin-right: 15%; margin-left: 15%;">
-      <center>
-        <button v-if="localCode === null" class="btn btn-primary" style="margin-top: 3%; margin-bottom: 3%" @click="location(item)">Scope Location</button>
-        <button v-if="item.status != 'BLOCKED'" class="btn btn-danger" style="margin-top: 3%; margin-bottom: 3%" @click="verify(item, message = 'a')">Block Account</button>
-        <button v-else class="btn btn-danger" style="margin-top: 3%; margin-bottom: 3%" @click="verify(item, message = 'c')">Unblock Account</button>
-        <button class="btn btn-primary" style="margin-top: 3%; margin-bottom: 3%" v-if="item.status !== 'GRANTED' && item.status !== 'BLOCKED'" @click="verify(item, message = 'b')">Verify Account</button>
-      </center>
+    <div class="incre-row" style="margin-top: 25px;">
+      <label class="title"><b>Actions</b></label>
+      <div class="incre-row">
+        <button v-if="item.status != 'BLOCKED'" class="btn btn-danger" style="margin-top: 3%; margin-bottom: 3%" @click="verify(item, 'BLOCKED')">Block Account</button>
+        <button v-else class="btn btn-danger" style="margin-top: 3%; margin-bottom: 3%" @click="verify(item, '_VERIFIED')">Unblock Account</button>
+        <button class="btn btn-primary" style="margin-top: 3%; margin-bottom: 3%" @click="verify(item, 'ACCOUNT_VERIFIED')">Account Verified</button>
+        <button class="btn btn-primary" style="margin-top: 3%; margin-bottom: 3%" @click="verify(item, 'BASIC_VERIFIED')">Basic Verified</button>
+        <button class="btn btn-primary" style="margin-top: 3%; margin-bottom: 3%" @click="verify(item, 'STANDARD_VERIFIED')">Standard Verified</button>
+        <button class="btn btn-primary" style="margin-top: 3%; margin-bottom: 3%" @click="verify(item, 'BUSINESS_VERIFIED')">Business Verified</button>
+        <button class="btn btn-primary" style="margin-top: 3%; margin-bottom: 3%" @click="verify(item, 'ENTERPISE_VERIFIED')">Enterprise Verified</button>
+      </div>
+    </div>
+    <div class="incre-row">
+      <label class="title"><b>Location Assigned</b></label>
+       <div class="incre-row">
+         <button class="btn btn-primary" style="margin-top: 3%; margin-bottom: 3%" @click="location(item)">Scope Location</button>
+       </div>
     </div>
     <basic :item="item"></basic>
     <ids :item="uploadImage"></ids>
@@ -33,8 +43,8 @@
     <Confirmation
       ref="confirm"
       :title="'Message'"
-      :message="message === 'a' ? 'Are you sure you want to block this user?' : message === 'c' ? 'Are you sure you want to unblock this user?': 'Are you sure you want to validate this account?'"
-      @onConfirm="message === 'a' ? blockUser($event) : message === 'c' ? unblockUser($event) : verifyUser($event)"
+      :message="'Are you sure you want to ' + message + ' this account?'"
+      @onConfirm="verifyUser($event)"
     ></Confirmation>
   </div>
 </template>
@@ -95,10 +105,14 @@ export default{
       ROUTER.push(parameter)
     },
     verify(item, message){
+      this.message = message
       this.$refs.confirm.show(item, message)
     },
     verifyUser(data){
-      this.$parent.$parent.update(data)
+      if(this.message == null){
+        return
+      }
+      this.$parent.$parent.updateStatusByParams(data, this.message)
     },
     unblockUser(data){
       this.$parent.$parent.updateStat(data)
