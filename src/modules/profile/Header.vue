@@ -14,12 +14,9 @@
         <span v-if="item.account.information.last_name !== null">{{item.account.information.last_name}}</span>
       </div>
       <p v-else class="text-white">{{item.account.username}}</p>
-      <ratings class="text-white" :ratings="rating" v-if="item !== null ? item.rating : 'No Ratings'"></ratings>
-      <!-- <ratings class="text-black" :ratings="rating"></ratings> -->
-      <p class="text-white"><i v-if="item.status === 'GRANTED' || item.status === 'VERIFIED'" class="far fa-check-circle" color="primary"></i><i> {{item.status === 'NOT_VERIFIED' ? 'NOT_VERIFIED' : item.status === 'VERIFIED' ? 'VERIFIED' : item.status === 'GRANTED' ? 'VERIFIED' : 'BLOCKED'}}</i></p>
-      <p class="text-white" v-if="location != null"><i> Scope Location: {{location}}</i></p>
+      <ratings class="text-white" :ratings="item.account.ratings"></ratings>
+      <p class="text-white"><i v-if="item.status !== 'NOT_VERIFIED'" class="far fa-check-circle" color="primary"></i><i> {{item.status}}</i></p>
       <br>
-      <!-- <label class="text-white" v-if="item.account.information !== null"><b>{{item.account.information.address}}</b></label> -->
 
     </div>
   </div>

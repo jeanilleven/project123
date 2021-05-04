@@ -29,7 +29,8 @@
       </tbody>
     </table>
     <div>
-      <button class="btn btn-primary pull-right" @click="seeMore()">See More</button>
+      <button class="btn btn-primary pull-right" style="margin-left: 10px;" @click="pagination(true)">Next</button>
+      <button class="btn btn-primary pull-right" @click="pagination(false)">Previous</button>
     </div>
     <empty v-if="data === null" :title="'No Transactions yet!'" :action="'Keep growing.'"></empty>
   </div>
@@ -111,8 +112,9 @@ export default{
       user: AUTH.user,
       data: null,
       auth: AUTH,
-      limit: 10,
+      limit: 5,
       activePage: 0,
+      offset: 0,
       category: [{
         title: 'Sort by',
         sorting: [{
@@ -173,6 +175,15 @@ export default{
       this.limit = this.limit + 5
       this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
     },
+    pagination(flag){
+      if(flag === false && this.offset > 5){
+        this.offset = this.offset - 5
+        this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
+      }else{
+        this.offset = this.offset + 5
+        this.retrieve({created_at: 'desc'}, {column: 'created_at', value: ''})
+      }
+    },
     retrieve(sort, filter){
       if(sort !== null){
         this.sort = sort
@@ -194,7 +205,7 @@ export default{
         }],
         sort: sort,
         limit: this.limit,
-        offset: this.activePage
+        offset: this.offset
       }
       $('#loading').css({display: 'block'})
       this.APIRequest('ledger/transaction_history', parameter).then(response => {

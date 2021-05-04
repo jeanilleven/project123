@@ -130,6 +130,7 @@ export default {
       }
       $('#loading').css({display: 'block'})
       this.APIRequest('tickets/retrieve', parameter).then(response => {
+        console.log('[response]', response)
         $('#loading').css({display: 'none'})
         if(response.data.length > 0){
           this.data = response.data[0]
