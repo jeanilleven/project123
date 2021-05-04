@@ -10,9 +10,7 @@
       @changeStyle="manageGrid($event)"
       :grid="['list', 'th-large']"></basic-filter>
 
-        <h2>&nbsp;</h2>
-        <br>
-
+      <div class="incre-row">
         <ul class="nav nav-tabs nav-justified">
           <li class="nav-item">
             <a class="nav-link" @click.prevent="setActive('USER')" :class="{ active: isActive('user') }" href="#user">User</a>
@@ -36,6 +34,7 @@
             <a class="nav-link" @click.prevent="setActive('ADMIN')" :class="{ active: isActive('admin') }" href="#admin">Admin</a>
           </li>
         </ul>
+      </div>
         <div class="tab-content py-3" id="myTabContent">
           <div class="tab-pane fade" :class="{ 'active show': isActive('user') }" id="user">User content</div>
           <div class="tab-pane fade" :class="{ 'active show': isActive('partner') }" id="partner">Partner content</div>
