@@ -17,26 +17,20 @@
     </div>
     <div class="incre-row">
       <label class="title"><b>Location Assigned</b></label>
-       <div class="incre-row">
-         <button class="btn btn-primary" style="margin-top: 3%; margin-bottom: 3%" @click="location(item)">Scope Location</button>
+       <div class="incre-row" style="margin-bottom: 30px;">
+          <label v-if="localCode !== null">
+            <b>{{localCode.code.toUpperCase()}}</b> - {{`${localCode.route}, ${localCode.locality}, ${localCode.region}, ${localCode.country}`}}
+          </label>
+          <br>
+          <span class="form-group">
+            <input type="text" class="form-control"  style="width: 30%; float: left !important; margin-right: 10px;" v-model="scope"/>
+            <button class="btn btn-primary" @click="updateScope()">Update Scope</button>
+          </span>
        </div>
     </div>
     <basic :item="item"></basic>
     <ids :item="uploadImage"></ids>
     <br>
-    <!-- <educations :data="item.educations" v-if="item.educations !== null"></educations>
-    <works :data="item.works" v-if="item.works !== null"></works> -->
-    <!-- <ids :data="item.cards" v-if="item.cards !== null"></ids> -->
-    <!-- <payments :data="item.cards" v-if="item.cards !== null"></payments> -->
-    <!-- <comakers :data="item.comakers" v-if="item.comakers !== null && item.payload === 'request'"></comakers>
-    <guarantors :data="item.guarantors" v-if="item.guarantors !== null"></guarantors> -->
-<!--     <reviews :item="item" v-if="item.account !== null"></reviews> -->
-    <!-- <div class="text-center">
-      <button class="btn danger action p-3 text-white">Decline</button>
-      <button class="btn success action p-3 text-white">Accept</button> -->
-      <!-- <button class="btn danger action p-3">Remove</button> -->
-    <!-- </div> -->
-
     <view-location
      ref="locate"
     ></view-location>
@@ -82,7 +76,8 @@ export default{
       data: null,
       uploadImage: [],
       localCode: null,
-      message: null
+      message: null,
+      scope: null
     }
   },
   props: ['item'],
@@ -126,6 +121,24 @@ export default{
     viewId(item){
       this.$refs.upload.showModal(item)
     },
+    updateScope(){
+      if(this.localCode === null){
+        return
+      }
+      if(this.localCode.account_id !== this.item.id){
+        return
+      }
+      if(this.scope === null || this.scope === ''){
+        return
+      }
+      let parameter = {
+        id: this.localCode.id,
+        code: this.scope
+      }
+      this.APIRequest('locations/update', parameter).then(response => {
+        this.retrieveLocation(this.item)
+      })
+    },
     retrieveLocation(item){
       let parameter = {
         condition: [{
@@ -136,7 +149,7 @@ export default{
       }
       this.APIRequest('locations/retrieve', parameter).then(response => {
         if(response.data.length > 0){
-          this.localCode = response.data[0].code
+          this.localCode = response.data[0]
         }else{
           this.localCode = null
         }

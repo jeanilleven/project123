@@ -16,7 +16,6 @@
       <p v-else class="text-white">{{item.account.username}}</p>
       <ratings class="text-white" :ratings="item.account.ratings"></ratings>
       <p class="text-white"><i v-if="item.status !== 'NOT_VERIFIED'" class="far fa-check-circle" color="primary"></i><i> {{item.status}}</i></p>
-      <p class="text-white" v-if="location != null"><i> Scope Location: {{location}}</i></p>
       <br>
 
     </div>
