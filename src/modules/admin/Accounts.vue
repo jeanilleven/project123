@@ -49,6 +49,7 @@
         <tr>
           <td>Date</td>
           <td>Username</td>
+          <td>Name</td>
           <td>Email</td>
           <td>Type</td>
           <!-- <td>Country & Region</td>
@@ -63,6 +64,7 @@
           <td>
             <label class="action-link text-primary" @click="showProfileModal(item)">{{item.username}}</label>
           </td>
+          <td>{{item.account.information.first_name + ' ' + item.account.information.middle_name + ' ' + item.account.information.last_name}}</td>
           <td>{{item.email}}</td>
           <td>
             <label v-if="editTypeIndex !== index">{{item.account_type}}</label>
@@ -225,10 +227,18 @@ export default{
           payload_value: 'desc'
         }, {
           title: 'Type ascending',
-          payload: 'status',
+          payload: 'account_type',
           payload_value: 'asc'
         }, {
           title: 'Type descending',
+          payload: 'account_type',
+          payload_value: 'desc'
+        }, {
+          title: 'Status ascending',
+          payload: 'status',
+          payload_value: 'asc'
+        }, {
+          title: 'Status descending',
           payload: 'status',
           payload_value: 'desc'
         }, {
@@ -373,6 +383,7 @@ export default{
         parameter['accountType'] = this.activeItem
       }
       this.APIRequest('accounts/retrieve_accounts', parameter).then(response => {
+        console.log('[]', response.data)
         $('#loading').css({display: 'none'})
         if(response.data.length > 0){
           this.data = response.data
