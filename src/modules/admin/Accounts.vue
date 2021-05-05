@@ -104,8 +104,8 @@
     </table>
     <div>
       <!-- <button class="btn btn-primary pull-right" v-if="data.length > 0" @click="seeMore(sort, filter)">See More</button> -->
-      <button class="btn btn-primary pull-right" style="margin-left: 10px;" @click="pagination(true)">Next</button>
-      <button class="btn btn-primary pull-right" @click="pagination(false)">Previous</button>
+      <!-- <button class="btn btn-primary pull-right" style="margin-left: 10px;" @click="pagination(true)">Next</button>
+      <button class="btn btn-primary pull-right" @click="pagination(false)">Previous</button> -->
     </div>
 
      <!-- <Pager
@@ -306,6 +306,8 @@ export default{
       this.$children[1].$children[0].retrieveLocation(item)
       this.$children[1].$children[0].retrieveImage(item)
       this.selecteditem['payload'] = 'account'
+      this.$children[1].$children[0].$children[0].retrieveRatings(item)
+      // this.$children[1].$children[0].$children[0].retrieveRatings()
       $('#profileModal').modal('show')
     },
     redirect(params){
@@ -387,7 +389,6 @@ export default{
         parameter['accountType'] = this.activeItem
       }
       this.APIRequest('accounts/retrieve_accounts', parameter).then(response => {
-        console.log('[]', response.data)
         $('#loading').css({display: 'none'})
         if(response.data.length > 0){
           this.data = response.data

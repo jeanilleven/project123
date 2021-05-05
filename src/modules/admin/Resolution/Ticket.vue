@@ -64,12 +64,12 @@ export default {
       category: [{
         title: 'Sort by',
         sorting: [{
-          title: 'Content ascending',
-          payload: 'content',
+          title: 'Title ascending',
+          payload: 'title',
           payload_value: 'asc'
         }, {
-          title: 'Content descending',
-          payload: 'content',
+          title: 'Title descending',
+          payload: 'title',
           payload_value: 'desc'
         }, {
           title: 'Status ascending',

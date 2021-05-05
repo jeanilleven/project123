@@ -31,7 +31,8 @@
               <svg v-if="currentTicket.type == 'closed'" height="16" class="octicon octicon-issue-closed" viewBox="0 0 16 16" version="1.1" width="16" aria-hidden="true"><path fill-rule="evenodd" d="M1.5 8a6.5 6.5 0 0110.65-5.003.75.75 0 00.959-1.153 8 8 0 102.592 8.33.75.75 0 10-1.444-.407A6.5 6.5 0 011.5 8zM8 12a1 1 0 100-2 1 1 0 000 2zm0-8a.75.75 0 01.75.75v3.5a.75.75 0 11-1.5 0v-3.5A.75.75 0 018 4zm4.78 4.28l3-3a.75.75 0 00-1.06-1.06l-2.47 2.47-.97-.97a.749.749 0 10-1.06 1.06l1.5 1.5a.75.75 0 001.06 0z" style="fill:red"></path></svg>
               <div>
                 <span>
-                  <b>{{ item.content[0] == '{' ? JSON.parse(item.content).title : item.content}} </b>#{{item.id}}
+                  <b>{{ item.title }}</b>#{{item.id}}
+                  <!-- <b>{{ item.content[0] == '{' ? JSON.parse(item.content).title : item.content}} </b>#{{item.id}} -->
                 </span>
 
                 <button
@@ -39,10 +40,10 @@
                   :style="{backgroundColor: ticketTypeBackgroundColor(item.type), color: ticketTypeColor(item.type)}"
                   >{{item.type}}
                 </button>
-                <br>
-                <span v-if="currentTicket.type == 'open'">opened by {{item.account_id}} {{getticketTimePassed(item.created_at) + ' ago'}}</span>
+                <!-- <br> -->
+                <!-- <span v-if="currentTicket.type == 'open'">opened by {{item.account_id}} {{getticketTimePassed(item.created_at) + ' ago'}}</span>
                 <span v-if="currentTicket.type == 'pending'">{{item.assigned_to  != null ? 'assigned to ' + item.assigned_to : 'not yet assigned'}}</span>
-                <span v-if="currentTicket.type == 'closed'">closed {{getticketTimePassed(item.updated_at) + ' ago'}}</span>
+                <span v-if="currentTicket.type == 'closed'">closed {{getticketTimePassed(item.updated_at) + ' ago'}}</span> -->
               </div>
             </div>
           </td>
