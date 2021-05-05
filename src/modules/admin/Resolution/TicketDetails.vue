@@ -4,25 +4,25 @@
     <label class="text-primary action-link" @click="redirect('/tickets')"><i class="fas fa-arrow-left"></i> <b> back </b>to previous</label>
   </div>
   <span v-if="data.length !== 0">
-    <span id="title"><b>{{title}}</b>#{{data.id}}</span>
-      <br><span>{{status}} {{ timeIntervalRes + ' ago'}} by {{data.account_id}}</span>
+    <span id="title"><b>{{data.title}}</b>#{{data.id}}</span>
+      <!-- <br><span>{{status}} {{ timeIntervalRes + ' ago'}} by {{data.account_id}}</span> -->
     </span>
    <div class="row" >
     <div class="col-10" id="detail">
       <form>
-        <div class="form-group">
+        <!-- <div class="form-group">
           <label for="text"><b>Title</b></label>
-          <label id="text">{{title}}</label>
+          <label id="text">{{title}}</label> -->
           <!-- <input type="text" class="form-control" v-model="title" id="text"> -->
-        </div>
-        <div class="form-group">
+        <!-- </div> -->
+        <!-- <div class="form-group"> -->
           <label for="pwd"><b>Details</b></label>
-          <p type="password" class="form-control"  id="pwd">{{ detail }}</p>
-        </div>
+          <p type="password"  id="pwd">{{ detail }}</p>
+        <!-- </div> -->
         <span><b>Image attachments</b></span><br>
 
         <multiple-img-uploader  v-if="data.length !== 0" :imageList="imageList" :isEditableProp="editable"/>
-        <button type="button" class="btn btn-primary mb-5" @click="update()" id="update">Update</button>
+        <!-- <button type="button" class="btn btn-primary mb-5" @click="update()" id="update">Update</button> -->
 
       </form>
     </div>
@@ -130,6 +130,7 @@ export default {
       }
       $('#loading').css({display: 'block'})
       this.APIRequest('tickets/retrieve', parameter).then(response => {
+        console.log('[response]', response)
         $('#loading').css({display: 'none'})
         if(response.data.length > 0){
           this.data = response.data[0]

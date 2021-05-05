@@ -14,7 +14,7 @@
         <span v-if="item.account.information.last_name !== null">{{item.account.information.last_name}}</span>
       </div>
       <p v-else class="text-white">{{item.account.username}}</p>
-      <ratings class="text-white" :ratings="item.account.ratings"></ratings>
+      <ratings class="text-white" :ratings="rating"></ratings>
       <p class="text-white"><i v-if="item.status !== 'NOT_VERIFIED'" class="far fa-check-circle" color="primary"></i><i> {{item.status}}</i></p>
       <br>
 
@@ -77,6 +77,7 @@ import AUTH from '../../services/auth'
 import CONFIG from '../../config.js'
 export default{
   mounted(){
+    // this.retrieveRatings()
   },
   data(){
     return {
@@ -90,19 +91,51 @@ export default{
     redirect(parameter){
       ROUTER.push(parameter)
     },
-    retrieveRatings(){
-      let parameter = {
-        condition: [{
-          value: this.$parent.$parent.item.id,
-          clause: '=',
-          column: 'account_id'
-        }]
+    retrieveRatings(item){
+      let parameter = null
+      if(this.user.userID === this.$parent.$parent.item.id){
+        parameter = {
+          condition: [{
+            column: 'payload',
+            clause: '=',
+            value: 'account'
+          }, {
+            column: 'payload_value',
+            clause: '=',
+            value: this.user.userID
+          }],
+          account_id: this.user.userID
+        }
+      }else{
+        parameter = {
+          condition: [{
+            column: 'payload',
+            clause: '=',
+            value: 'account'
+          }, {
+            column: 'payload_value',
+            clause: '=',
+            value: this.$parent.$parent.item.id
+          }],
+          account_id: this.$parent.$parent.item.id
+        }
       }
+      // let parameter = {
+      //   condition: [{
+      //     column: 'payload',
+      //     clause: '=',
+      //     value: 'account'
+      //   }, {
+      //     column: 'payload_value',
+      //     clause: '=',
+      //     value: this.$parent.$parent.item.id
+      //   }],
+      //   account_id: this.$parent.$parent.item.id
+      // }
       $('#loading').css({display: 'block'})
-      this.APIRequest('account_informations/retrieve_account_info', parameter).then(response => {
+      this.APIRequest('ratings/retrieve', parameter).then(response => {
         $('#loading').css({display: 'none'})
-        console.log('[response]', response.data[0].rating)
-        this.rating = response.data[0].rating
+        this.rating = response
       })
     }
   },
