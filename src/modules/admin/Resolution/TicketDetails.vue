@@ -31,7 +31,8 @@
         <ticket-type v-if="data.length !== 1" :isEditable="{isEditable: user.userID === data.account_id, typeResult: data.type}"/>
       <hr>
       <span>Assignee</span>
-      <p @click="showAssignees()" style="color:grey; cursor: pointer;">{{ assignee ? assignee : 'no assigned resolver'}}</p>
+      <br>
+      <p @click="showAssignees()" style="color:grey; cursor: pointer;"><b><u><i class="fas fa-user-plus"></i>&nbsp;&nbsp;{{ assignee ? assignee : 'Add assignee resolver'}}</u></b></p>
       <assignees ref="assign"></assignees>
       <hr>
       <span>Status</span>
@@ -41,6 +42,8 @@
       </div>
     </div>
   </div>
+  <br>
+  <br>
   <comments v-if="data !== null" :id="data.id"/>
 </div>
 
